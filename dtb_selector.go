@@ -253,28 +253,28 @@ var Consoles = []ConsoleConfig{
 	{
 		RealName: "sauce panel1",
 		BrandEntries: []BrandEntry{
-			{Brand: "SaySouce R36s", DisplayName: "Soy Sauce Panel 1"},
+			{Brand: "SoySauce R36s", DisplayName: "Soy Sauce Panel 1"},
 		},
 		ExtraSources: []string{"logo/480P/", "kernel/common/"},
 	},
 	{
 		RealName: "sauce panel2",
 		BrandEntries: []BrandEntry{
-			{Brand: "SaySouce R36s", DisplayName: "Soy Sauce Panel 2"},
+			{Brand: "SoySauce R36s", DisplayName: "Soy Sauce Panel 2"},
 		},
 		ExtraSources: []string{"logo/480P/", "kernel/common/"},
 	},
 	{
 		RealName: "sauce panel3",
 		BrandEntries: []BrandEntry{
-			{Brand: "SaySouce R36s", DisplayName: "Soy Sauce Panel 3"},
+			{Brand: "SoySauce R36s", DisplayName: "Soy Sauce Panel 3"},
 		},
 		ExtraSources: []string{"logo/480P/", "kernel/common/"},
 	},
 	{
 		RealName: "sauce panel4",
 		BrandEntries: []BrandEntry{
-			{Brand: "SaySouce R36s", DisplayName: "Soy Sauce Panel 4"},
+			{Brand: "SoySauce R36s", DisplayName: "Soy Sauce Panel 4"},
 		},
 		ExtraSources: []string{"logo/480P/", "kernel/common/"},
 	},

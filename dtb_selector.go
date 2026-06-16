@@ -486,9 +486,9 @@ type LanguageMenu3 struct {
 	Copying              string
 	CopyingExtra         string
 	CopyingFmt           string
-	SelectBatteryVersion string
-	BatteryVersion44     string
-	BatteryVersion66     string
+	SelectBatteryVersion  string
+	BatteryVersionOriginal string
+	BatteryVersionFix     string
 }
 
 type LanguageCleanup struct {
@@ -552,9 +552,9 @@ var english = Language{
 		Copying:              "Copying: ",
 		CopyingExtra:         "Copying extra resources...",
 		CopyingFmt:           "  Copying: %s\n",
-		SelectBatteryVersion: "Select battery driver version:",
-		BatteryVersion44:     "1. Kernel 4.4",
-		BatteryVersion66:     "2. Kernel 6.6",
+		SelectBatteryVersion:  "Select battery driver version:",
+		BatteryVersionOriginal: "1. Original battery driver",
+		BatteryVersionFix:     "2. arkos4clone_fix battery driver",
 	},
 	Cleanup: LanguageCleanup{
 		OperationCompleted:   "  ✅  Operation completed!",
@@ -609,9 +609,9 @@ var chinese = Language{
 		Copying:              "开始复制: ",
 		CopyingExtra:         "正在复制额外资源...",
 		CopyingFmt:           "  开始复制: %s\n",
-		SelectBatteryVersion: "请选择电池驱动版本:",
-		BatteryVersion44:     "1. 内核 4.4",
-		BatteryVersion66:     "2. 内核 6.6",
+		SelectBatteryVersion:  "请选择电池驱动版本:",
+		BatteryVersionOriginal: "1. 原版电池驱动",
+		BatteryVersionFix:     "2. arkos4clone_fix 电池驱动",
 	},
 	Cleanup: LanguageCleanup{
 		OperationCompleted:   "  ✅  操作完成！",
@@ -666,9 +666,9 @@ var korean = Language{
 		Copying:              "복사중",
 		CopyingExtra:         "기타 리소스 복사중...",
 		CopyingFmt:           "  복사중: %s\n",
-		SelectBatteryVersion: "배터리 드라이버 버전을 선택하세요:",
-		BatteryVersion44:     "1. 커널 4.4",
-		BatteryVersion66:     "2. 커널 6.6",
+		SelectBatteryVersion:  "배터리 드라이버 버전을 선택하세요:",
+		BatteryVersionOriginal: "1. 원본 배터리 드라이버",
+		BatteryVersionFix:     "2. arkos4clone_fix 배터리 드라이버",
 	},
 	Cleanup: LanguageCleanup{
 		OperationCompleted:   "  ✅  성공!",
@@ -1046,8 +1046,8 @@ func selectBatteryVersion(lang *Language) (string, error) {
 	fmt.Println(colorWrap("┌────────────────────────────────────────┐", ansiCyan))
 	fmt.Println(colorWrap(lang.Menu3.SelectBatteryVersion, ansiBold+ansiGreen))
 	fmt.Println(colorWrap("└────────────────────────────────────────┘", ansiCyan))
-	fmt.Println(lang.Menu3.BatteryVersion44)
-	fmt.Println(lang.Menu3.BatteryVersion66)
+	fmt.Println(lang.Menu3.BatteryVersionOriginal)
+	fmt.Println(lang.Menu3.BatteryVersionFix)
 
 	for {
 		choice, err := readIntChoice(lang, lang.Common.SelectNumber)
@@ -1056,9 +1056,9 @@ func selectBatteryVersion(lang *Language) (string, error) {
 		}
 		switch choice {
 		case 1:
-			return "4.4", nil
+			return "original", nil
 		case 2:
-			return "6.6", nil
+			return "arkos4clone_fix", nil
 		default:
 			fmt.Println(colorWrap(lang.Common.InvalidSelection, ansiRed))
 		}
@@ -1082,6 +1082,23 @@ func copySelectedConsole(lang *Language, selected *SelectedConsole, baseDir stri
 		return fmt.Errorf("failed to copy console: %v", err)
 	}
 
+	// 让用户选择电池驱动版本并复制 Image
+	batteryVersion, err := selectBatteryVersion(lang)
+	if err != nil {
+		return fmt.Errorf("failed to select battery version: %v", err)
+	}
+	if batteryVersion != "" {
+		kernelSrc := filepath.Join(baseDir, "consoles", "kernel", batteryVersion, "Image")
+		if _, err := os.Stat(kernelSrc); err == nil {
+			fmt.Printf(lang.Menu3.CopyingFmt, "kernel/"+batteryVersion+"/Image")
+			if err := copyFile(kernelSrc, filepath.Join(baseDir, "Image")); err != nil {
+				return fmt.Errorf("failed to copy kernel Image: %v", err)
+			}
+		} else {
+			fmt.Printf("  Warning: Kernel Image not found: %s\n", kernelSrc)
+		}
+	}
+
 	fmt.Println(colorWrap(lang.Menu3.CopyingExtra, ansiCyan))
 	for _, extra := range selected.Config.ExtraSources {
 		extraSrc := filepath.Join(baseDir, "consoles", extra)
@@ -1092,23 +1109,6 @@ func copySelectedConsole(lang *Language, selected *SelectedConsole, baseDir stri
 			}
 		} else {
 			fmt.Printf("  Warning: Extra source not found: %s\n", extra)
-		}
-	}
-
-	// 让用户选择电池驱动版本并复制 Image
-	batteryVersion, err := selectBatteryVersion(lang)
-	if err != nil {
-		return fmt.Errorf("failed to select battery version: %v", err)
-	}
-	if batteryVersion != "" {
-		kernelSrc := filepath.Join(baseDir, "consoles", "kernel", batteryVersion+"-battery", "Image")
-		if _, err := os.Stat(kernelSrc); err == nil {
-			fmt.Printf(lang.Menu3.CopyingFmt, "kernel/"+batteryVersion+"-battery/Image")
-			if err := copyFile(kernelSrc, filepath.Join(baseDir, "Image")); err != nil {
-				return fmt.Errorf("failed to copy kernel Image: %v", err)
-			}
-		} else {
-			fmt.Printf("  Warning: Kernel Image not found: %s\n", kernelSrc)
 		}
 	}
 

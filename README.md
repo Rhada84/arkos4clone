@@ -56,7 +56,7 @@ After the script finishes, `(d)ArkOS4Clone.img.xz` will be generated in the root
 1. Download the **ArkOS** release image
 2. Flash to SD card
 3. Run `dtb_selector.exe` (Windows) to select your device
-4. Select battery driver version (4.4 or 6.6) when prompted
+4. Select battery driver version (Original or arkos4clone_fix) when prompted
 5. Reboot the device
 
 Non-Windows users, see [Manual Configuration](#manual-configuration).
@@ -197,7 +197,7 @@ Non-Windows users, see [Manual Configuration](#manual-configuration).
 | R39S | `480P5-3` | User Select | `consoles/r40s/`     |  |
 
 > **Logo Path:** `consoles/logo/<Logo>/logo.bmp`  
-> **Kernel Path:** `consoles/kernel/4.4-battery/Image` or `consoles/kernel/6.6-battery/Image` (user selects during setup)
+> **Kernel Path:** `consoles/kernel/original/Image` or `consoles/kernel/arkos4clone_fix/Image` (user selects during setup)
 
 ---
 
@@ -208,8 +208,8 @@ For non-Windows users:
 1. Mount the `BOOT` partition of the SD card
 2. Copy `boot.ini` and the two `.dtb` files from `consoles/<device>/` to the root directory
 3. Copy the appropriate kernel Image:
-   - For 4.4 battery driver: `consoles/kernel/4.4-battery/Image`
-   - For 6.6 battery driver: `consoles/kernel/6.6-battery/Image`
+   - For Original battery driver: `consoles/kernel/original/Image`
+   - For arkos4clone_fix battery driver: `consoles/kernel/arkos4clone_fix/Image`
 4. Copy `consoles/logo/<resolution>/logo.bmp` to the root directory
 5. Unmount the SD card, insert into device, and reboot
 
@@ -240,8 +240,8 @@ Adjust joystick axis mappings (Joymux / amux), battery parameters, and generate 
 
 When using the `dtb_selector` tool, you will be prompted to select a battery driver version:
 
-- **4.4** — For devices using the older 4.4 kernel battery driver
-- **6.6** — For devices using the newer 6.6 kernel battery driver
+- **Original battery driver** — For devices using the original kernel battery driver
+- **arkos4clone_fix battery driver** — For devices using the arkos4clone_fix kernel battery driver
 
 The selected version's `Image` file will be copied to the root directory of your SD card.
 

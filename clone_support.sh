@@ -28,7 +28,7 @@ else
 fi
 
 # 这些都是普通文件，直接复制即可
-sudo cp -f ./sh/clone.sh ./dtb_selector_macos ./dtb_selector_win32.exe ./sh/expandtoexfat.sh "$MOUNT_DIR/boot/"
+sudo cp -f ./sh/clone.sh ./dtb_selector_macos ./dtb_selector_linux32 ./dtb_selector_win32.exe ./sh/expandtoexfat.sh "$MOUNT_DIR/boot/"
 
 # 如果镜像名包含 dArkOS，使用专用的 expandtoexfat.sh
 if [[ "$ARKOS_IMAGE_NAME" == *dArkOS* ]]; then
@@ -223,12 +223,17 @@ sudo cp -f ./bin/json-c3/* "$MOUNT_DIR/root/usr/lib/aarch64-linux-gnu/" || true
 sudo chown -R 1002:1002 "$MOUNT_DIR/root/usr/lib/aarch64-linux-gnu/libjson-c.so*" 2>/dev/null || true
 sudo chmod -R 777 "$MOUNT_DIR/root/usr/lib/aarch64-linux-gnu/libjson-c.so*" 2>/dev/null || true
 
-echo "== 更新 PPSSPP 1.20.2 =="
+echo "== 更新 PPSSPP 1.20.4 =="
 sudo cp -a ./replace_file/ppsspp/* "$MOUNT_DIR/root/opt/ppsspp/" 2>/dev/null || true
 sudo chown -R 1002:1002 "$MOUNT_DIR/root/opt/ppsspp/" 2>/dev/null || true
 sudo chmod -R 777 "$MOUNT_DIR/root/opt/ppsspp/" 2>/dev/null || true
 
-echo "== 更新 ScummVM v2026.1.0 =="
+echo "== 更新 flycastsa v2.6 =="
+sudo cp -a ./replace_file/flycastsa/flycast "$MOUNT_DIR/root/opt/flycastsa/" 2>/dev/null || true
+sudo chown -R 1002:1002 "$MOUNT_DIR/root/opt/flycastsa/" 2>/dev/null || true
+sudo chmod -R 777 "$MOUNT_DIR/root/opt/flycastsa/" 2>/dev/null || true
+
+echo "== 更新 ScummVM v2026.2.0 =="
 sudo cp -a ./replace_file/scummvm/* "$MOUNT_DIR/root/opt/scummvm/" 2>/dev/null || true
 sudo chown -R 1002:1002 "$MOUNT_DIR/root/opt/scummvm/" 2>/dev/null || true
 sudo chmod -R 777 "$MOUNT_DIR/root/opt/scummvm/" 2>/dev/null || true

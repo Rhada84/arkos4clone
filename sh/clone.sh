@@ -61,11 +61,12 @@ cp_if_exists() {
     # 使用 -L 解引用符号链接，确保复制实际文件
     cp -L "$src" "$dst" 2>/dev/null || install -m 0755 -D "$src" "$dst"
     sudo chmod 0755 "$dst" 2>/dev/null || true
-    sudo chown -R ark:ark "$dst" 2>/dev/null || true
   else
     mkdir -p "$dst"
     cp -a "$src" "$dst/"
+    sudo chmod -R 0755 "$dst" 2>/dev/null || true
   fi
+  sudo chown -R ark:ark "$dst" 2>/dev/null || true
   msg "Copied: $src -> $dst"
 }
 

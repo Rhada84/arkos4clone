@@ -82,6 +82,7 @@ cp -f ./sh/clone.sh "$PAYLOAD_BOOT/firstboot.sh"
 # 其他 boot 工具保持原文件名
 cp -f ./dtb_selector_macos \
       ./dtb_selector_win32.exe \
+      ./dtb_selector_linux32 \
       "$PAYLOAD_BOOT/" 2>/dev/null || true
 
 # DTB 选择器提示标记文件
@@ -155,9 +156,13 @@ echo "== 注入 json-c3 库（drastic-kk 依赖） =="
 mkdir -p "$PAYLOAD_ROOT/usr/lib/aarch64-linux-gnu/"
 cp -f ./bin/json-c3/* "$PAYLOAD_ROOT/usr/lib/aarch64-linux-gnu/" 2>/dev/null || true
 
-echo "== 更新 PPSSPP1.20.2 =="
+echo "== 更新 PPSSPP1.20.4 =="
 mkdir -p "$PAYLOAD_ROOT/opt/ppsspp"
 cp -a ./replace_file/ppsspp/. "$PAYLOAD_ROOT/opt/ppsspp/" 2>/dev/null || true
+
+echo "== 更新 flycastsa v2.6 =="
+mkdir -p "$PAYLOAD_ROOT/opt/flycastsa"
+cp -a ./replace_file/flycastsa/flycast "$PAYLOAD_ROOT/opt/flycastsa/" 2>/dev/null || true
 
 echo "== 更新 ScummVM v2026.1.0 =="
 mkdir -p "$PAYLOAD_ROOT/opt/scummvm"
@@ -277,11 +282,15 @@ meta_add "0777" "1002:1002" "/opt/drastic/*"
 meta_add "0777" "1002:1002" "/opt/drastic-kk"
 meta_add "0777" "1002:1002" "/opt/drastic-kk/*"
 
-# ppsspp1.21.1：1002:1002 + 777
+# ppsspp1.21.4：1002:1002 + 777
 meta_add "0777" "1002:1002" "/opt/ppsspp"
 meta_add "0777" "1002:1002" "/opt/ppsspp/*"
 
-# ScummVM v2026.1.0：1002:1002 + 777
+# flycastsa v2.6：1002:1002 + 777
+meta_add "0777" "1002:1002" "/opt/flycastsa"
+meta_add "0777" "1002:1002" "/opt/flycastsa/*"
+
+# ScummVM v2026.2.0：1002:1002 + 777
 meta_add "0777" "1002:1002" "/opt/scummvm"
 meta_add "0777" "1002:1002" "/opt/scummvm/*"
 

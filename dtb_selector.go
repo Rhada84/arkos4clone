@@ -9,6 +9,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"regexp"
 	"runtime"
 	"strconv"
 	"strings"
@@ -465,12 +466,13 @@ type Language struct {
 	Title   string
 	Variant LanguageVariant
 
-	Common  LanguageCommon
-	Menu1   LanguageMenu1
-	Menu2   LanguageMenu2
-	Menu3   LanguageMenu3
-	Cleanup LanguageCleanup
-	Menu4   LanguageMenu4
+	Common    LanguageCommon
+	Menu1     LanguageMenu1
+	Menu2     LanguageMenu2
+	Menu3     LanguageMenu3
+	Cleanup   LanguageCleanup
+	Menu4     LanguageMenu4
+	Overclock LanguageOverclock
 }
 
 type LanguageCommon struct {
@@ -539,6 +541,77 @@ const (
 	KOREAN  LanguageVariant = "ko"
 )
 
+// ===================== 超频配置 =====================
+type FreqOption struct {
+	Value int
+}
+
+type FreqSelection struct {
+	MaxFreq  int
+	BootFreq int
+}
+
+type OverclockConfig struct {
+	CPU      FreqSelection
+	GPU      FreqSelection
+	DDR      FreqSelection
+	Voltage  bool
+}
+
+type FreqParamDef struct {
+	Name         string
+	DefaultMax   int
+	DefaultBoot  int
+	Options      []FreqOption
+}
+
+var cpuFreqOptions = []FreqOption{
+	{408}, {600}, {816}, {1008}, {1200}, {1248}, {1296},
+	{1368}, {1416}, {1440}, {1464}, {1488}, {1512}, {1608},
+}
+
+var gpuFreqOptions = []FreqOption{
+	{200}, {300}, {400}, {480}, {520}, {600}, {650},
+}
+
+var ddrFreqOptions = []FreqOption{
+	{194}, {328}, {450}, {528}, {666}, {786}, {924}, {1040},
+}
+
+// 超频相关的多语言字符串
+type LanguageOverclock struct {
+	AskOverclock      string
+	OverclockTitle    string
+	MaxFreqLabel      string
+	BootFreqLabel     string
+	BootFreqMustLE    string
+	DefaultFreqNote   string
+	RedWarning        string
+	FreezeWarning     string
+	CurrentConfig     string
+	ConfigCPU         string
+	ConfigGPU         string
+	ConfigDDR         string
+	MaxFreq           string
+	BootFreq          string
+	ApplyOverclock    string
+	OverclockApplied  string
+	UsingDefaults     string
+	DDRCloneDefault   string
+	DDROriginalDefault string
+	OCWarning         string
+	GPUDDRFreezeTip   string
+	AskVoltage        string
+	VoltageTitle      string
+	VoltageWarning    string
+	VoltageConfirmPrompt string
+	VoltageConfirmText   string
+	VoltageInputPrompt   string
+	VoltageWrongInput    string
+	VoltageApplied       string
+	VoltageSkipped       string
+}
+
 var english = Language{
 	Title:   "DTB Selector Tool - Go Version",
 	Variant: ENGLISH,
@@ -593,6 +666,38 @@ var english = Language{
 		Info1:             "Enter the number or press Enter. English is the default selection: ",
 		TagFileCreated:    "Chinese language tag file has been created. (.cn created)",
 		OperationComplete: "Operation complete! Language selected: ",
+	},
+	Overclock: LanguageOverclock{
+		AskOverclock:     "Do you want to adjust overclocking parameters?",
+		OverclockTitle:   "Overclocking Parameters Configuration",
+		MaxFreqLabel:     "Maximum frequency (visible in ES after boot)",
+		BootFreqLabel:    "Boot frequency (used during system startup)",
+		BootFreqMustLE:   "Boot frequency must be <= max frequency",
+		DefaultFreqNote:  "Default frequencies ensure normal boot. Frequencies above default shown in RED.",
+		RedWarning:       "WARNING: Exceeding default frequency may cause system freeze!",
+		FreezeWarning:    "If system freezes, please lower the frequency.",
+		CurrentConfig:    "Current configuration:",
+		ConfigCPU:        "CPU",
+		ConfigGPU:        "GPU",
+		ConfigDDR:        "DDR",
+		MaxFreq:          "Max",
+		BootFreq:         "Boot",
+		ApplyOverclock:   "Applying overclocking parameters to boot.ini...",
+		OverclockApplied: "Overclocking parameters applied successfully!",
+		UsingDefaults:    "Using default overclocking parameters (1296/520/666).",
+		DDRCloneDefault:  "Clone default",
+		DDROriginalDefault: "Original default",
+		OCWarning:         "WARNING: In this mode, do NOT submit issues for any bugs.\n  Any CPU damage is at your own risk.\n  If you don't understand this, please select N.\n\n  Oh by the way, this system will NOT damage your speakers.\n  If you're worried about that risk, don't use it.\n  We have no idea why such ridiculous rumors spread.",
+		GPUDDRFreezeTip:   "If the system freezes after entering, please lower the frequency.",
+		AskVoltage:        "Do you want to increase voltage for higher stability?",
+		VoltageTitle:      "Voltage Increase Configuration",
+		VoltageWarning:    "WARNING: Increasing voltage may cause hardware damage!",
+		VoltageConfirmPrompt: "To confirm you understand the risks, type: ",
+		VoltageConfirmText:  "i know what i am doing",
+		VoltageInputPrompt:  "Enter confirmation: ",
+		VoltageWrongInput:   "Incorrect input. Voltage increase cancelled.",
+		VoltageApplied:      "Voltage increase applied successfully!",
+		VoltageSkipped:      "Voltage increase skipped.",
 	},
 }
 
@@ -651,6 +756,38 @@ var chinese = Language{
 		TagFileCreated:    "已创建中文语言标记文件. (.cn created)",
 		OperationComplete: "操作完成！已选择语言: ",
 	},
+	Overclock: LanguageOverclock{
+		AskOverclock:     "是否要调整超频参数？",
+		OverclockTitle:   "超频参数配置",
+		MaxFreqLabel:     "最大频率（开机后可在ES中看到的最大频率）",
+		BootFreqLabel:    "启动频率（系统启动时使用的频率）",
+		BootFreqMustLE:   "启动频率必须 <= 最大频率",
+		DefaultFreqNote:  "默认频率保证正常开机。超过默认频率的选项显示为红色。",
+		RedWarning:       "警告：超过默认频率可能导致系统卡死！",
+		FreezeWarning:    "如果遇到卡死请降低频率。",
+		CurrentConfig:    "当前配置：",
+		ConfigCPU:        "CPU",
+		ConfigGPU:        "GPU",
+		ConfigDDR:        "内存",
+		MaxFreq:          "最大",
+		BootFreq:         "启动",
+		ApplyOverclock:   "正在将超频参数写入 boot.ini...",
+		OverclockApplied: "超频参数已成功应用！",
+		UsingDefaults:    "使用默认超频参数 (1296/520/666)。",
+		DDRCloneDefault:  "克隆机默认",
+		DDROriginalDefault: "original（原版机）默认",
+		OCWarning:         "警告：在此模式下出现任何bug请不要提交issues。\n  导致CPU性能损坏请自行负责。\n  如果你对此行为不了解请选择N。\n\n  哦顺便说一句，该系统不会导致扬声器损坏。\n  如果你担心会有这种风险请不要使用。\n  我也不知道这种离谱的谣言为什么会被传播，甚至有人相信。",
+		GPUDDRFreezeTip:   "如果进入系统后遇到卡死请降低频率。",
+		AskVoltage:        "是否要增加电压以提高稳定性？",
+		VoltageTitle:      "电压增加配置",
+		VoltageWarning:    "警告：增加电压可能导致硬件损坏！",
+		VoltageConfirmPrompt: "请输入以下内容确认您了解风险：",
+		VoltageConfirmText:  "我知道我在做什么",
+		VoltageInputPrompt:  "请输入确认文本：",
+		VoltageWrongInput:   "输入错误，已取消电压增加。",
+		VoltageApplied:      "电压增加已成功应用！",
+		VoltageSkipped:      "已跳过电压增加。",
+	},
 }
 
 var korean = Language{
@@ -708,6 +845,38 @@ var korean = Language{
 		TagFileCreated:    "중국어 태그 파일이 생성되었어요. (.ko created)",
 		OperationComplete: "작업이 완료되었어요! 언어가 선택되었어요: ",
 	},
+	Overclock: LanguageOverclock{
+		AskOverclock:     "오버클럭 매개변수를 조정하시겠습니까?",
+		OverclockTitle:   "오버클럭 매개변수 설정",
+		MaxFreqLabel:     "최대 주파수 (부팅 후 ES에서 표시되는 최대 주파수)",
+		BootFreqLabel:    "부팅 주파수 (시스템 부팅 시 사용되는 주파수)",
+		BootFreqMustLE:   "부팅 주파수는 최대 주파수 이하여야 합니다",
+		DefaultFreqNote:  "기본 주파수는 정상 부팅을 보장합니다. 기본을 초과하는 옵션은 빨간색으로 표시됩니다.",
+		RedWarning:       "경고: 기본 주파수를 초과하면 시스템이 멈출 수 있습니다!",
+		FreezeWarning:    "시스템이 멈추면 주파수를 낮추세요.",
+		CurrentConfig:    "현재 설정:",
+		ConfigCPU:        "CPU",
+		ConfigGPU:        "GPU",
+		ConfigDDR:        "메모리",
+		MaxFreq:          "최대",
+		BootFreq:         "부팅",
+		ApplyOverclock:   "boot.ini에 오버클럭 매개변수를 적용 중...",
+		OverclockApplied: "오버클럭 매개변수가 성공적으로 적용되었습니다!",
+		UsingDefaults:    "기본 오버클럭 매개변수 사용 (1296/520/666).",
+		DDRCloneDefault:  "클론 기본",
+		DDROriginalDefault: "오리지널 기본",
+		OCWarning:         "경고: 이 모드에서 발생하는 버그에 대해 issues를 제출하지 마세요.\n  CPU 손상은 사용자 책임입니다.\n  이해하지 못하셨다면 N을 선택하세요.\n\n  참고로 이 시스템은 스피커를 손상시키지 않습니다.\n  그런 위험이 걱정된다면 사용하지 마세요.\n  이런 터무니없는 소문이 왜 퍼지는지 모르겠습니다.",
+		GPUDDRFreezeTip:   "시스템 진입 후 멈춤 현상이 발생하면 주파수를 낮추세요.",
+		AskVoltage:        "안정성을 높이기 위해 전압을 올리시겠습니까?",
+		VoltageTitle:      "전압 인상 설정",
+		VoltageWarning:    "경고: 전압을 올리면 하드웨어가 손상될 수 있습니다!",
+		VoltageConfirmPrompt: "위험을 이해했음을 확인하려면 입력하세요: ",
+		VoltageConfirmText:  "i know what i am doing",
+		VoltageInputPrompt:  "확인 텍스트 입력: ",
+		VoltageWrongInput:   "입력이 올바르지 않습니다. 전압 인상이 취소되었습니다.",
+		VoltageApplied:      "전압 인상이 성공적으로 적용되었습니다!",
+		VoltageSkipped:      "전압 인상을 건너뛰었습니다.",
+	},
 }
 
 var (
@@ -723,12 +892,13 @@ var stdinReader = bufio.NewReader(os.Stdin)
 
 // ===================== ANSI 颜色 & Fancy UI =====================
 var (
-	ansiReset = "\033[0m"
-	ansiRed   = "\033[31m"
-	ansiGreen = "\033[32m"
-	ansiBlue  = "\033[34m"
-	ansiCyan  = "\033[36m"
-	ansiBold  = "\033[1m"
+	ansiReset   = "\033[0m"
+	ansiRed     = "\033[31m"
+	ansiDeepRed = "\033[38;5;196m"
+	ansiGreen   = "\033[32m"
+	ansiBlue    = "\033[34m"
+	ansiCyan    = "\033[36m"
+	ansiBold    = "\033[1m"
 )
 
 func supportsANSI() bool {
@@ -1086,6 +1256,221 @@ func selectBatteryVersion(lang *Language) (string, error) {
 	}
 }
 
+// ===================== 超频选择 =====================
+func selectFrequency(lang *Language, label string, options []FreqOption, defaultVal int, defaultLabels map[int]string, extremeFreq int) (int, error) {
+	for {
+		clearScreen()
+		fmt.Println()
+		fmt.Println(colorWrap(label, ansiBold+ansiGreen))
+		for i, opt := range options {
+			prefix := fmt.Sprintf("  %d. %d MHz", i+1, opt.Value)
+			if lbl, ok := defaultLabels[opt.Value]; ok {
+				fmt.Printf("%s %s\n", prefix, colorWrap("("+lbl+")", ansiBold+ansiCyan))
+			} else if opt.Value == defaultVal {
+				fmt.Printf("%s %s\n", prefix, colorWrap("(Default)", ansiBold+ansiCyan))
+			} else if extremeFreq > 0 && opt.Value == extremeFreq {
+				fmt.Println(colorWrap(prefix, ansiBold+ansiDeepRed))
+			} else if opt.Value > defaultVal {
+				fmt.Println(colorWrap(prefix, ansiRed))
+			} else {
+				fmt.Println(prefix)
+			}
+		}
+		fmt.Println()
+		choice, err := readIntChoice(lang, lang.Common.SelectNumber)
+		if err != nil {
+			return 0, err
+		}
+		if choice >= 1 && choice <= len(options) {
+			return options[choice-1].Value, nil
+		}
+		fmt.Println(colorWrap(lang.Common.InvalidSelection, ansiRed))
+	}
+}
+
+func selectOverclocking(lang *Language) (*OverclockConfig, error) {
+	clearScreen()
+	fmt.Println()
+	fmt.Println(colorWrap("┌────────────────────────────────────────┐", ansiCyan))
+	fmt.Println(colorWrap(lang.Overclock.OverclockTitle, ansiBold+ansiGreen))
+	fmt.Println(colorWrap("└────────────────────────────────────────┘", ansiCyan))
+	fmt.Println(colorWrap(lang.Overclock.DefaultFreqNote, ansiCyan))
+	fmt.Println(colorWrap(lang.Overclock.FreezeWarning, ansiBold+ansiRed))
+	fmt.Println()
+	fmt.Println(colorWrap(lang.Overclock.AskOverclock, ansiBold+ansiGreen))
+	fmt.Println("  1. Yes")
+	fmt.Println("  2. No")
+
+	choice, err := readIntChoice(lang, lang.Common.SelectNumber)
+	if err != nil {
+		return nil, err
+	}
+	if choice != 1 {
+		return nil, nil
+	}
+
+	// 超频警告
+	clearScreen()
+	fmt.Println()
+	fmt.Println(colorWrap("┌────────────────────────────────────────┐", ansiRed))
+	fmt.Println(colorWrap(lang.Overclock.OCWarning, ansiBold+ansiRed))
+	fmt.Println(colorWrap("└────────────────────────────────────────┘", ansiRed))
+	fmt.Println()
+	fmt.Println(colorWrap(lang.Overclock.FreezeWarning, ansiBold+ansiRed))
+	fmt.Println()
+	_, _ = prompt(lang.Common.PressEnterToContinue)
+
+	cfg := &OverclockConfig{
+		CPU:  FreqSelection{MaxFreq: 1296, BootFreq: 1296},
+		GPU:  FreqSelection{MaxFreq: 520, BootFreq: 520},
+		DDR:  FreqSelection{MaxFreq: 666, BootFreq: 666},
+	}
+
+	ddrLabels := map[int]string{666: lang.Overclock.DDRCloneDefault, 786: lang.Overclock.DDROriginalDefault}
+
+	// CPU Max
+	cpuMax, err := selectFrequency(lang, lang.Overclock.ConfigCPU+" - "+lang.Overclock.MaxFreqLabel, cpuFreqOptions, 1296, nil, 1608)
+	if err != nil {
+		return nil, err
+	}
+	cfg.CPU.MaxFreq = cpuMax
+
+	// CPU Boot
+	cpuBoot, err := selectFrequency(lang, lang.Overclock.ConfigCPU+" - "+lang.Overclock.BootFreqLabel, filterFreqOptions(cpuFreqOptions, cpuMax), 1296, nil, 1608)
+	if err != nil {
+		return nil, err
+	}
+	cfg.CPU.BootFreq = cpuBoot
+
+	// GPU
+	gpuFreq, err := selectFrequency(lang, lang.Overclock.ConfigGPU, gpuFreqOptions, 520, nil, 650)
+	if err != nil {
+		return nil, err
+	}
+	cfg.GPU.MaxFreq = gpuFreq
+	cfg.GPU.BootFreq = gpuFreq
+
+	// DDR 提示
+	fmt.Println(colorWrap(lang.Overclock.GPUDDRFreezeTip, ansiBold+ansiRed))
+
+	// DDR
+	ddrFreq, err := selectFrequency(lang, lang.Overclock.ConfigDDR, ddrFreqOptions, 666, ddrLabels, 1040)
+	if err != nil {
+		return nil, err
+	}
+	cfg.DDR.MaxFreq = ddrFreq
+	cfg.DDR.BootFreq = ddrFreq
+
+	// 电压选择
+	voltage, err := selectVoltage(lang)
+	if err != nil {
+		return nil, err
+	}
+	cfg.Voltage = voltage
+
+	return cfg, nil
+}
+
+func filterFreqOptions(options []FreqOption, maxVal int) []FreqOption {
+	var filtered []FreqOption
+	for _, opt := range options {
+		if opt.Value <= maxVal {
+			filtered = append(filtered, opt)
+		}
+	}
+	return filtered
+}
+
+// ===================== 电压选择 =====================
+func selectVoltage(lang *Language) (bool, error) {
+	clearScreen()
+	fmt.Println()
+	fmt.Println(colorWrap("┌────────────────────────────────────────┐", ansiCyan))
+	fmt.Println(colorWrap(lang.Overclock.VoltageTitle, ansiBold+ansiGreen))
+	fmt.Println(colorWrap("└────────────────────────────────────────┘", ansiCyan))
+	fmt.Println(colorWrap(lang.Overclock.VoltageWarning, ansiBold+ansiRed))
+	fmt.Println()
+	fmt.Println(colorWrap(lang.Overclock.AskVoltage, ansiBold+ansiGreen))
+	fmt.Println("  1. Yes")
+	fmt.Println("  2. No")
+
+	choice, err := readIntChoice(lang, lang.Common.SelectNumber)
+	if err != nil {
+		return false, err
+	}
+	if choice != 1 {
+		fmt.Println(colorWrap(lang.Overclock.VoltageSkipped, ansiCyan))
+		return false, nil
+	}
+
+	// 要求用户输入确认文本
+	clearScreen()
+	fmt.Println()
+	fmt.Println(colorWrap("┌────────────────────────────────────────┐", ansiRed))
+	fmt.Println(colorWrap(lang.Overclock.VoltageWarning, ansiBold+ansiRed))
+	fmt.Println(colorWrap("└────────────────────────────────────────┘", ansiRed))
+	fmt.Println()
+	fmt.Println(colorWrap(lang.Overclock.VoltageConfirmPrompt, ansiBold+ansiGreen))
+	fmt.Println(colorWrap(lang.Overclock.VoltageConfirmText, ansiBold+ansiCyan))
+	fmt.Println()
+
+	resp, err := prompt(lang.Overclock.VoltageInputPrompt)
+	if err != nil {
+		return false, err
+	}
+
+	if strings.TrimSpace(strings.ToLower(resp)) != strings.ToLower(lang.Overclock.VoltageConfirmText) {
+		fmt.Println(colorWrap(lang.Overclock.VoltageWrongInput, ansiRed))
+		return false, nil
+	}
+
+	fmt.Println(colorWrap(lang.Overclock.VoltageApplied, ansiBold+ansiGreen))
+	return true, nil
+}
+
+// ===================== 写入超频参数到 boot.ini =====================
+func applyOverclockingToBootIni(baseDir string, oc *OverclockConfig) error {
+	bootIni := filepath.Join(baseDir, "boot.ini")
+	data, err := os.ReadFile(bootIni)
+	if err != nil {
+		return err
+	}
+
+	content := string(data)
+
+	// 写入用户选择的频率参数
+	ocArgs := fmt.Sprintf("max_cpufreq=%d boot_cpufreq=%d max_gpufreq=%d max_ddrfreq=%d",
+		oc.CPU.MaxFreq, oc.CPU.BootFreq, oc.GPU.MaxFreq, oc.DDR.MaxFreq)
+	re := regexp.MustCompile(`(setenv\s+bootargs\s+"[^"]*?)((?:\s+(?:max_cpufreq|boot_cpufreq|max_gpufreq|boot_gpufreq|max_ddrfreq|boot_ddrfreq)=\d+)*)\s*"`)
+	if re.MatchString(content) {
+		content = re.ReplaceAllString(content, "${1} "+ocArgs+"\"")
+	}
+
+	if oc.Voltage {
+		// 添加 dtbo_loadaddr 变量
+		content = strings.Replace(content,
+			`setenv dtb_loadaddr "0x01f00000"`,
+			"setenv dtb_loadaddr \"0x01f00000\"\nsetenv dtbo_loadaddr \"0x01f30000\"", 1)
+
+		// 在 load dtb 后面追加 load dtbo 和 fdt 操作
+		lines := strings.Split(content, "\n")
+		var newLines []string
+		for _, line := range lines {
+			newLines = append(newLines, line)
+			if strings.Contains(line, "load mmc 1:1 ${dtb_loadaddr}") {
+				newLines = append(newLines, "load mmc 1:1 ${dtbo_loadaddr} consoles/dtbo/rk3326-oc-voltage.dtbo")
+				newLines = append(newLines, "")
+				newLines = append(newLines, "fdt addr ${dtb_loadaddr}")
+				newLines = append(newLines, "fdt resize 8192")
+				newLines = append(newLines, "fdt apply ${dtbo_loadaddr}")
+			}
+		}
+		content = strings.Join(newLines, "\n")
+	}
+
+	return os.WriteFile(bootIni, []byte(content), 0644)
+}
+
 // ===================== 复制逻辑 =====================
 func copySelectedConsole(lang *Language, selected *SelectedConsole, baseDir string) error {
 	if selected == nil || selected.Config == nil {
@@ -1118,6 +1503,21 @@ func copySelectedConsole(lang *Language, selected *SelectedConsole, baseDir stri
 		} else {
 			fmt.Printf("  Warning: Kernel Image not found: %s\n", kernelSrc)
 		}
+	}
+
+	// 超频参数选择
+	ocCfg, err := selectOverclocking(lang)
+	if err != nil {
+		return fmt.Errorf("failed to select overclocking: %v", err)
+	}
+	if ocCfg != nil {
+		fmt.Println(colorWrap(lang.Overclock.ApplyOverclock, ansiCyan))
+		if err := applyOverclockingToBootIni(baseDir, ocCfg); err != nil {
+			return fmt.Errorf("failed to apply overclocking: %v", err)
+		}
+		fmt.Println(colorWrap(lang.Overclock.OverclockApplied, ansiBold+ansiGreen))
+	} else {
+		fmt.Println(colorWrap(lang.Overclock.UsingDefaults, ansiCyan))
 	}
 
 	fmt.Println(colorWrap(lang.Menu3.CopyingExtra, ansiCyan))

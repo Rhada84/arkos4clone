@@ -269,6 +269,7 @@ check_clone_dependencies() {
     "replace_file/drastic"
     "replace_file/drastic-kk"
     "replace_file/ppsspp"
+    "replace_file/flycastsa"
     "replace_file/pymo"
     "replace_file/resources"
     "replace_file/retrorun"

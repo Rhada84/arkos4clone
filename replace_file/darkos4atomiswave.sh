@@ -27,7 +27,11 @@ elif [[ -e "/dev/input/by-path/platform-singleadc-joypad-event-joystick" ]]; the
 else
   sdl_controllerconfig="19000000030000000300000002030000,gameforce_gamepad,leftstick:b14,rightx:a3,leftshoulder:b4,start:b9,lefty:a0,dpup:b10,righty:a2,a:b0,b:b1,guide:b16,dpdown:b11,rightshoulder:b5,righttrigger:b7,rightstick:b15,dpright:b13,x:b3,back:b8,leftx:a1,y:b2,dpleft:b12,lefttrigger:b6,platform:Linux,"
 fi
-SDL_GAMECONTROLLERCONFIG="$sdl_controllerconfig" /opt/flycastsa/flycast "$2"
+if grep -q '<string name="Language" value="zh-CN" />' /home/ark/.emulationstation/es_settings.cfg; then
+    SDL_GAMECONTROLLERCONFIG="$sdl_controllerconfig" LANG=zh_CN.UTF-8 LC_ALL=zh_CN.UTF-8 /opt/flycastsa/flycast "$2"
+else
+    SDL_GAMECONTROLLERCONFIG="$sdl_controllerconfig" /opt/flycastsa/flycast "$2"
+fi
 sudo systemctl stop killer_daemon.service
 sudo systemctl restart ogage &
 elif [[ $1 == "retrorun" ]]; then

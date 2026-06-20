@@ -16,6 +16,7 @@ SRC=dtb_selector.go
 PLATFORMS=(
   platform_win32
   platform_macos
+  platform_linux32
 )
 
 platform_win32() {
@@ -65,8 +66,15 @@ platform_macos() {
   echo "Generated: $EXE"
 }
 
+platform_linux32() {
+  EXE="${TARGET}_linux32"
+  echo "Building: Linux 32-Bit"
+  GOOS=linux GOARCH=386 $GO build "$FLAGS" -o "$EXE" "$SRC"
+  echo "Generated: $EXE"
+}
+
 platform_linux64() {
-  EXE="${TARGET}_linux"
+  EXE="${TARGET}_linux64"
   echo "Building: Linux 64-Bit"
   GOOS=linux GOARCH=amd64 $GO build "$FLAGS" -o "$EXE" "$SRC"
   echo "Generated: $EXE"
@@ -79,7 +87,8 @@ then
          "${TARGET}_macos_intel" \
          "${TARGET}_macos_apple" \
          "${TARGET}_macos" \
-         "${TARGET}_linux"
+         "${TARGET}_linux32" \
+         "${TARGET}_linux64"
   exit
 fi
 

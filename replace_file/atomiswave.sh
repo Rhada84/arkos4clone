@@ -64,9 +64,9 @@ else
   sdl_controllerconfig="19000000030000000300000002030000,gameforce_gamepad,leftstick:b14,rightx:a3,leftshoulder:b4,start:b9,lefty:a0,dpup:b10,righty:a2,a:b0,b:b1,guide:b16,dpdown:b11,rightshoulder:b5,righttrigger:b7,rightstick:b15,dpright:b13,x:b3,back:b8,leftx:a1,y:b2,dpleft:b12,lefttrigger:b6,platform:Linux,"
 fi
 if grep -q '<string name="Language" value="zh-CN" />' /home/ark/.emulationstation/es_settings.cfg; then
-    LD_LIBRARY_PATH=/opt/flycastsa-2022/libs/ SDL_GAMECONTROLLERCONFIG="$sdl_controllerconfig" LANG=zh_CN.UTF-8 LC_ALL=zh_CN.UTF-8 /opt/flycastsa-2022/flycast "$2"
+    LD_LIBRARY_PATH=/opt/flycastsa/libs/ SDL_GAMECONTROLLERCONFIG="$sdl_controllerconfig" LANG=zh_CN.UTF-8 LC_ALL=zh_CN.UTF-8 /opt/flycastsa-2022/flycast "$2"
 else
-    LD_LIBRARY_PATH=/opt/flycastsa-2022/libs/ SDL_GAMECONTROLLERCONFIG="$sdl_controllerconfig" /opt/flycastsa-2022/flycast "$2"
+    LD_LIBRARY_PATH=/opt/flycastsa/libs/ SDL_GAMECONTROLLERCONFIG="$sdl_controllerconfig" /opt/flycastsa-2022/flycast "$2"
 fi
 sudo killall python3
 sudo systemctl restart oga_events &

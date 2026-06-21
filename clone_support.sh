@@ -68,6 +68,26 @@ else
 fi
 sudo depmod -a -b "$MOUNT_DIR/root" 4.4.189 2>/dev/null || true
 
+# 如果镜像名包含 dArkOS，更新 firmware
+if [[ "$ARKOS_IMAGE_NAME" == *dArkOS* ]]; then
+    echo "检测到 dArkOS 镜像，添加固件"
+    FIRMWARE_SRC="$SCRIPT_DIR/replace_file/firmware"
+    FIRMWARE_DST="$MOUNT_DIR/root/usr/lib/firmware"
+    
+    if [[ -d "$FIRMWARE_SRC" ]]; then
+        sudo mkdir -p "$FIRMWARE_DST"
+        # 删除目标目录中的悬空符号链接，避免 cp 报错
+        sudo find "$FIRMWARE_DST" -type l -xtype l -delete 2>/dev/null || true
+        sudo cp -rf "$FIRMWARE_SRC/." "$FIRMWARE_DST/"
+        sudo chown -R root:root "$FIRMWARE_DST"
+        sudo chmod -R 755 "$FIRMWARE_DST"
+        sudo find "$FIRMWARE_DST" -type f -exec chmod 644 {} \;
+        echo "固件更新完成"
+    else
+        echo "[warn] 固件源目录不存在: $FIRMWARE_SRC，跳过"
+    fi
+fi
+
 echo "== 注入 915 固件 =="
 # 通配符不存在会让 cp 失败，加 || true 容错
 sudo cp -f ./bin/rk915_*.bin "$MOUNT_DIR/root/usr/lib/firmware/" 2>/dev/null || true

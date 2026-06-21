@@ -34,7 +34,7 @@ else
 fi
 sudo systemctl stop killer_daemon.service
 sudo systemctl restart ogage &
-elif [[ $1 == "flycastsa-2022" ]]; then
+elif [[ $1 == "standalone-2022" ]]; then
 echo "VAR=flycast" > /home/ark/.config/KILLIT
 sudo systemctl restart killer_daemon.service
 rm -rf "/home/ark/.local/share/flycast"

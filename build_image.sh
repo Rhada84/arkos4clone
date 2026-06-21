@@ -78,7 +78,7 @@ check_jdk_file() {
   log_info "下载 JDK 文件..."
   # 以原用户身份下载（避免权限问题）
   if [[ -n "${SUDO_USER:-}" ]]; then
-    if sudo -u "$SUDO_USER" wget -q --show-progress -O "$SCRIPT_DIR/$jdk_file" "$jdk_url"; then
+    if sudo -u "$SUDO_USER" wget $WGET_OPTS -O "$SCRIPT_DIR/$jdk_file" "$jdk_url"; then
       log_ok "JDK 下载完成: $jdk_file"
     else
       log_error "JDK 下载失败"
@@ -86,7 +86,7 @@ check_jdk_file() {
       exit 1
     fi
   else
-    if wget -q --show-progress -O "$SCRIPT_DIR/$jdk_file" "$jdk_url"; then
+    if wget $WGET_OPTS -O "$SCRIPT_DIR/$jdk_file" "$jdk_url"; then
       log_ok "JDK 下载完成: $jdk_file"
     else
       log_error "JDK 下载失败"
@@ -170,7 +170,7 @@ check_pm_libs() {
 
   # 下载
   if [[ -n "${SUDO_USER:-}" ]]; then
-    if sudo -u "$SUDO_USER" wget --progress=bar:force -O "$zip_file" "$runtimes_url"; then
+    if sudo -u "$SUDO_USER" wget $WGET_OPTS -O "$zip_file" "$runtimes_url"; then
       log_ok "runtimes 下载完成"
     else
       log_error "runtimes 下载失败"
@@ -182,7 +182,7 @@ check_pm_libs() {
     sudo -u "$SUDO_USER" unzip -o -q "$zip_file" -d "$pm_libs_dir"
     sudo -u "$SUDO_USER" rm -f "$zip_file"
   else
-    if wget --progress=bar:force -O "$zip_file" "$runtimes_url"; then
+    if wget $WGET_OPTS -O "$zip_file" "$runtimes_url"; then
       log_ok "runtimes 下载完成"
     else
       log_error "runtimes 下载失败"
@@ -225,7 +225,7 @@ check_portmaster() {
   local zip_file="$SCRIPT_DIR/PortMaster.zip"
 
   if [[ -n "${SUDO_USER:-}" ]]; then
-    if sudo -u "$SUDO_USER" wget -q --show-progress -O "$zip_file" "$pm_url"; then
+    if sudo -u "$SUDO_USER" wget $WGET_OPTS -O "$zip_file" "$pm_url"; then
       log_ok "PortMaster 下载完成"
     else
       log_error "PortMaster 下载失败"
@@ -236,7 +236,7 @@ check_portmaster() {
     sudo -u "$SUDO_USER" unzip -q -o "$zip_file" -d "$SCRIPT_DIR"
     sudo -u "$SUDO_USER" rm -f "$zip_file"
   else
-    if wget -q --show-progress -O "$zip_file" "$pm_url"; then
+    if wget $WGET_OPTS -O "$zip_file" "$pm_url"; then
       log_ok "PortMaster 下载完成"
     else
       log_error "PortMaster 下载失败"
@@ -465,13 +465,14 @@ show_usage() {
 ArkOS4Clone 一键构建脚本
 
 用法:
-  sudo ./build_image.sh <源镜像路径> [工作目录]
+  sudo ./build_image.sh <源镜像路径> [工作目录] [--ci]
 
 参数:
   源镜像路径    必需，原始 ArkOS 镜像文件路径
   工作目录      可选，用于存放镜像副本和处理文件
                 建议使用 ext4 文件系统以获得最佳性能
                 默认: 源镜像所在目录
+  --ci          可选，静默模式，减少下载进度等刷屏日志
 
 环境变量:
   ARKOS_MNT       挂载路径 (默认: <工作目录>/mnt)
@@ -545,6 +546,14 @@ main() {
   ARKOS_WORK_DIR="${ARKOS_WORK_DIR:-${work_dir}}"
   ARKOS_IMAGE_NAME="$(basename "$source_image")"
   export ARKOS_MNT ARKOS_WORK_DIR ARKOS_IMAGE_NAME
+
+  # 第三个参数 --ci: 静默模式，减少 CI 环境下的刷屏日志
+  if [[ "${3:-}" == "--ci" ]]; then
+    WGET_OPTS="-q"
+    export ARKOS_QUIET=1
+  else
+    WGET_OPTS="-q --show-progress"
+  fi
 
   # 根据源镜像名决定输出前缀
   local output_prefix

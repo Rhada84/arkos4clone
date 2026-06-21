@@ -2,8 +2,8 @@
 set -euo pipefail
 
 # ============ 配置 ============
-# CI 环境下不显示 rsync 进度，本地运行时显示
-if [[ "${CI:-}" == "true" || "${GITHUB_ACTIONS:-}" == "true" ]]; then
+# ARKOS_QUIET=1 时静默（由 build_image.sh --ci 传入）
+if [[ "${ARKOS_QUIET:-}" == "1" ]]; then
   RSYNC_PROGRESS="--quiet"
 else
   RSYNC_PROGRESS="--info=progress2"

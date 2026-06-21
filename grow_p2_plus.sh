@@ -2,6 +2,12 @@
 set -euo pipefail
 
 # ============ 配置 ============
+# ARKOS_QUIET=1 时静默（由 build_image.sh --ci 传入）
+if [[ "${ARKOS_QUIET:-}" == "1" ]]; then
+  RSYNC_PROGRESS="--quiet"
+else
+  RSYNC_PROGRESS="--info=progress2"
+fi
 ADD_MB=2536                   # 追加容量（MiB），当前约 +2.48 GiB
 # 临时目录优先使用 ARKOS_WORK_DIR，否则使用当前目录
 WORK_BASE="${ARKOS_WORK_DIR:-$(pwd)}"
@@ -105,7 +111,7 @@ if has_p3; then
   fi
 
   echo "备份 p3 -> $TMP_DIR（rsync -aH --delete，保证 tmp 为“镜像一致”）"
-  sudo rsync -aH --delete --info=progress2 "$P3_OLD_MNT"/ "$TMP_DIR"/
+  sudo rsync -aH --delete $RSYNC_PROGRESS "$P3_OLD_MNT"/ "$TMP_DIR"/
 
   echo "卸载旧 p3 挂载点"
   sudo umount "$P3_OLD_MNT"
@@ -226,10 +232,10 @@ if [[ -d "$TMP_DIR" ]] && [[ -n "$(ls -A "$TMP_DIR" 2>/dev/null || true)" ]]; th
   # FAT32/exFAT 不支持 Unix 权限，使用 --no-perms --no-owner --no-group
   case "$ORIG_P3_FS" in
     vfat|fat32|fat16|exfat)
-      sudo rsync -rltD --no-perms --no-owner --no-group --delete --info=progress2 "$TMP_DIR"/ "$P3_NEW_MNT"/
+      sudo rsync -rltD --no-perms --no-owner --no-group --delete $RSYNC_PROGRESS "$TMP_DIR"/ "$P3_NEW_MNT"/
       ;;
     *)
-      sudo rsync -aH --delete --info=progress2 "$TMP_DIR"/ "$P3_NEW_MNT"/
+      sudo rsync -aH --delete $RSYNC_PROGRESS "$TMP_DIR"/ "$P3_NEW_MNT"/
       ;;
   esac
   sync

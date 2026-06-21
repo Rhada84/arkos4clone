@@ -355,6 +355,11 @@ main() {
     msg "First boot, device=$DEVICE_NAME"
     echo "$DEVICE_NAME" | sudo tee /etc/hostname >/dev/null
     sudo hostnamectl set-hostname "$DEVICE_NAME" || true
+    # 更新挂载点下的 /etc/hosts（不存在才添加）
+    if ! grep -q "127.0.1.1.*$DEVICE_NAME" "$MOUNT_DIR/etc/hosts" 2>/dev/null; then
+        sudo sed -i "/127.0.1.1/d" "$MOUNT_DIR/etc/hosts"
+        echo "127.0.1.1    $DEVICE_NAME" | sudo tee -a "$MOUNT_DIR/etc/hosts" >/dev/null
+    fi
     apply_all_quirks
     sleep 5
     sudo systemctl unmask systemd-journald.service systemd-journald.socket 2>/dev/null || true
@@ -380,6 +385,11 @@ main() {
       echo "$DEVICE_NAME" | sudo tee /etc/hostname >/dev/null
       sudo hostnamectl set-hostname "$DEVICE_NAME" || true
       echo "$DEVICE_NAME" | sudo tee "$CONSOLE_FILE" > /dev/null
+      # 更新挂载点下的 /etc/hosts（不存在才添加）
+      if ! grep -q "127.0.1.1.*$DEVICE_NAME" "$MOUNT_DIR/etc/hosts" 2>/dev/null; then
+          sudo sed -i "/127.0.1.1/d" "$MOUNT_DIR/etc/hosts"
+          echo "127.0.1.1    $DEVICE_NAME" | sudo tee -a "$MOUNT_DIR/etc/hosts" >/dev/null
+      fi
     fi
     (
       printf '\033c'

@@ -464,6 +464,8 @@
 			</emulator>
 			<emulator name="standalone">
 			  </emulator>
+			<emulator name="standalone-2022">
+			  </emulator>
 		</emulators>
 		<platform>atomiswave</platform>
 		<theme>atomiswave</theme>
@@ -503,6 +505,8 @@
 				</cores>
 			</emulator>
 			<emulator name="standalone">
+			  </emulator>
+			<emulator name="standalone-2022">
 			  </emulator>
 		</emulators>
 		<platform>naomi</platform>
@@ -1633,7 +1637,9 @@
 				</cores>
 			</emulator>
 			<emulator name="standalone">
-		    </emulator>
+			  </emulator>
+			<emulator name="standalone-2022">
+			  </emulator>
 		</emulators>
 		<platform>dreamcast</platform>
 		<theme>dreamcast</theme>
@@ -1829,11 +1835,12 @@
 		<emulators>
 			<emulator name="retroarch32">
 				<cores>
+					<core>pcsx_rearmed_neon</core>
+					<core>pcsx_rearmed_neon</core>
 					<core>pcsx_rearmed_rumble</core>
 					<core>pcsx_rearmed</core>
 					<core>pcsx_rearmed_unai</core>
 					<core>pcsx_rearmed_peops</core>
-					<core>pcsx_rearmed_neon</core>
 				</cores>
 			</emulator>
 			<emulator name="retroarch">
@@ -1842,7 +1849,6 @@
 					<core>swanstation</core>
 					<core>pcsx_rearmed_unai</core>
 					<core>pcsx_rearmed_peops</core>
-					<core>pcsx_rearmed_neon</core>
 				</cores>
 			</emulator>
 			<emulator name="standalone-duckstation">
@@ -3072,6 +3078,8 @@
 			</emulator>
 			<emulator name="standalone">
 			  </emulator>
+			<emulator name="standalone-2022">
+			  </emulator>
 		</emulators>
 		<platform>atomiswave</platform>
 		<theme>atomiswave</theme>
@@ -3111,6 +3119,8 @@
 				</cores>
 			</emulator>
 			<emulator name="standalone">
+			  </emulator>
+			<emulator name="standalone-2022">
 			  </emulator>
 		</emulators>
 		<platform>naomi</platform>
@@ -4239,7 +4249,9 @@
 				</cores>
 			</emulator>
 			<emulator name="standalone">
-		    </emulator>
+			  </emulator>
+			<emulator name="standalone-2022">
+			  </emulator>
 		</emulators>
 		<platform>dreamcast</platform>
 		<theme>dreamcast</theme>

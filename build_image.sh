@@ -268,6 +268,7 @@ check_clone_dependencies() {
     "replace_file"
     "replace_file/drastic"
     "replace_file/drastic-kk"
+    "replace_file/onscripter"
     "replace_file/retroarch"
     "replace_file/ppsspp"
     "replace_file/flycastsa"

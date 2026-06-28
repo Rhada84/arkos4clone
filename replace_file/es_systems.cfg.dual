@@ -1570,6 +1570,8 @@
 		<extension>.img .IMG .cue .CUE .chd .CHD .iso .ISO .m3u .M3U</extension>
 		<command>sudo perfmax %GOVERNOR% %ROM%; nice -n -19 /usr/local/bin/saturn.sh %EMULATOR% %CORE% %ROM%; sudo perfnorm</command>
 		<emulators>
+			<emulator name="standalone-nobios">
+		      </emulator>
 			<emulator name="retroarch32">
 				<cores>
 					<core>yabasanshiro</core>
@@ -1593,8 +1595,6 @@
 				</cores>
 			</emulator>
 			<emulator name="standalone-bios">
-		      </emulator>
-			<emulator name="standalone-nobios">
 		      </emulator>
 		</emulators>
 		<platform>saturn</platform>
@@ -2292,8 +2292,10 @@
 		<fullname>ONScripter</fullname>
 		<path>/roms/onscripter/</path>
 		<extension>.dat .DAT .txt .TXT</extension>
-		<command>sudo perfmax %GOVERNOR% %ROM%; nice -n -19 /usr/local/bin/%EMULATOR% -L /home/ark/.config/%EMULATOR%/cores/%CORE%_libretro.so %ROM%; sudo perfnorm</command>
+		<command>sudo perfmax %GOVERNOR% %ROM%; nice -n -19 nice -n -19 /usr/local/bin/choose_ons_ver.sh %EMULATOR% %CORE%_libretro.so %ROM%; sudo perfnorm</command>
 		<emulators>
+			<emulator name="onscripter-sa">
+			</emulator>
 			<emulator name="retroarch">
 				<cores>
 					<core>onscripter</core>
@@ -4170,6 +4172,8 @@
 		<extension>.img .IMG .cue .CUE .chd .CHD .iso .ISO .m3u .M3U</extension>
 		<command>sudo perfmax %GOVERNOR% %ROM%; nice -n -19 /usr/local/bin/saturn.sh %EMULATOR% %CORE% %ROM%; sudo perfnorm</command>
 		<emulators>
+			<emulator name="standalone-nobios">
+		      </emulator>
 			<emulator name="retroarch32">
 				<cores>
 					<core>yabasanshiro</core>
@@ -4193,8 +4197,6 @@
 				</cores>
 			</emulator>
 			<emulator name="standalone-bios">
-		      </emulator>
-			<emulator name="standalone-nobios">
 		      </emulator>
 		</emulators>
 		<platform>saturn</platform>
@@ -4892,8 +4894,10 @@
 		<fullname>ONScripter [SD2]</fullname>
 		<path>/roms2/onscripter/</path>
 		<extension>.dat .DAT .txt .TXT</extension>
-		<command>sudo perfmax %GOVERNOR% %ROM%; nice -n -19 /usr/local/bin/%EMULATOR% -L /home/ark/.config/%EMULATOR%/cores/%CORE%_libretro.so %ROM%; sudo perfnorm</command>
+		<command>sudo perfmax %GOVERNOR% %ROM%; nice -n -19 nice -n -19 /usr/local/bin/choose_ons_ver.sh %EMULATOR% %CORE%_libretro.so %ROM%; sudo perfnorm</command>
 		<emulators>
+			<emulator name="onscripter-sa">
+			</emulator>
 			<emulator name="retroarch">
 				<cores>
 					<core>onscripter</core>

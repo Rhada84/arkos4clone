@@ -129,6 +129,8 @@ if [[ "$ARKOS_IMAGE_NAME" == *dArkOS* ]]; then
   cp -f ./replace_file/drastic.sh "$PAYLOAD_ROOT/usr/local/bin/" 2>/dev/null || true
   cp -f ./replace_file/drastic_kk.sh "$PAYLOAD_ROOT/usr/local/bin/" 2>/dev/null || true
   cp -f ./replace_file/choose_drastic_ver.sh "$PAYLOAD_ROOT/usr/local/bin/" 2>/dev/null || true
+  cp -f ./replace_file/choose_ons_ver.sh "$PAYLOAD_ROOT/usr/local/bin/" 2>/dev/null || true
+  cp -f ./replace_file/onscripter.sh "$PAYLOAD_ROOT/usr/local/bin/" 2>/dev/null || true
   cp -f ./replace_file/mediaplayer.sh "$PAYLOAD_ROOT/usr/local/bin/" 2>/dev/null || true
 
   echo "== 注入 adc-key 服务 =="
@@ -170,6 +172,10 @@ if [[ "$ARKOS_IMAGE_NAME" == *dArkOS* ]]; then
   mkdir -p "$PAYLOAD_ROOT/opt/drastic-kk"
   cp -a ./replace_file/drastic-kk/. "$PAYLOAD_ROOT/opt/drastic-kk/" 2>/dev/null || true
   rm -rf "$PAYLOAD_ROOT/opt/drastic-kk/patch" 2>/dev/null || true
+
+  echo "== 添加 onscripter-sa =="
+  mkdir -p "$PAYLOAD_ROOT/opt/onscripter"
+  cp -a ./replace_file/onscripter/. "$PAYLOAD_ROOT/opt/onscripter/" 2>/dev/null || true
 
   echo "== 改用自适应分辨率 Retroarch 1.22.2 =="
   mkdir -p "$PAYLOAD_ROOT/opt/retroarch/bin/"
@@ -251,7 +257,7 @@ EOF
   meta_add "0777" "1000:1000" "/usr/lib/firmware/aic8800DC/*"
   meta_add "0777" "1000:1000" "/opt/351Files"
   meta_add "0777" "1000:1000" "/opt/351Files/*"
-  for f in darkos4atomiswave.sh darkos4dreamcast.sh darkos4naomi.sh darkos4saturn.sh darkos4n64.sh darkos4pico8.sh darkos4get_last_played.sh drastic.sh drastic_kk.sh choose_drastic_ver.sh mediaplayer.sh; do
+  for f in darkos4atomiswave.sh darkos4dreamcast.sh darkos4naomi.sh darkos4saturn.sh darkos4n64.sh darkos4pico8.sh darkos4get_last_played.sh drastic.sh drastic_kk.sh choose_drastic_ver.sh mediaplayer.sh onscripter.sh choose_ons_ver.sh; do
     meta_add "0777" "1000:1000" "/usr/local/bin/$f"
   done
   meta_add "0777" "1000:1000" "/usr/local/bin/adckeys.py"
@@ -270,6 +276,8 @@ EOF
   meta_add "0777" "1000:1000" "/opt/drastic/*"
   meta_add "0777" "1000:1000" "/opt/drastic-kk"
   meta_add "0777" "1000:1000" "/opt/drastic-kk/*"
+  meta_add "0777" "1000:1000" "/opt/onscripter"
+  meta_add "0777" "1000:1000" "/opt/onscripter/*"
   meta_add "0777" "1000:1000" "/opt/retroarch/bin/"
   meta_add "0777" "1000:1000" "/opt/retroarch/bin/*"
   meta_add "0777" "1000:1000" "/opt/flycastsa"
@@ -358,6 +366,8 @@ else
   cp -f ./replace_file/drastic.sh "$PAYLOAD_ROOT/usr/local/bin/" 2>/dev/null || true
   cp -f ./replace_file/drastic_kk.sh "$PAYLOAD_ROOT/usr/local/bin/" 2>/dev/null || true
   cp -f ./replace_file/choose_drastic_ver.sh "$PAYLOAD_ROOT/usr/local/bin/" 2>/dev/null || true
+  cp -f ./replace_file/choose_ons_ver.sh "$PAYLOAD_ROOT/usr/local/bin/" 2>/dev/null || true
+  cp -f ./replace_file/onscripter.sh "$PAYLOAD_ROOT/usr/local/bin/" 2>/dev/null || true
   cp -f ./replace_file/mediaplayer.sh "$PAYLOAD_ROOT/usr/local/bin/" 2>/dev/null || true
   cp -f ./replace_file/get_last_played.sh "$PAYLOAD_ROOT/usr/local/bin/" 2>/dev/null || true
 
@@ -400,6 +410,10 @@ else
   mkdir -p "$PAYLOAD_ROOT/opt/drastic-kk"
   cp -a ./replace_file/drastic-kk/. "$PAYLOAD_ROOT/opt/drastic-kk/" 2>/dev/null || true
   rm -rf "$PAYLOAD_ROOT/opt/drastic-kk/patch" 2>/dev/null || true
+
+  echo "== 添加 onscripter-sa =="
+  mkdir -p "$PAYLOAD_ROOT/opt/onscripter"
+  cp -a ./replace_file/onscripter/. "$PAYLOAD_ROOT/opt/onscripter/" 2>/dev/null || true
 
   echo "== 改用自适应分辨率 Retroarch 1.22.2 =="
   mkdir -p "$PAYLOAD_ROOT/opt/retroarch/bin/"
@@ -488,7 +502,7 @@ EOF
   meta_add "0777" "1002:1002" "/usr/lib/firmware/aic8800DC/*"
   meta_add "0777" "1002:1002" "/opt/351Files"
   meta_add "0777" "1002:1002" "/opt/351Files/*"
-  for f in atomiswave.sh dreamcast.sh naomi.sh saturn.sh n64.sh pico8.sh drastic.sh drastic_kk.sh choose_drastic_ver.sh mediaplayer.sh get_last_played.sh; do
+  for f in atomiswave.sh dreamcast.sh naomi.sh saturn.sh n64.sh pico8.sh drastic.sh drastic_kk.sh choose_drastic_ver.sh mediaplayer.sh get_last_played.sh choose_ons_ver.sh onscripter.sh; do
     meta_add "0777" "1002:1002" "/usr/local/bin/$f"
   done
   meta_add "0777" "1002:1002" "/usr/local/bin/adckeys.py"
@@ -507,6 +521,8 @@ EOF
   meta_add "0777" "1002:1002" "/opt/drastic/*"
   meta_add "0777" "1002:1002" "/opt/drastic-kk"
   meta_add "0777" "1002:1002" "/opt/drastic-kk/*"
+  meta_add "0777" "1002:1002" "/opt/onscripter"
+  meta_add "0777" "1002:1002" "/opt/onscripter/*"
   meta_add "0777" "1002:1002" "/opt/retroarch/bin/"
   meta_add "0777" "1002:1002" "/opt/retroarch/bin/*"
   meta_add "0777" "1002:1002" "/opt/ppsspp"

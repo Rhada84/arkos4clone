@@ -85,18 +85,37 @@ get_profile_name() {
 # ==================== OTA 更新 ====================
 maybe_apply_ota_update() {
   local tar_path=""
-  [[ -f "/roms/update.tar" ]] && tar_path="/roms/update.tar"
-  [[ -f "/roms2/update.tar" ]] && tar_path="/roms2/update.tar"
+  # 检查 update-arkos.tar 或 update-darkos.tar
+  for name in update-arkos.tar update-darkos.tar; do
+    [[ -f "/roms/$name" ]] && tar_path="/roms/$name" && break
+    [[ -f "/roms2/$name" ]] && tar_path="/roms2/$name" && break
+  done
   [[ -z "$tar_path" ]] && return 0
 
+  # 检查升级包是否与当前系统匹配
+  local is_darkos=false
+  grep -q "dArkOS" /usr/share/plymouth/themes/text.plymouth 2>/dev/null && is_darkos=true
+  
+  if [[ "$is_darkos" == "true" && "$tar_path" != *darkos* ]]; then
+    err "Mismatch: current=dArkOS, package=ArkOS. Use update-darkos.tar"
+    return 0
+  fi
+  if [[ "$is_darkos" == "false" && "$tar_path" == *darkos* ]]; then
+    err "Mismatch: current=ArkOS, package=dArkOS. Use update-arkos.tar"
+    return 0
+  fi
+
   local tmpdir="/home/ark/.ota_update" TTY="/dev/tty1"
+  local ota_title="ArkOS4Clone OTA"
+  [[ "$is_darkos" == "true" ]] && ota_title="dArkOS4Clone OTA"
+  
   msg "OTA package found: $tar_path"
   sudo rm -rf "$tmpdir" 2>/dev/null || true
   sudo mkdir -p "$tmpdir" || { err "Failed to create OTA dir"; return 0; }
 
   {
     printf '\033c'
-    echo "==============================="; echo "        ArkOS4Clone OTA        "; echo "==============================="
+    echo "==============================="; echo "        $ota_title        "; echo "==============================="
     echo; echo "[OTA] Package: $tar_path"; echo "[OTA] Step 1/2: Extracting... (Do NOT power off)"
   } > "$TTY"
 
@@ -164,12 +183,6 @@ apply_joy_conf() {
   esac
 }
 
-apply_profile_assets() {
-  local prof; prof="$(get_profile_name)"
-  msg "Applying 351Files profile: $prof"
-  cp_if_exists "$QUIRKS_DIR/$prof/351Files" "/opt/351Files" "no" || true
-}
-
 apply_es_input() {
   msg "apply_es_input: CONSOLE_FILE=$CONSOLE_FILE"
   [[ ! -f "$CONSOLE_FILE" ]] && { warn "CONSOLE_FILE not found, skip es_input"; return 0; }
@@ -228,11 +241,11 @@ apply_sdl_rotation() {
   ln -sf "libSDL2-2.0.so.0" "$sdl32_dir/libSDL2-2.0.so" && msg "  Created: libSDL2-2.0.so -> libSDL2-2.0.so.0 (32)" || warn "  Failed: libSDL2-2.0.so (32)"
   ln -sf "libSDL2-2.0.so" "$sdl32_dir/libSDL2.so" && msg "  Created: libSDL2.so -> libSDL2-2.0.so (32)" || warn "  Failed: libSDL2.so (32)"
   
-  # RetroArch rotation
-  cp_if_exists "$QUIRKS_DIR/rotate/retroarch/retroarch32.$ra_suffix" "/opt/retroarch/bin/retroarch32" "yes" || true
-  cp_if_exists "$QUIRKS_DIR/rotate/retroarch/retroarch.$ra_suffix" "/opt/retroarch/bin/retroarch" "yes" || true
+  # # RetroArch rotation
+  # cp_if_exists "$QUIRKS_DIR/rotate/retroarch/retroarch32.$ra_suffix" "/opt/retroarch/bin/retroarch32" "yes" || true
+  # cp_if_exists "$QUIRKS_DIR/rotate/retroarch/retroarch.$ra_suffix" "/opt/retroarch/bin/retroarch" "yes" || true
   
-  sudo chmod 777 /opt/retroarch/bin/* 2>/dev/null || true
+  # sudo chmod 777 /opt/retroarch/bin/* 2>/dev/null || true
 }
 
 apply_rotate_file() {
@@ -251,7 +264,6 @@ apply_all_quirks() {
   fi
   apply_joy_conf
   apply_hotkey_conf
-  apply_profile_assets
   apply_es_input
   apply_rotate_file
 }
@@ -276,6 +288,13 @@ handle_d007_service() {
   else
     sudo systemctl disable --now adckeys.service 2>/dev/null || true
   fi
+}
+
+# ==================== Es 守服务 ====================
+handle_es_service() {
+  msg "enabling es-status-daemon.service"
+  sudo systemctl daemon-reload 2>/dev/null || true
+  sudo systemctl enable --now es-status-daemon.service 2>/dev/null || warn "es-status-daemon.service failed"
 }
 
 # ==================== 国际化配置 ====================
@@ -412,6 +431,9 @@ main() {
 
   # D007 服务
   handle_d007_service
+
+  # es-status-daemon.service 服务
+  handle_es_service
 
   # 国际化
   [[ -f "/boot/.cn" ]] && { apply_localization "cn"; sudo rm -f /boot/.cn; }

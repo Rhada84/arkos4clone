@@ -277,6 +277,7 @@ alias symbol:ip_set_del ip_set
 alias symbol:rds_send_drop_acked rds
 alias symbol:rt2x00mac_remove_interface rt2x00lib
 alias symbol:rt2800_check_firmware rt2800lib
+alias symbol:skw_bd_addr_gen_init skwbt
 alias symbol:usb_composite_setup_continue libcomposite
 alias symbol:hostap_dump_tx_header hostap
 alias symbol:ip_set_alloc ip_set
@@ -473,6 +474,7 @@ alias symbol:br_dev_queue_push_xmit bridge
 alias symbol:inet6_csk_update_pmtu ipv6
 alias symbol:wlcore_free_hw wlcore
 alias symbol:ath9k_hw_set_txpowerlimit ath9k_hw
+alias symbol:btseekwave_write_ble_wakeup_adv_enable skwbt
 alias symbol:eeprom_93cx6_write eeprom_93cx6
 alias symbol:h4_recv_buf hci_uart
 alias symbol:wlcore_event_max_tx_failure wlcore
@@ -543,6 +545,7 @@ alias symbol:wlcore_event_inactive_sta wlcore
 alias symbol:nf_ct_expect_unregister_notifier nf_conntrack
 alias symbol:nf_connlabels_put nf_conntrack
 alias symbol:usb_function_deactivate libcomposite
+alias symbol:skw_stop_wifi_service skw_usb_lite
 alias symbol:tcp_vegas_cwnd_event tcp_vegas
 alias symbol:nf_ct_expect_alloc nf_conntrack
 alias symbol:xfrm6_protocol_deregister ipv6
@@ -648,6 +651,7 @@ alias symbol:rt2x00queue_pause_queue rt2x00lib
 alias symbol:rds_message_addref rds
 alias symbol:get_userconfig_txpwr_ofst aic_load_fw_usb
 alias symbol:nf_conntrack_untracked nf_conntrack
+alias symbol:skw_file_copy skwbt
 alias symbol:vhost_vq_access_ok vhost
 alias symbol:ip6_append_data ipv6
 alias symbol:inet_diag_dump_one_icsk inet_diag
@@ -735,6 +739,7 @@ alias symbol:ath9k_cmn_process_rssi ath9k_common
 alias symbol:hostap_setup_dev hostap
 alias symbol:rt2800_conf_tx rt2800lib
 alias symbol:rt2x00mac_stop rt2x00lib
+alias symbol:skw_char2hex skwbt
 alias symbol:hostap_info_init hostap
 alias symbol:nf_ct_l3protos nf_conntrack
 alias symbol:rds_send_xmit rds
@@ -866,6 +871,7 @@ alias symbol:garp_register_application garp
 alias symbol:l2tp_session_free l2tp_core
 alias symbol:nft_set_elem_destroy nf_tables
 alias symbol:serio_bus serio
+alias symbol:skw_get_bd_addr skwbt
 alias symbol:ip_set_hostmask_map ip_set
 alias symbol:ipcomp_output xfrm_ipcomp
 alias symbol:gameport_unregister_driver gameport
@@ -1017,6 +1023,7 @@ alias symbol:usb_stor_set_xfer_buf usb_storage
 alias symbol:phonet_proto_unregister phonet
 alias symbol:gre_add_protocol gre
 alias symbol:nf_defrag_ipv6_enable nf_defrag_ipv6
+alias symbol:skw_file_read skwbt
 alias symbol:hostap_set_auth_algs hostap
 alias symbol:mwifiex_upload_device_dump mwifiex
 alias symbol:nf_ct_expect_related_report nf_conntrack
@@ -1165,6 +1172,7 @@ alias symbol:bcma_core_enable bcma
 alias symbol:ath9k_hw_cfg_output ath9k_hw
 alias symbol:ip_set_put_byindex ip_set
 alias symbol:__nf_ct_ext_destroy nf_conntrack
+alias symbol:skw_file_write skwbt
 alias symbol:ppp_output_wakeup ppp_generic
 alias symbol:btrtl_initialize btrtl
 alias symbol:usb_stor_control_msg usb_storage
@@ -1186,6 +1194,7 @@ alias symbol:usbnet_resume_rx usbnet
 alias symbol:__nf_ct_expect_find nf_conntrack
 alias symbol:usb_stor_CB_reset usb_storage
 alias symbol:rndis_uninit usb_f_rndis
+alias symbol:skw_parse_wakeup_adv_conf skwbt
 alias symbol:rt2x00mac_sta_add rt2x00lib
 alias symbol:nfnetlink_alloc_skb nfnetlink
 alias symbol:rndis_set_param_dev usb_f_rndis
@@ -1328,6 +1337,7 @@ alias symbol:nf_ct_l4proto_register nf_conntrack
 alias symbol:ip_tunnel_dellink ip_tunnel
 alias symbol:rt2800_disable_wpdma rt2800lib
 alias symbol:xt_proto_fini x_tables
+alias symbol:skw_strlen skwbt
 alias symbol:rt2800_vco_calibration rt2800lib
 alias symbol:dsa_host_dev_to_mii_bus dsa_core
 alias symbol:nfnetlink_send nfnetlink
@@ -1443,6 +1453,7 @@ alias symbol:usbnet_set_settings usbnet
 alias symbol:usb_wwan_port_probe usb_wwan
 alias symbol:usb_stor_post_reset usb_storage
 alias symbol:ipv6_chk_addr_and_flags ipv6
+alias symbol:skw_start_wifi_service skw_usb_lite
 alias symbol:usb_ep_autoconfig_reset libcomposite
 alias symbol:wlcore_set_scan_chan_params wlcore
 alias symbol:vsock_addr_equals_addr vsock

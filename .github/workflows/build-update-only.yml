@@ -1,4 +1,4 @@
-name: 构建 update.tar 和 firstboot.sh
+name: 构建升级包
 
 on:
   workflow_dispatch:
@@ -20,6 +20,11 @@ jobs:
           chmod +x build_update_tar.sh
           sudo ./build_update_tar.sh
 
+      - name: Build update.tar
+        run: |
+          chmod +x build_update_tar.sh
+          sudo ./build_update_tar.sh -d
+
       - name: Prepare firstboot.sh
         run: |
           cp sh/clone.sh firstboot.sh
@@ -30,9 +35,10 @@ jobs:
         run: |
           BUILD_DATE=$(TZ=Asia/Shanghai date +%Y%m%d)
 
-          echo "上传文件: update.tar firstboot.sh"
+          echo "上传文件: update*.tar firstboot.sh"
           gh release create "update-${BUILD_DATE}" \
-            update.tar \
+            update-arkos.tar \
+            update-darkos.tar \
             firstboot.sh \
             --title "ArkOS4Clone-Update-${BUILD_DATE}" \
             --notes "ArkOS4Clone OTA 更新包 - $BUILD_DATE" \

@@ -4,21 +4,34 @@ set -euo pipefail
 # ============================================
 # ArkOS4Clone OTA 升级包制作脚本
 #
+# 用法：
+#   sudo ./build_update_tar.sh           # 构建 ArkOS 版本
+#   sudo ./build_update_tar.sh -d        # 构建 dArkOS 版本
+#   sudo ./build_update_tar.sh darkos    # 构建 dArkOS 版本
+#
 # 输出文件：
 #   ./update.tar   （放到设备 /roms/update.tar）
 # ============================================
 
+# 解析命令行参数
+ARKOS_IMAGE_NAME=""
+for arg in "$@"; do
+  case "${arg,,}" in  # 转小写比较
+    -d|darkos|darkos4clone|darkos4clone)
+      ARKOS_IMAGE_NAME="dArkOS"
+      ;;
+  esac
+done
+
 # 生成版本信息
 UPDATE_DATE="$(TZ=Asia/Shanghai date +%m%d%Y)"
 MODDER="kk&lcdyk"
-ARKOS_IMAGE_NAME="${ARKOS_IMAGE_NAME:-}"
 
 # 工作目录与临时构建目录
 WORKDIR="$(pwd)"
 STAGE="/tmp/_ota_stage"
 PAYLOAD_BOOT="${STAGE}/payload/boot"
 PAYLOAD_ROOT="${STAGE}/payload/root"
-OUT_TAR="${WORKDIR}/update.tar"
 
 # boot 分区（FAT32）专用 rsync 参数
 RSYNC_BOOT_OPTS="-rltD --no-owner --no-group --no-perms --omit-dir-times"
@@ -55,6 +68,7 @@ if [[ "$ARKOS_IMAGE_NAME" == *dArkOS* ]]; then
   echo "=== 检测到 dArkOS 镜像，构建 dArkOS OTA 包 ==="
   VERSION="dArkOS4Clone-${UPDATE_DATE}-${MODDER}"
   CHOWN_USER="1000:1000"
+  OUT_TAR="${WORKDIR}/update-darkos.tar"
 
   echo "== 构建 payload/boot =="
   mkdir -p "$PAYLOAD_BOOT/consoles"
@@ -88,7 +102,11 @@ if [[ "$ARKOS_IMAGE_NAME" == *dArkOS* ]]; then
 
   echo "== 注入 rk915 固件 =="
   mkdir -p "$PAYLOAD_ROOT/usr/lib/firmware/"
-  cp -f ./bin/rk915_*.bin "$PAYLOAD_ROOT/usr/lib/firmware/" 2>/dev/null || true
+  cp -f ./bin/rk915/* "$PAYLOAD_ROOT/usr/lib/firmware/" 2>/dev/null || true
+
+  echo "== 注入 swt6621s 固件 =="
+  mkdir -p "$PAYLOAD_ROOT/usr/lib/firmware/"
+  cp -f ./bin/swt6621s/* "$PAYLOAD_ROOT/usr/lib/firmware/" 2>/dev/null || true
 
   echo "== 注入 aic8800DC 固件 =="
   mkdir -p "$PAYLOAD_ROOT/usr/lib/firmware/aic8800DC"
@@ -97,6 +115,7 @@ if [[ "$ARKOS_IMAGE_NAME" == *dArkOS* ]]; then
   echo "== 注入 351Files 资源 =="
   mkdir -p "$PAYLOAD_ROOT/opt/351Files/res"
   cp -r ./res/* "$PAYLOAD_ROOT/opt/351Files/res/" 2>/dev/null || true
+  cp -r ./replace_file/351Files "$PAYLOAD_ROOT/opt/351Files/" 2>/dev/null || true
 
   echo "== 注入 dArkOS 启动脚本 =="
   mkdir -p "$PAYLOAD_ROOT/usr/local/bin"
@@ -110,6 +129,8 @@ if [[ "$ARKOS_IMAGE_NAME" == *dArkOS* ]]; then
   cp -f ./replace_file/drastic.sh "$PAYLOAD_ROOT/usr/local/bin/" 2>/dev/null || true
   cp -f ./replace_file/drastic_kk.sh "$PAYLOAD_ROOT/usr/local/bin/" 2>/dev/null || true
   cp -f ./replace_file/choose_drastic_ver.sh "$PAYLOAD_ROOT/usr/local/bin/" 2>/dev/null || true
+  cp -f ./replace_file/choose_ons_ver.sh "$PAYLOAD_ROOT/usr/local/bin/" 2>/dev/null || true
+  cp -f ./replace_file/onscripter.sh "$PAYLOAD_ROOT/usr/local/bin/" 2>/dev/null || true
   cp -f ./replace_file/mediaplayer.sh "$PAYLOAD_ROOT/usr/local/bin/" 2>/dev/null || true
 
   echo "== 注入 adc-key 服务 =="
@@ -117,6 +138,17 @@ if [[ "$ARKOS_IMAGE_NAME" == *dArkOS* ]]; then
   cp -f ./bin/adc-key/adckeys.py "$PAYLOAD_ROOT/usr/local/bin/" 2>/dev/null || true
   cp -f ./bin/adc-key/adckeys.sh "$PAYLOAD_ROOT/usr/local/bin/" 2>/dev/null || true
   cp -f ./bin/adc-key/adckeys.service "$PAYLOAD_ROOT/etc/systemd/system/" 2>/dev/null || true
+
+  echo "== 注入 es-service 服务 =="
+  mkdir -p "$PAYLOAD_ROOT/etc/systemd/system"
+  cp -f ./bin/es-service/es-status-daemon.sh "$PAYLOAD_ROOT/usr/local/bin/" 2>/dev/null || true
+  cp -f ./bin/es-service/es-status-daemon.service "$PAYLOAD_ROOT/etc/systemd/system/" 2>/dev/null || true
+
+  echo "== 注入 zram 服务 =="
+  mkdir -p "$PAYLOAD_ROOT/etc/systemd/system"
+  cp -f ./bin/zram-service/zram-setup.sh "$PAYLOAD_ROOT/usr/local/bin/" 2>/dev/null || true
+  cp -f ./bin/zram-service/zram.conf "$PAYLOAD_ROOT/etc/" 2>/dev/null || true
+  cp -f ./bin/zram-service/zram-swap.service "$PAYLOAD_ROOT/etc/systemd/system/" 2>/dev/null || true
 
   echo "== 注入核心与 EmulationStation 文件 =="
   mkdir -p "$PAYLOAD_ROOT/home/ark/.config/retroarch/cores" \
@@ -140,6 +172,15 @@ if [[ "$ARKOS_IMAGE_NAME" == *dArkOS* ]]; then
   mkdir -p "$PAYLOAD_ROOT/opt/drastic-kk"
   cp -a ./replace_file/drastic-kk/. "$PAYLOAD_ROOT/opt/drastic-kk/" 2>/dev/null || true
   rm -rf "$PAYLOAD_ROOT/opt/drastic-kk/patch" 2>/dev/null || true
+
+  echo "== 添加 onscripter-sa =="
+  mkdir -p "$PAYLOAD_ROOT/opt/onscripter"
+  cp -a ./replace_file/onscripter/. "$PAYLOAD_ROOT/opt/onscripter/" 2>/dev/null || true
+
+  echo "== 改用自适应分辨率 Retroarch 1.22.2 =="
+  mkdir -p "$PAYLOAD_ROOT/opt/retroarch/bin/"
+  cp -a ./replace_file/retroarch/retroarch "$PAYLOAD_ROOT/opt/retroarch/bin/" 2>/dev/null || true
+  cp -a ./replace_file/retroarch/retroarch32 "$PAYLOAD_ROOT/opt/retroarch/bin/" 2>/dev/null || true
 
   echo "== 注入 json-c3 库 =="
   mkdir -p "$PAYLOAD_ROOT/usr/lib/aarch64-linux-gnu/"
@@ -211,16 +252,22 @@ EOF
   meta_add "0777" "1000:1000" "/usr/local/bin/sdljoymap"
   meta_add "0777" "1000:1000" "/usr/local/bin/console_detect"
   meta_add "0777" "1000:1000" "/usr/lib/firmware/rk915_*.bin"
+  meta_add "0777" "1000:1000" "/usr/lib/firmware/SWT6621S_*.bin"
   meta_add "0777" "1000:1000" "/usr/lib/firmware/aic8800DC"
   meta_add "0777" "1000:1000" "/usr/lib/firmware/aic8800DC/*"
   meta_add "0777" "1000:1000" "/opt/351Files"
   meta_add "0777" "1000:1000" "/opt/351Files/*"
-  for f in darkos4atomiswave.sh darkos4dreamcast.sh darkos4naomi.sh darkos4saturn.sh darkos4n64.sh darkos4pico8.sh darkos4get_last_played.sh drastic.sh drastic_kk.sh choose_drastic_ver.sh mediaplayer.sh; do
+  for f in darkos4atomiswave.sh darkos4dreamcast.sh darkos4naomi.sh darkos4saturn.sh darkos4n64.sh darkos4pico8.sh darkos4get_last_played.sh drastic.sh drastic_kk.sh choose_drastic_ver.sh mediaplayer.sh onscripter.sh choose_ons_ver.sh; do
     meta_add "0777" "1000:1000" "/usr/local/bin/$f"
   done
   meta_add "0777" "1000:1000" "/usr/local/bin/adckeys.py"
   meta_add "0777" "1000:1000" "/usr/local/bin/adckeys.sh"
   meta_add "0777" "1000:1000" "/etc/systemd/system/adckeys.service"
+  meta_add "0777" "1000:1000" "/usr/local/bin/es-status-daemon.sh"
+  meta_add "0777" "1000:1000" "/etc/systemd/system/es-status-daemon.service"
+  meta_add "0777" "1000:1000" "/etc/zram.conf"
+  meta_add "0777" "1000:1000" "/usr/local/bin/zram-setup.sh"
+  meta_add "0777" "1000:1000" "/etc/systemd/system/zram-swap.service"
   meta_add "0777" "1000:1000" "/home/ark/.config/retroarch/cores/*"
   meta_add "0777" "1000:1000" "/home/ark/.config/retroarch32/cores/*"
   meta_add "0777" "1000:1000" "/etc/emulationstation/darkos4es_systems.cfg"
@@ -229,6 +276,10 @@ EOF
   meta_add "0777" "1000:1000" "/opt/drastic/*"
   meta_add "0777" "1000:1000" "/opt/drastic-kk"
   meta_add "0777" "1000:1000" "/opt/drastic-kk/*"
+  meta_add "0777" "1000:1000" "/opt/onscripter"
+  meta_add "0777" "1000:1000" "/opt/onscripter/*"
+  meta_add "0777" "1000:1000" "/opt/retroarch/bin/"
+  meta_add "0777" "1000:1000" "/opt/retroarch/bin/*"
   meta_add "0777" "1000:1000" "/opt/flycastsa"
   meta_add "0777" "1000:1000" "/opt/flycastsa/*"
   meta_add "0777" "1000:1000" "/opt/flycastsa-2022"
@@ -264,6 +315,7 @@ else
   echo "=== 检测到 ArkOS 镜像，构建 ArkOS OTA 包 ==="
   VERSION="ArkOS4Clone-${UPDATE_DATE}-${MODDER}"
   CHOWN_USER="1002:1002"
+  OUT_TAR="${WORKDIR}/update-arkos.tar"
 
   echo "== 构建 payload/boot =="
   mkdir -p "$PAYLOAD_BOOT/consoles"
@@ -288,7 +340,11 @@ else
 
   echo "== 注入 rk915 固件 =="
   mkdir -p "$PAYLOAD_ROOT/usr/lib/firmware/"
-  cp -f ./bin/rk915_*.bin "$PAYLOAD_ROOT/usr/lib/firmware/" 2>/dev/null || true
+  cp -f ./bin/rk915/* "$PAYLOAD_ROOT/usr/lib/firmware/" 2>/dev/null || true
+
+  echo "== 注入 swt6621s 固件 =="
+  mkdir -p "$PAYLOAD_ROOT/usr/lib/firmware/"
+  cp -f ./bin/swt6621s/* "$PAYLOAD_ROOT/usr/lib/firmware/" 2>/dev/null || true
 
   echo "== 注入 aic8800DC 固件 =="
   mkdir -p "$PAYLOAD_ROOT/usr/lib/firmware/aic8800DC"
@@ -297,6 +353,7 @@ else
   echo "== 注入 351Files 资源 =="
   mkdir -p "$PAYLOAD_ROOT/opt/351Files/res"
   cp -r ./res/* "$PAYLOAD_ROOT/opt/351Files/res/" 2>/dev/null || true
+  cp -r ./replace_file/351Files "$PAYLOAD_ROOT/opt/351Files/" 2>/dev/null || true
 
   echo "== 注入 ArkOS 启动脚本 =="
   mkdir -p "$PAYLOAD_ROOT/usr/local/bin"
@@ -309,6 +366,8 @@ else
   cp -f ./replace_file/drastic.sh "$PAYLOAD_ROOT/usr/local/bin/" 2>/dev/null || true
   cp -f ./replace_file/drastic_kk.sh "$PAYLOAD_ROOT/usr/local/bin/" 2>/dev/null || true
   cp -f ./replace_file/choose_drastic_ver.sh "$PAYLOAD_ROOT/usr/local/bin/" 2>/dev/null || true
+  cp -f ./replace_file/choose_ons_ver.sh "$PAYLOAD_ROOT/usr/local/bin/" 2>/dev/null || true
+  cp -f ./replace_file/onscripter.sh "$PAYLOAD_ROOT/usr/local/bin/" 2>/dev/null || true
   cp -f ./replace_file/mediaplayer.sh "$PAYLOAD_ROOT/usr/local/bin/" 2>/dev/null || true
   cp -f ./replace_file/get_last_played.sh "$PAYLOAD_ROOT/usr/local/bin/" 2>/dev/null || true
 
@@ -317,6 +376,17 @@ else
   cp -f ./bin/adc-key/adckeys.py "$PAYLOAD_ROOT/usr/local/bin/" 2>/dev/null || true
   cp -f ./bin/adc-key/adckeys.sh "$PAYLOAD_ROOT/usr/local/bin/" 2>/dev/null || true
   cp -f ./bin/adc-key/adckeys.service "$PAYLOAD_ROOT/etc/systemd/system/" 2>/dev/null || true
+
+  echo "== 注入 es-service 服务 =="
+  mkdir -p "$PAYLOAD_ROOT/etc/systemd/system"
+  cp -f ./bin/es-service/es-status-daemon.sh "$PAYLOAD_ROOT/usr/local/bin/" 2>/dev/null || true
+  cp -f ./bin/es-service/es-status-daemon.service "$PAYLOAD_ROOT/etc/systemd/system/" 2>/dev/null || true
+
+  echo "== 注入 zram 服务 =="
+  mkdir -p "$PAYLOAD_ROOT/etc/systemd/system"
+  cp -f ./bin/zram-service/zram-setup.sh "$PAYLOAD_ROOT/usr/local/bin/" 2>/dev/null || true
+  cp -f ./bin/zram-service/zram.conf "$PAYLOAD_ROOT/etc/" 2>/dev/null || true
+  cp -f ./bin/zram-service/zram-swap.service "$PAYLOAD_ROOT/etc/systemd/system/" 2>/dev/null || true
 
   echo "== 注入核心与 EmulationStation 文件 =="
   mkdir -p "$PAYLOAD_ROOT/home/ark/.config/retroarch/cores" \
@@ -340,6 +410,15 @@ else
   mkdir -p "$PAYLOAD_ROOT/opt/drastic-kk"
   cp -a ./replace_file/drastic-kk/. "$PAYLOAD_ROOT/opt/drastic-kk/" 2>/dev/null || true
   rm -rf "$PAYLOAD_ROOT/opt/drastic-kk/patch" 2>/dev/null || true
+
+  echo "== 添加 onscripter-sa =="
+  mkdir -p "$PAYLOAD_ROOT/opt/onscripter"
+  cp -a ./replace_file/onscripter/. "$PAYLOAD_ROOT/opt/onscripter/" 2>/dev/null || true
+
+  echo "== 改用自适应分辨率 Retroarch 1.22.2 =="
+  mkdir -p "$PAYLOAD_ROOT/opt/retroarch/bin/"
+  cp -a ./replace_file/retroarch/retroarch "$PAYLOAD_ROOT/opt/retroarch/bin/" 2>/dev/null || true
+  cp -a ./replace_file/retroarch/retroarch32 "$PAYLOAD_ROOT/opt/retroarch/bin/" 2>/dev/null || true
 
   echo "== 注入 json-c3 库 =="
   mkdir -p "$PAYLOAD_ROOT/usr/lib/aarch64-linux-gnu/"
@@ -418,16 +497,22 @@ EOF
   meta_add "0777" "1002:1002" "/usr/local/bin/sdljoymap"
   meta_add "0777" "1002:1002" "/usr/local/bin/console_detect"
   meta_add "0777" "1002:1002" "/usr/lib/firmware/rk915_*.bin"
+  meta_add "0777" "1002:1002" "/usr/lib/firmware/SWT6621S_*.bin"
   meta_add "0777" "1002:1002" "/usr/lib/firmware/aic8800DC"
   meta_add "0777" "1002:1002" "/usr/lib/firmware/aic8800DC/*"
   meta_add "0777" "1002:1002" "/opt/351Files"
   meta_add "0777" "1002:1002" "/opt/351Files/*"
-  for f in atomiswave.sh dreamcast.sh naomi.sh saturn.sh n64.sh pico8.sh drastic.sh drastic_kk.sh choose_drastic_ver.sh mediaplayer.sh get_last_played.sh; do
+  for f in atomiswave.sh dreamcast.sh naomi.sh saturn.sh n64.sh pico8.sh drastic.sh drastic_kk.sh choose_drastic_ver.sh mediaplayer.sh get_last_played.sh choose_ons_ver.sh onscripter.sh; do
     meta_add "0777" "1002:1002" "/usr/local/bin/$f"
   done
   meta_add "0777" "1002:1002" "/usr/local/bin/adckeys.py"
   meta_add "0777" "1002:1002" "/usr/local/bin/adckeys.sh"
   meta_add "0777" "1002:1002" "/etc/systemd/system/adckeys.service"
+  meta_add "0777" "1002:1002" "/usr/local/bin/es-status-daemon.sh"
+  meta_add "0777" "1002:1002" "/etc/systemd/system/es-status-daemon.service"
+  meta_add "0777" "1002:1002" "/etc/zram.conf"
+  meta_add "0777" "1002:1002" "/usr/local/bin/zram-setup.sh"
+  meta_add "0777" "1002:1002" "/etc/systemd/system/zram-swap.service"
   meta_add "0777" "1002:1002" "/home/ark/.config/retroarch/cores/*"
   meta_add "0777" "1002:1002" "/home/ark/.config/retroarch32/cores/*"
   meta_add "0777" "1002:1002" "/etc/emulationstation/es_systems.cfg"
@@ -436,6 +521,10 @@ EOF
   meta_add "0777" "1002:1002" "/opt/drastic/*"
   meta_add "0777" "1002:1002" "/opt/drastic-kk"
   meta_add "0777" "1002:1002" "/opt/drastic-kk/*"
+  meta_add "0777" "1002:1002" "/opt/onscripter"
+  meta_add "0777" "1002:1002" "/opt/onscripter/*"
+  meta_add "0777" "1002:1002" "/opt/retroarch/bin/"
+  meta_add "0777" "1002:1002" "/opt/retroarch/bin/*"
   meta_add "0777" "1002:1002" "/opt/ppsspp"
   meta_add "0777" "1002:1002" "/opt/ppsspp/*"
   meta_add "0777" "1002:1002" "/opt/scummvm"
@@ -563,7 +652,7 @@ else
 fi
 
 log "=== Step 1: Stop conflicting services ==="
-for s in adckeys.service batt_led.service ddtbcheck.service 351mp.service mpv.service oga_events; do
+for s in adckeys.service zram-swap.service es-status-daemon.service batt_led.service ddtbcheck.service 351mp.service mpv.service oga_events; do
   if [[ -e "/etc/systemd/system/$s" || -e "/lib/systemd/system/$s" ]]; then
     svc_stop_disable "$s"
   fi
@@ -741,10 +830,6 @@ rm -rf "/opt/system/Advanced/Screen - Switch to Original Screen Timings.sh" 2>/d
 rm -rf "/opt/system/Advanced/Reset EmulationStation Controls.sh" 2>/dev/null || true
 rm -rf "/opt/system/Advanced/Fix Global Hotkeys.sh" 2>/dev/null || true
 
-if [[ -e "/opt/351Files/351Files" ]]; then
-  mv "/opt/351Files/351Files" "/opt/351Files/351Files.old" 2>/dev/null && log "Renamed: 351Files -> 351Files.old" || true
-fi
-
 log "=== Step 8: Apply permissions (META) ==="
 apply_meta
 
@@ -768,6 +853,8 @@ if have_systemctl; then
   systemctl daemon-reload 2>/dev/null || true
   systemctl enable adckeys.service 2>/dev/null && log "Enabled: adckeys.service" || true
   systemctl restart adckeys.service 2>/dev/null && log "Started: adckeys.service" || true
+  systemctl enable es-status-daemon.service 2>/dev/null && log "Enabled: es-status-daemon.service" || true
+  systemctl restart es-status-daemon.service 2>/dev/null && log "Started: es-status-daemon.service" || true
   chmod 777 /usr/local/bin/ogage 2>/dev/null && log "Fixed: ogage chmod 777" || true
 fi
 

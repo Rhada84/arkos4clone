@@ -73,9 +73,14 @@ if [[ "$ARKOS_IMAGE_NAME" == *dArkOS* ]]; then
   fi
 
   echo "== 注入 915 固件 =="
-  safe sudo cp -f ./bin/rk915_*.bin "$MOUNT_DIR/root/usr/lib/firmware/" 2>/dev/null
+  safe sudo cp -f ./bin/rk915/* "$MOUNT_DIR/root/usr/lib/firmware/" 2>/dev/null
   safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/usr/lib/firmware/"rk915_*.bin 2>/dev/null
   safe sudo chmod -R 777 "$MOUNT_DIR/root/usr/lib/firmware/"rk915_*.bin 2>/dev/null
+
+  echo "== 注入 swt6621s 固件 =="
+  safe sudo cp -f ./bin/swt6621s/* "$MOUNT_DIR/root/usr/lib/firmware/" 2>/dev/null
+  safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/usr/lib/firmware/"SWT6621S_*.bin 2>/dev/null
+  safe sudo chmod -R 777 "$MOUNT_DIR/root/usr/lib/firmware/"SWT6621S_*.bin 2>/dev/null
 
   echo "== 注入 aic8800DC 固件 =="
   safe sudo mkdir -p "$MOUNT_DIR/root/usr/lib/firmware/aic8800DC"
@@ -83,14 +88,10 @@ if [[ "$ARKOS_IMAGE_NAME" == *dArkOS* ]]; then
   safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/usr/lib/firmware/aic8800DC" 2>/dev/null
   safe sudo chmod -R 777 "$MOUNT_DIR/root/usr/lib/firmware/aic8800DC" 2>/dev/null
 
-  echo "== 注入 351Files 资源 =="
+  echo "== 注入 351Files 自适应 =="
   safe sudo mkdir -p "$MOUNT_DIR/root/opt/351Files/res"
   safe sudo cp -r ./res/* "$MOUNT_DIR/root/opt/351Files/res/" 2>/dev/null
-  if [[ -e "$MOUNT_DIR/root/opt/351Files/351Files" ]]; then
-    sudo mv "$MOUNT_DIR/root/opt/351Files/351Files" "$MOUNT_DIR/root/opt/351Files/351Files.old"
-  else
-    echo "[warn] 未找到 $MOUNT_DIR/root/opt/351Files/351Files，跳过重命名"
-  fi
+  safe sudo cp -r ./replace_file/351Files "$MOUNT_DIR/root/opt/351Files/" 2>/dev/null
   safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/opt/351Files/" 2>/dev/null
   safe sudo chmod -R 777 "$MOUNT_DIR/root/opt/351Files/" 2>/dev/null
 
@@ -103,6 +104,8 @@ if [[ "$ARKOS_IMAGE_NAME" == *dArkOS* ]]; then
   safe sudo cp -f ./replace_file/drastic.sh "$MOUNT_DIR/root/usr/local/bin/"
   safe sudo cp -f ./replace_file/drastic_kk.sh "$MOUNT_DIR/root/usr/local/bin/"
   safe sudo cp -f ./replace_file/choose_drastic_ver.sh "$MOUNT_DIR/root/usr/local/bin/"
+  safe sudo cp -f ./replace_file/choose_ons_ver.sh "$MOUNT_DIR/root/usr/local/bin/"
+  safe sudo cp -f ./replace_file/onscripter.sh "$MOUNT_DIR/root/usr/local/bin/"
   safe sudo cp -f ./replace_file/darkos4get_last_played.sh "$MOUNT_DIR/root/usr/local/bin/get_last_played.sh"
   safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/usr/local/bin/atomiswave.sh" 2>/dev/null
   safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/usr/local/bin/dreamcast.sh" 2>/dev/null
@@ -112,6 +115,8 @@ if [[ "$ARKOS_IMAGE_NAME" == *dArkOS* ]]; then
   safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/usr/local/bin/drastic.sh" 2>/dev/null
   safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/usr/local/bin/drastic_kk.sh" 2>/dev/null
   safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/usr/local/bin/choose_drastic_ver.sh" 2>/dev/null
+  safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/usr/local/bin/choose_ons_ver.sh" 2>/dev/null
+  safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/usr/local/bin/onscripter.sh" 2>/dev/null
   safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/usr/local/bin/get_last_played.sh" 2>/dev/null
   safe sudo chmod 777 "$MOUNT_DIR/root/usr/local/bin/atomiswave.sh" 2>/dev/null
   safe sudo chmod 777 "$MOUNT_DIR/root/usr/local/bin/dreamcast.sh" 2>/dev/null
@@ -121,6 +126,8 @@ if [[ "$ARKOS_IMAGE_NAME" == *dArkOS* ]]; then
   safe sudo chmod 777 "$MOUNT_DIR/root/usr/local/bin/drastic.sh" 2>/dev/null
   safe sudo chmod 777 "$MOUNT_DIR/root/usr/local/bin/drastic_kk.sh" 2>/dev/null
   safe sudo chmod 777 "$MOUNT_DIR/root/usr/local/bin/choose_drastic_ver.sh" 2>/dev/null
+  safe sudo chmod 777 "$MOUNT_DIR/root/usr/local/bin/choose_ons_ver.sh" 2>/dev/null
+  safe sudo chmod 777 "$MOUNT_DIR/root/usr/local/bin/onscripter.sh" 2>/dev/null
   safe sudo chmod 777 "$MOUNT_DIR/root/usr/local/bin/get_last_played.sh" 2>/dev/null
 
   echo "== 注入 adc-key 服务脚本 =="
@@ -133,6 +140,25 @@ if [[ "$ARKOS_IMAGE_NAME" == *dArkOS* ]]; then
   safe sudo chmod 777 "$MOUNT_DIR/root/usr/local/bin/adckeys.py" 2>/dev/null
   safe sudo chmod 777 "$MOUNT_DIR/root/usr/local/bin/adckeys.sh" 2>/dev/null
   safe sudo chmod 777 "$MOUNT_DIR/root/etc/systemd/system/adckeys.service" 2>/dev/null
+
+  echo "== 注入 es-service 服务脚本 =="
+  safe sudo cp -f ./bin/es-service/es-status-daemon.sh "$MOUNT_DIR/root/usr/local/bin/"
+  safe sudo cp -f ./bin/es-service/es-status-daemon.service "$MOUNT_DIR/root/etc/systemd/system/"
+  safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/usr/local/bin/es-status-daemon.sh" 2>/dev/null
+  safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/etc/systemd/system/es-status-daemon.service" 2>/dev/null
+  safe sudo chmod 777 "$MOUNT_DIR/root/usr/local/bin/es-status-daemon.sh" 2>/dev/null
+  safe sudo chmod 777 "$MOUNT_DIR/root/etc/systemd/system/es-status-daemon.service" 2>/dev/null
+
+  echo "== 注入 zram 服务脚本 =="
+  safe sudo cp -f ./bin/zram-service/zram-setup.sh "$MOUNT_DIR/root/usr/local/bin/"
+  safe sudo cp -f ./bin/zram-service/zram-swap.service "$MOUNT_DIR/root/etc/systemd/system/"
+  safe sudo cp -f ./bin/zram-service/zram.conf "$MOUNT_DIR/root/etc/"
+  safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/usr/local/bin/zram-setup.sh" 2>/dev/null
+  safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/etc/systemd/system/zram-swap.service" 2>/dev/null
+  safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/etc/zram.conf" 2>/dev/null
+  safe sudo chmod 777 "$MOUNT_DIR/root/usr/local/bin/zram-setup.sh" 2>/dev/null
+  safe sudo chmod 777 "$MOUNT_DIR/root/etc/systemd/system/zram-swap.service" 2>/dev/null
+  safe sudo chmod 777 "$MOUNT_DIR/root/etc/zram.conf" 2>/dev/null
 
   echo "== 注入核心 =="
   safe sudo cp -f ./mod_so/64/* "$MOUNT_DIR/root/home/ark/.config/retroarch/cores/"
@@ -157,14 +183,14 @@ if [[ "$ARKOS_IMAGE_NAME" == *dArkOS* ]]; then
   safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/usr/bin/emulationstation/emulationstation"
   safe sudo chmod -R 777 "$MOUNT_DIR/root/usr/bin/emulationstation/emulationstation"
 
-  echo "== 还原drastic =="
+  echo "== 还原 drastic =="
   safe sudo rm -rf "$MOUNT_DIR/root/opt/drastic" 2>/dev/null
   safe sudo mkdir -p "$MOUNT_DIR/root/opt/drastic" 2>/dev/null
   safe sudo cp -a ./replace_file/drastic/. "$MOUNT_DIR/root/opt/drastic/" 2>/dev/null
   safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/opt/drastic" 2>/dev/null
   safe sudo chmod -R 777 "$MOUNT_DIR/root/opt/drastic" 2>/dev/null
 
-  echo "== 添加drastic-kk =="
+  echo "== 添加 drastic-kk =="
   safe sudo mkdir -p "$MOUNT_DIR/root/opt/drastic-kk" 2>/dev/null
   safe sudo cp -a ./replace_file/drastic-kk/. "$MOUNT_DIR/root/opt/drastic-kk/" 2>/dev/null
   safe sudo rm -rf "$MOUNT_DIR/root/opt/drastic-kk/patch" 2>/dev/null
@@ -174,12 +200,24 @@ if [[ "$ARKOS_IMAGE_NAME" == *dArkOS* ]]; then
   safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/usr/lib/aarch64-linux-gnu/libjson-c.so"* 2>/dev/null
   safe sudo chmod -R 777 "$MOUNT_DIR/root/usr/lib/aarch64-linux-gnu/libjson-c.so"* 2>/dev/null
 
+  echo "== 添加 onscripter-sa =="
+  safe sudo mkdir -p "$MOUNT_DIR/root/opt/onscripter" 2>/dev/null
+  safe sudo cp -a ./replace_file/onscripter/. "$MOUNT_DIR/root/opt/onscripter/" 2>/dev/null
+  safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/opt/onscripter" 2>/dev/null
+  safe sudo chmod -R 777 "$MOUNT_DIR/root/opt/onscripter" 2>/dev/null
+
+  echo "== 改用自适应分辨率 Retroarch 1.22.2 =="
+  safe sudo cp -a ./replace_file/retroarch/retroarch "$MOUNT_DIR/root/opt/retroarch/bin/" 2>/dev/null
+  safe sudo cp -a ./replace_file/retroarch/retroarch32 "$MOUNT_DIR/root/opt/retroarch/bin/" 2>/dev/null
+  safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/opt/retroarch/bin/" 2>/dev/null
+  safe sudo chmod -R 777 "$MOUNT_DIR/root/opt/retroarch/bin/" 2>/dev/null
+
   echo "== 更新 flycastsa v2.6 =="
   safe sudo cp -a ./replace_file/flycastsa/flycast "$MOUNT_DIR/root/opt/flycastsa/" 2>/dev/null
   safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/opt/flycastsa/" 2>/dev/null
   safe sudo chmod -R 777 "$MOUNT_DIR/root/opt/flycastsa/" 2>/dev/null
 
-  echo "== 添加flycastsa-2022  =="
+  echo "== 添加 flycastsa-2022  =="
   safe sudo mkdir -p "$MOUNT_DIR/root/opt/flycastsa-2022" 2>/dev/null
   safe sudo cp -a ./replace_file/flycastsa-2022/. "$MOUNT_DIR/root/opt/flycastsa-2022/" 2>/dev/null
   safe sudo rm -rf "$MOUNT_DIR/root/opt/flycastsa-2022/patch" 2>/dev/null
@@ -353,9 +391,14 @@ else
   safe sudo depmod -a -b "$MOUNT_DIR/root" 4.4.189 2>/dev/null
 
   echo "== 注入 915 固件 =="
-  safe sudo cp -f ./bin/rk915_*.bin "$MOUNT_DIR/root/usr/lib/firmware/" 2>/dev/null
+  safe sudo cp -f ./bin/rk915/rk915_*.bin "$MOUNT_DIR/root/usr/lib/firmware/" 2>/dev/null
   safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/usr/lib/firmware/"rk915_*.bin 2>/dev/null
   safe sudo chmod -R 777 "$MOUNT_DIR/root/usr/lib/firmware/"rk915_*.bin 2>/dev/null
+
+  echo "== 注入 swt6621s 固件 =="
+  safe sudo cp -f ./bin/swt6621s/* "$MOUNT_DIR/root/usr/lib/firmware/" 2>/dev/null
+  safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/usr/lib/firmware/"SWT6621S_*.bin 2>/dev/null
+  safe sudo chmod -R 777 "$MOUNT_DIR/root/usr/lib/firmware/"SWT6621S_*.bin 2>/dev/null
 
   echo "== 注入 aic8800DC 固件 =="
   safe sudo mkdir -p "$MOUNT_DIR/root/usr/lib/firmware/aic8800DC"
@@ -363,14 +406,10 @@ else
   safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/usr/lib/firmware/aic8800DC" 2>/dev/null
   safe sudo chmod -R 777 "$MOUNT_DIR/root/usr/lib/firmware/aic8800DC" 2>/dev/null
 
-  echo "== 注入 351Files 资源 =="
+  echo "== 注入 351Files 自适应 =="
   safe sudo mkdir -p "$MOUNT_DIR/root/opt/351Files/res"
   safe sudo cp -r ./res/* "$MOUNT_DIR/root/opt/351Files/res/" 2>/dev/null
-  if [[ -e "$MOUNT_DIR/root/opt/351Files/351Files" ]]; then
-    sudo mv "$MOUNT_DIR/root/opt/351Files/351Files" "$MOUNT_DIR/root/opt/351Files/351Files.old"
-  else
-    echo "[warn] 未找到 $MOUNT_DIR/root/opt/351Files/351Files，跳过重命名"
-  fi
+  safe sudo cp -r ./replace_file/351Files "$MOUNT_DIR/root/opt/351Files/" 2>/dev/null
   safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/opt/351Files/" 2>/dev/null
   safe sudo chmod -R 777 "$MOUNT_DIR/root/opt/351Files/" 2>/dev/null
 
@@ -384,6 +423,8 @@ else
   safe sudo cp -f ./replace_file/drastic.sh "$MOUNT_DIR/root/usr/local/bin/"
   safe sudo cp -f ./replace_file/drastic_kk.sh "$MOUNT_DIR/root/usr/local/bin/"
   safe sudo cp -f ./replace_file/choose_drastic_ver.sh "$MOUNT_DIR/root/usr/local/bin/"
+  safe sudo cp -f ./replace_file/choose_ons_ver.sh "$MOUNT_DIR/root/usr/local/bin/"
+  safe sudo cp -f ./replace_file/onscripter.sh "$MOUNT_DIR/root/usr/local/bin/"
   safe sudo cp -f ./replace_file/mediaplayer.sh "$MOUNT_DIR/root/usr/local/bin/"
   safe sudo cp -f ./replace_file/get_last_played.sh "$MOUNT_DIR/root/usr/local/bin/"
   safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/usr/local/bin/atomiswave.sh" 2>/dev/null
@@ -395,6 +436,8 @@ else
   safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/usr/local/bin/drastic.sh" 2>/dev/null
   safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/usr/local/bin/drastic_kk.sh" 2>/dev/null
   safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/usr/local/bin/choose_drastic_ver.sh" 2>/dev/null
+  safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/usr/local/bin/choose_ons_ver.sh" 2>/dev/null
+  safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/usr/local/bin/onscripter.sh" 2>/dev/null
   safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/usr/local/bin/mediaplayer.sh" 2>/dev/null
   safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/usr/local/bin/get_last_played.sh" 2>/dev/null
   safe sudo chmod 777 "$MOUNT_DIR/root/usr/local/bin/atomiswave.sh" 2>/dev/null
@@ -406,6 +449,8 @@ else
   safe sudo chmod 777 "$MOUNT_DIR/root/usr/local/bin/drastic.sh" 2>/dev/null
   safe sudo chmod 777 "$MOUNT_DIR/root/usr/local/bin/drastic_kk.sh" 2>/dev/null
   safe sudo chmod 777 "$MOUNT_DIR/root/usr/local/bin/choose_drastic_ver.sh" 2>/dev/null
+  safe sudo chmod 777 "$MOUNT_DIR/root/usr/local/bin/choose_ons_ver.sh" 2>/dev/null
+  safe sudo chmod 777 "$MOUNT_DIR/root/usr/local/bin/onscripter.sh" 2>/dev/null
   safe sudo chmod 777 "$MOUNT_DIR/root/usr/local/bin/mediaplayer.sh" 2>/dev/null
   safe sudo chmod 777 "$MOUNT_DIR/root/usr/local/bin/get_last_played.sh" 2>/dev/null
 
@@ -419,6 +464,25 @@ else
   safe sudo chmod 777 "$MOUNT_DIR/root/usr/local/bin/adckeys.py" 2>/dev/null
   safe sudo chmod 777 "$MOUNT_DIR/root/usr/local/bin/adckeys.sh" 2>/dev/null
   safe sudo chmod 777 "$MOUNT_DIR/root/etc/systemd/system/adckeys.service" 2>/dev/null
+
+  echo "== 注入 es-service 服务脚本 =="
+  safe sudo cp -f ./bin/es-service/es-status-daemon.sh "$MOUNT_DIR/root/usr/local/bin/"
+  safe sudo cp -f ./bin/es-service/es-status-daemon.service "$MOUNT_DIR/root/etc/systemd/system/"
+  safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/usr/local/bin/es-status-daemon.sh" 2>/dev/null
+  safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/etc/systemd/system/es-status-daemon.service" 2>/dev/null
+  safe sudo chmod 777 "$MOUNT_DIR/root/usr/local/bin/es-status-daemon.sh" 2>/dev/null
+  safe sudo chmod 777 "$MOUNT_DIR/root/etc/systemd/system/es-status-daemon.service" 2>/dev/null
+
+  echo "== 注入 zram 服务脚本 =="
+  safe sudo cp -f ./bin/zram-service/zram-setup.sh "$MOUNT_DIR/root/usr/local/bin/"
+  safe sudo cp -f ./bin/zram-service/zram-swap.service "$MOUNT_DIR/root/etc/systemd/system/"
+  safe sudo cp -f ./bin/zram-service/zram.conf "$MOUNT_DIR/root/etc/"
+  safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/usr/local/bin/zram-setup.sh" 2>/dev/null
+  safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/etc/systemd/system/zram-swap.service" 2>/dev/null
+  safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/etc/zram.conf" 2>/dev/null
+  safe sudo chmod 777 "$MOUNT_DIR/root/usr/local/bin/zram-setup.sh" 2>/dev/null
+  safe sudo chmod 777 "$MOUNT_DIR/root/etc/systemd/system/zram-swap.service" 2>/dev/null
+  safe sudo chmod 777 "$MOUNT_DIR/root/etc/zram.conf" 2>/dev/null
 
   echo "== 注入核心 =="
   safe sudo cp -f ./mod_so/64/* "$MOUNT_DIR/root/home/ark/.config/retroarch/cores/"
@@ -443,14 +507,14 @@ else
   safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/usr/bin/emulationstation/emulationstation"
   safe sudo chmod -R 777 "$MOUNT_DIR/root/usr/bin/emulationstation/emulationstation"
 
-  echo "== 还原drastic =="
+  echo "== 还原 drastic =="
   safe sudo rm -rf "$MOUNT_DIR/root/opt/drastic" 2>/dev/null
   safe sudo mkdir -p "$MOUNT_DIR/root/opt/drastic" 2>/dev/null
   safe sudo cp -a ./replace_file/drastic/. "$MOUNT_DIR/root/opt/drastic/" 2>/dev/null
   safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/opt/drastic" 2>/dev/null
   safe sudo chmod -R 777 "$MOUNT_DIR/root/opt/drastic" 2>/dev/null
 
-  echo "== 添加drastic-kk =="
+  echo "== 添加 drastic-kk =="
   safe sudo mkdir -p "$MOUNT_DIR/root/opt/drastic-kk" 2>/dev/null
   safe sudo cp -a ./replace_file/drastic-kk/. "$MOUNT_DIR/root/opt/drastic-kk/" 2>/dev/null
   safe sudo rm -rf "$MOUNT_DIR/root/opt/drastic-kk/patch" 2>/dev/null
@@ -459,6 +523,18 @@ else
   safe sudo cp -f ./bin/json-c3/* "$MOUNT_DIR/root/usr/lib/aarch64-linux-gnu/"
   safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/usr/lib/aarch64-linux-gnu/libjson-c.so"* 2>/dev/null
   safe sudo chmod -R 777 "$MOUNT_DIR/root/usr/lib/aarch64-linux-gnu/libjson-c.so"* 2>/dev/null
+
+  echo "== 添加 onscripter-sa =="
+  safe sudo mkdir -p "$MOUNT_DIR/root/opt/onscripter" 2>/dev/null
+  safe sudo cp -a ./replace_file/onscripter/. "$MOUNT_DIR/root/opt/onscripter/" 2>/dev/null
+  safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/opt/onscripter" 2>/dev/null
+  safe sudo chmod -R 777 "$MOUNT_DIR/root/opt/onscripter" 2>/dev/null
+
+  echo "== 改用自适应分辨率 Retroarch 1.22.2 =="
+  safe sudo cp -a ./replace_file/retroarch/retroarch "$MOUNT_DIR/root/opt/retroarch/bin/" 2>/dev/null
+  safe sudo cp -a ./replace_file/retroarch/retroarch32 "$MOUNT_DIR/root/opt/retroarch/bin/" 2>/dev/null
+  safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/opt/retroarch/bin/" 2>/dev/null
+  safe sudo chmod -R 777 "$MOUNT_DIR/root/opt/retroarch/bin/" 2>/dev/null
 
   echo "== 更新 PPSSPP 1.20.4 =="
   safe sudo cp -a ./replace_file/ppsspp/* "$MOUNT_DIR/root/opt/ppsspp/" 2>/dev/null
@@ -475,7 +551,7 @@ else
   safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/opt/flycastsa/" 2>/dev/null
   safe sudo chmod -R 777 "$MOUNT_DIR/root/opt/flycastsa/" 2>/dev/null
 
-  echo "== 添加flycastsa-2022  =="
+  echo "== 添加 flycastsa-2022  =="
   safe sudo mkdir -p "$MOUNT_DIR/root/opt/flycastsa-2022" 2>/dev/null
   safe sudo cp -a ./replace_file/flycastsa-2022/. "$MOUNT_DIR/root/opt/flycastsa-2022/" 2>/dev/null
   safe sudo rm -rf "$MOUNT_DIR/root/opt/flycastsa-2022/patch" 2>/dev/null

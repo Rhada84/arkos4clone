@@ -73,7 +73,7 @@ fi
 	(pv -n /roms.tar | tar --no-same-permissions --no-same-owner --warning=no-timestamp -xf - -C /) &> /tmp/tar_stat.txt &
 	let COUNT=1
 	while true; do
-	  VAL=$(tail -n 1 /tmp/tar_stat.txt)
+	  VAL=$(tail -n 1 /tmp/tar_stat.txt | tr -d '\000')
 	  if [[ "$VAL" == "100" ]]; then
 	   VAL_INT=$(awk "BEGIN {print ($VAL / 100) * 20 + 60}" 2> /dev/null | cut -d '.' -f1)
 	   echo $VAL_INT

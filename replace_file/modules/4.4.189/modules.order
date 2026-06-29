@@ -6,6 +6,7 @@ kernel/crypto/michael_mic.ko
 kernel/crypto/authenc.ko
 kernel/crypto/authencesn.ko
 kernel/drivers/misc/eeprom/eeprom_93cx6.ko
+kernel/drivers/misc/seekwaveplatform_lite/skw_usb_lite.ko
 kernel/drivers/spi/spidev.ko
 kernel/drivers/spi/spi-bitbang.ko
 kernel/drivers/spi/spi-gpio.ko
@@ -69,6 +70,7 @@ kernel/drivers/net/wireless/rtl88x2bu/88x2bu.ko
 kernel/drivers/net/wireless/rtl8821cu/8821cu.ko
 kernel/drivers/net/wireless/ew-7611ulb/8723bu.ko
 kernel/drivers/net/wireless/esp8089/esp8089.ko
+kernel/drivers/net/wireless/swt6621s_wifi/swt6621s_wifi.ko
 kernel/drivers/net/usb/rtl8150.ko
 kernel/drivers/net/usb/r8152.ko
 kernel/drivers/net/usb/lan78xx.ko
@@ -176,6 +178,7 @@ kernel/drivers/bluetooth/btmrvl.ko
 kernel/drivers/bluetooth/btmrvl_sdio.ko
 kernel/drivers/bluetooth/btbcm.ko
 kernel/drivers/bluetooth/btrtl.ko
+kernel/drivers/bluetooth/swtbt4l/skwbt.ko
 kernel/drivers/staging/rtl8712/r8712u.ko
 kernel/drivers/staging/rtl8723au/r8723au.ko
 kernel/drivers/atm/atmtcp.ko

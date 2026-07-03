@@ -72,6 +72,13 @@ Non-Windows users, see [Manual Configuration](#manual-configuration).
 | A10MINI | `480P` | User Select | `consoles/a10mini/` | Thanks to Mr.Wu |
 | A10MINI V4 | `540P` | User Select | `consoles/a10miniv4/` | Thanks to Mr.Wu |
 
+### UDT
+
+| Device | Logo | Kernel | Config Files | Notes |
+|--------|------|--------|--------------|-------|
+| R36Ultra | `720P` | User Select | `consoles/r36ultra/` | Thanks to Mr.Li |
+| R36UltraX | `7268P` | User Select | `consoles/r36ultrax/` | Thanks to Mr.Li |
+
 ### AISLPC
 
 | Device | Logo | Kernel | Config Files | Notes |
@@ -102,9 +109,9 @@ Non-Windows users, see [Manual Configuration](#manual-configuration).
 
 | Device | Logo | Kernel | Config Files | Notes |
 |--------|------|--------|--------------|-------|
+| RGB10 | `320P` | User Select | `consoles/rgb10/` | |
 | RGB20S | `480P` | User Select | `consoles/rgb20s/` | |
 | RGB10MAX1 | `854x480P` | User Select | `consoles/rgb10max1/` | |
-| RGB10 | `320P` | User Select | `consoles/rgb10/` | |
 
 ### RetroBox
 
@@ -130,25 +137,25 @@ Non-Windows users, see [Manual Configuration](#manual-configuration).
 
 | Device | Logo | Kernel | Config Files | Notes |
 |--------|------|--------|--------------|-------|
+| R36H ProMax | `768P` | User Select | `consoles/r45h/` | Thanks to Mr.Lang |
+| R40XX | `768P` | User Select | `consoles/r40xx/` | Thanks to Mr.Lang |
+| R40XX ProMax | `768P` | User Select | `consoles/r46h/` | Thanks to Mr.Lang |
+| R45H | `768P` | User Select | `consoles/r45h/` | Thanks to Mr.Lang |
+| R46H | `768P` | User Select | `consoles/r46h/` | Thanks to Mr.Lang |
+| R36sPlus | `720P` | User Select | `consoles/r36splus/` | Thanks to Mr.Lang |
 | R33s | `480P` | User Select | `consoles/r33s/` | |
-| R36H | `480P` | User Select | `consoles/r36h/` | Thanks to Mr.Lang |
 | R36s Panel 0 | `480P` | User Select | `consoles/origin panel0/` |  |
 | R36s Panel 1 | `480P` | User Select | `consoles/origin panel1/` | |
 | R36s Panel 2 | `480P` | User Select | `consoles/origin panel2/` | |
 | R36s Panel 3 | `480P` | User Select | `consoles/origin panel3/` | |
 | R36s Panel 4 | `480P` | User Select | `consoles/origin panel4/` | Thanks to 海拉姆电玩 |
 | R36s V22 | `480P` | User Select | `consoles/v22 panel4/` | |
-| R36s V30 | `480P` | User Select | `consoles/v30 panel4/` | Thanks to 海拉姆电玩 |
+| R36s V30 | `480P` | User Select | `consoles/v30 panel4/` | Thanks to 海拉姆电玩 and Mr.Lang |
 | R36XX | `480P` | User Select | `consoles/origin panel4/` | Thanks to Mr.Lang |
+| R36H | `480P` | User Select | `consoles/r36h/` | Thanks to Mr.Lang |
 | O30S | `480P` | User Select | `consoles/r36h/` | |
-| R36sPlus | `720P` | User Select | `consoles/r36splus/` | Thanks to Mr.Lang |
-| R36H ProMax | `768P` | User Select | `consoles/r45h/` | Thanks to Mr.Lang |
-| R40XX | `768P` | User Select | `consoles/r40xx/` | Thanks to Mr.Lang |
-| R40XX ProMax | `768P` | User Select | `consoles/r46h/` | Thanks to Mr.Lang |
-| R45H | `768P` | User Select | `consoles/r45h/` | Thanks to Mr.Lang |
-| R46H | `768P` | User Select | `consoles/r46h/` | Thanks to Mr.Lang |
 | R50S | `854x480P` | User Select | `consoles/r50s/` | Thanks to Mr.Lang |
-| R50S | `720x1280P` | User Select | `consoles/r50h/` | Thanks to Mr.Lang |
+| R50H | `720x1280P` | User Select | `consoles/r50h/` | Thanks to Mr.Lang |
 
 ### SoySauce R36s
 
@@ -173,26 +180,25 @@ Non-Windows users, see [Manual Configuration](#manual-configuration).
 | Mymini | `480P` | User Select | `consoles/mymini/` | Thanks to XiFan |
 | Mini40 | `720P` | User Select | `consoles/mini40/` | Thanks to XiFan |
 | R36Max | `720P` | User Select | `consoles/r36max/` | Thanks to XiFan |
-| R36Max2 | `768P` | User Select | `consoles/r36max2/` | Thanks to XiFan |
-| XF45V | `768P` | User Select | `consoles/xf45v/` | Thanks to XiFan |
-| DC45V | `768P` | User Select | `consoles/dc45v/` | Thanks to XiFan |
-| RF45V | `768P` | User Select | `consoles/rf45v/` | Thanks to XiFan |
 | R36Pro | `480P` | User Select | `consoles/r36pro/` | Thanks to XiFan |
-| XF28 | `480P-1` | User Select | `consoles/xf28/` | Thanks to XiFan |
 | XF35H | `480P` | User Select | `consoles/xf35h/` | Thanks to XiFan |
 | RF35H | `480P` | User Select | `consoles/rf35h/` | Thanks to XiFan |
 | XF40H | `720P` | User Select | `consoles/xf40h/` | Thanks to XiFan |
 | RF40H | `720P` | User Select | `consoles/rf40h/` | Thanks to XiFan |
 | DC35V | `480P` | User Select | `consoles/dc35v/` | Thanks to XiFan |
 | DC40V | `720P` | User Select | `consoles/dc40v/` | Thanks to XiFan |
+| XF40V | `720P` | User Select | `consoles/dc40v/` | Thanks to XiFan |
+| XF28 | `480P-1` | User Select | `consoles/xf28/` | Thanks to XiFan |
+| R36Max2 | `768P` | User Select | `consoles/r36max2/` | Thanks to XiFan |
+| XF45V | `768P` | User Select | `consoles/xf45v/` | Thanks to XiFan |
+| DC45V | `768P` | User Select | `consoles/dc45v/` | Thanks to XiFan |
+| RF45V | `768P` | User Select | `consoles/rf45v/` | Thanks to XiFan |
 
 ### Other Devices
 
 | Device | Logo | Kernel | Config Files | Notes |
 |--------|------|--------|--------------|-------|
 | HG36 (HG3506) | `480P` | User Select | `consoles/hg36/` | |
-| R36Ultra | `720P` | User Select | `consoles/r36ultra/` | Thanks to Mr.Li |
-| R36UltraX | `7268P` | User Select | `consoles/r36ultrax/` | Thanks to Mr.Li |
 | RX6H | `480P` | User Select | `consoles/rx6h/` | Thanks to Mr.Yin |
 | XGB36 (G26) | `480P` | User Select | `consoles/xgb36/` | |
 | T16MAX | `720P` | User Select | `consoles/t16max/` | |

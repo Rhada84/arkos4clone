@@ -224,6 +224,19 @@ if [[ "$ARKOS_IMAGE_NAME" == *dArkOS* ]]; then
   safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/opt/flycastsa-2022" 2>/dev/null
   safe sudo chmod -R 777 "$MOUNT_DIR/root/opt/flycastsa-2022" 2>/dev/null
 
+  echo "== 添加 flycastsa-r7  =="
+  safe sudo mkdir -p "$MOUNT_DIR/root/opt/flycastsa-r7" 2>/dev/null
+  safe sudo cp -a ./replace_file/flycastsa-r7/. "$MOUNT_DIR/root/opt/flycastsa-r7/" 2>/dev/null
+  safe sudo rm -rf "$MOUNT_DIR/root/opt/flycastsa-r7/patch" 2>/dev/null
+  safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/opt/flycastsa-r7" 2>/dev/null
+  safe sudo chmod -R 777 "$MOUNT_DIR/root/opt/flycastsa-r7" 2>/dev/null
+
+  echo "== 更新 yabasanshiro-sa =="
+  safe sudo cp -a ./replace_file/yabasanshiro/. "$MOUNT_DIR/root/opt/yabasanshiro/" 2>/dev/null
+  safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/opt/yabasanshiro/" 2>/dev/null
+  safe sudo chmod -R 777 "$MOUNT_DIR/root/opt/yabasanshiro/" 2>/dev/null
+  safe sudo rm -rf "$MOUNT_DIR/root/opt/yabasanshiro/patch" 2>/dev/null
+
   echo "== 处理 roms.tar =="
   if [ "$(stat -c%s $MOUNT_DIR/root/roms.tar 2>/dev/null || echo 0)" -le $((100*1024*1024)) ]; then
     echo "== 复制 roms.tar 出来操作 =="
@@ -425,6 +438,7 @@ else
   safe sudo cp -f ./replace_file/n64.sh "$MOUNT_DIR/root/usr/local/bin/"
   safe sudo cp -f ./replace_file/gametank.sh "$MOUNT_DIR/root/usr/local/bin/"
   safe sudo cp -f ./replace_file/gametankkeydemon.py "$MOUNT_DIR/root/usr/local/bin/"
+  safe sudo cp -f ./replace_file/flash.sh "$MOUNT_DIR/root/usr/local/bin/"
   safe sudo cp -f ./replace_file/pico8.sh "$MOUNT_DIR/root/usr/local/bin/"
   safe sudo cp -f ./replace_file/drastic.sh "$MOUNT_DIR/root/usr/local/bin/"
   safe sudo cp -f ./replace_file/drastic_kk.sh "$MOUNT_DIR/root/usr/local/bin/"
@@ -441,6 +455,7 @@ else
   safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/usr/local/bin/n64.sh" 2>/dev/null
   safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/usr/local/bin/gametank.sh" 2>/dev/null
   safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/usr/local/bin/gametankkeydemon.py" 2>/dev/null
+  safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/usr/local/bin/flash.sh" 2>/dev/null
   safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/usr/local/bin/pico8.sh" 2>/dev/null
   safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/usr/local/bin/drastic.sh" 2>/dev/null
   safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/usr/local/bin/drastic_kk.sh" 2>/dev/null
@@ -457,6 +472,7 @@ else
   safe sudo chmod 777 "$MOUNT_DIR/root/usr/local/bin/n64.sh" 2>/dev/null
   safe sudo chmod 777 "$MOUNT_DIR/root/usr/local/bin/gametank.sh" 2>/dev/null
   safe sudo chmod 777 "$MOUNT_DIR/root/usr/local/bin/gametankkeydemon.py" 2>/dev/null
+  safe sudo chmod 777 "$MOUNT_DIR/root/usr/local/bin/flash.sh" 2>/dev/null
   safe sudo chmod 777 "$MOUNT_DIR/root/usr/local/bin/pico8.sh" 2>/dev/null
   safe sudo chmod 777 "$MOUNT_DIR/root/usr/local/bin/drastic.sh" 2>/dev/null
   safe sudo chmod 777 "$MOUNT_DIR/root/usr/local/bin/drastic_kk.sh" 2>/dev/null
@@ -578,11 +594,31 @@ else
   safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/opt/flycastsa-2022" 2>/dev/null
   safe sudo chmod -R 777 "$MOUNT_DIR/root/opt/flycastsa-2022" 2>/dev/null
 
+  echo "== 添加 flycastsa-r7  =="
+  safe sudo mkdir -p "$MOUNT_DIR/root/opt/flycastsa-r7" 2>/dev/null
+  safe sudo cp -a ./replace_file/flycastsa-r7/. "$MOUNT_DIR/root/opt/flycastsa-r7/" 2>/dev/null
+  safe sudo rm -rf "$MOUNT_DIR/root/opt/flycastsa-r7/patch" 2>/dev/null
+  safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/opt/flycastsa-r7" 2>/dev/null
+  safe sudo chmod -R 777 "$MOUNT_DIR/root/opt/flycastsa-r7" 2>/dev/null
+
   echo "== 添加 gametank-sa  =="
   safe sudo mkdir -p "$MOUNT_DIR/root/opt/gametank" 2>/dev/null
   safe sudo cp -a ./replace_file/gametank/. "$MOUNT_DIR/root/opt/gametank/" 2>/dev/null
   safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/opt/gametank" 2>/dev/null
   safe sudo chmod -R 777 "$MOUNT_DIR/root/opt/gametank" 2>/dev/null
+
+  echo "== 添加 ruffle-sa  =="
+  safe sudo mkdir -p "$MOUNT_DIR/root/opt/rufflesa" 2>/dev/null
+  safe sudo cp -a ./replace_file/rufflesa/. "$MOUNT_DIR/root/opt/rufflesa/" 2>/dev/null
+  safe sudo rm -rf "$MOUNT_DIR/root/opt/rufflesa/patch" 2>/dev/null
+  safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/opt/rufflesa" 2>/dev/null
+  safe sudo chmod -R 777 "$MOUNT_DIR/root/opt/rufflesa" 2>/dev/null
+
+  echo "== 更新 yabasanshiro-sa =="
+  safe sudo cp -a ./replace_file/yabasanshiro/. "$MOUNT_DIR/root/opt/yabasanshiro/" 2>/dev/null
+  safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/opt/yabasanshiro/" 2>/dev/null
+  safe sudo chmod -R 777 "$MOUNT_DIR/root/opt/yabasanshiro/" 2>/dev/null
+  safe sudo rm -rf "$MOUNT_DIR/root/opt/yabasanshiro/patch" 2>/dev/null
 
   echo "== 处理 roms.tar =="
   if [ "$(stat -c%s $MOUNT_DIR/root/roms.tar 2>/dev/null || echo 0)" -le $((100*1024*1024)) ]; then

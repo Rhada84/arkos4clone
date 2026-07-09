@@ -18,6 +18,11 @@ else
   param_device="chi"
 fi
 
+if grep -q '<string name="Language" value="zh-CN" />' /home/ark/.emulationstation/es_settings.cfg; then
+  export LANG=zh_CN.UTF-8 
+  export LC_ALL=zh_CN.UTF-8
+fi
+
 if [[ $1 == *"standalone"* ]]; then
   directory=$(dirname "$2" | cut -d "/" -f2)
   if [[ ! -d "/$directory/saturn/yabasanshiro" ]]; then

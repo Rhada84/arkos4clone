@@ -1574,6 +1574,18 @@
 		<extension>.img .IMG .cue .CUE .chd .CHD .iso .ISO .m3u .M3U</extension>
 		<command>sudo perfmax %GOVERNOR% %ROM%; nice -n -19 /usr/local/bin/saturn.sh %EMULATOR% %CORE% %ROM%; sudo perfnorm</command>
 		<emulators>
+			<emulator name="standalone-nobios">
+		      </emulator>
+			<emulator name="standalone-bios">
+		      </emulator>
+			<emulator name="standalone-pi4-nobios">
+		      </emulator>
+			<emulator name="standalone-pi4-bios">
+		      </emulator>
+			<emulator name="standalone-2412-nobios">
+		      </emulator>
+			<emulator name="standalone-2412-bios">
+		      </emulator>
 			<emulator name="retroarch32">
 				<cores>
 					<core>yabasanshiro</core>
@@ -1596,10 +1608,6 @@
 					<core>yabasanshiro</core>
 				</cores>
 			</emulator>
-			<emulator name="standalone-bios">
-		      </emulator>
-			<emulator name="standalone-nobios">
-		      </emulator>
 		</emulators>
 		<platform>saturn</platform>
 		<theme>saturn</theme>
@@ -4218,6 +4226,18 @@
 		<extension>.img .IMG .cue .CUE .chd .CHD .iso .ISO .m3u .M3U</extension>
 		<command>sudo perfmax %GOVERNOR% %ROM%; nice -n -19 /usr/local/bin/saturn.sh %EMULATOR% %CORE% %ROM%; sudo perfnorm</command>
 		<emulators>
+			<emulator name="standalone-nobios">
+		      </emulator>
+			<emulator name="standalone-bios">
+		      </emulator>
+			<emulator name="standalone-pi4-nobios">
+		      </emulator>
+			<emulator name="standalone-pi4-bios">
+		      </emulator>
+			<emulator name="standalone-2412-nobios">
+		      </emulator>
+			<emulator name="standalone-2412-bios">
+		      </emulator>
 			<emulator name="retroarch32">
 				<cores>
 					<core>yabasanshiro</core>
@@ -4240,10 +4260,6 @@
 					<core>yabasanshiro</core>
 				</cores>
 			</emulator>
-			<emulator name="standalone-bios">
-		      </emulator>
-			<emulator name="standalone-nobios">
-		      </emulator>
 		</emulators>
 		<platform>saturn</platform>
 		<theme>saturn</theme>

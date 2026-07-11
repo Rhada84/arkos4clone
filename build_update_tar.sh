@@ -186,25 +186,15 @@ if [[ "$ARKOS_IMAGE_NAME" == *dArkOS* ]]; then
   mkdir -p "$PAYLOAD_ROOT/usr/lib/aarch64-linux-gnu/"
   cp -f ./bin/json-c3/* "$PAYLOAD_ROOT/usr/lib/aarch64-linux-gnu/" 2>/dev/null || true
 
-  echo "== 更新 flycastsa v2.6 =="
+  echo "== 更新和添加 flycastsa =="
   mkdir -p "$PAYLOAD_ROOT/opt/flycastsa"
+  cp -a ./replace_file/flycastsa/. "$PAYLOAD_ROOT/opt/flycastsa/" 2>/dev/null || true
   rm -rf "$PAYLOAD_ROOT/opt/flycastsa/patch" 2>/dev/null || true
-  cp -a ./replace_file/flycastsa/flycast "$PAYLOAD_ROOT/opt/flycastsa/" 2>/dev/null || true
 
-  echo "== 添加 flycastsa-2022 =="
-  mkdir -p "$PAYLOAD_ROOT/opt/flycastsa-2022"
-  cp -a ./replace_file/flycastsa-2022/. "$PAYLOAD_ROOT/opt/flycastsa-2022/" 2>/dev/null || true
-  rm -rf "$PAYLOAD_ROOT/opt/flycastsa-2022/patch" 2>/dev/null || true
-
-  echo "== 添加 flycastsa-r7 =="
-  mkdir -p "$PAYLOAD_ROOT/opt/flycastsa-r7"
-  cp -a ./replace_file/flycastsa-r7/. "$PAYLOAD_ROOT/opt/flycastsa-r7/" 2>/dev/null || true
-  rm -rf "$PAYLOAD_ROOT/opt/flycastsa-r7/patch" 2>/dev/null || true
-
-  echo "== 更新 yabasanshiro-sa =="
+  echo "== 更新和添加 yabasanshiro-sa =="
   mkdir -p "$PAYLOAD_ROOT/opt/yabasanshiro"
-  rm -rf "$PAYLOAD_ROOT/opt/yabasanshiro/patch" 2>/dev/null || true
   cp -a ./replace_file/yabasanshiro/. "$PAYLOAD_ROOT/opt/yabasanshiro/" 2>/dev/null || true
+  rm -rf "$PAYLOAD_ROOT/opt/yabasanshiro/patch" 2>/dev/null || true
 
   echo "== 注入 retrorun =="
   mkdir -p "$PAYLOAD_ROOT/usr/local/bin"
@@ -293,10 +283,6 @@ EOF
   meta_add "0777" "1000:1000" "/opt/retroarch/bin/*"
   meta_add "0777" "1000:1000" "/opt/flycastsa"
   meta_add "0777" "1000:1000" "/opt/flycastsa/*"
-  meta_add "0777" "1000:1000" "/opt/flycastsa-2022"
-  meta_add "0777" "1000:1000" "/opt/flycastsa-2022/*"
-  meta_add "0777" "1000:1000" "/opt/flycastsa-r7"
-  meta_add "0777" "1000:1000" "/opt/flycastsa-r7/*"
   meta_add "0777" "1000:1000" "/opt/yabasanshiro"
   meta_add "0777" "1000:1000" "/opt/yabasanshiro/*"
   meta_add "0777" "1000:1000" "/usr/lib/aarch64-linux-gnu/libjson-c.so*"
@@ -456,20 +442,10 @@ else
   mkdir -p "$PAYLOAD_ROOT/opt/scummvm"
   cp -a ./replace_file/scummvm/. "$PAYLOAD_ROOT/opt/scummvm/" 2>/dev/null || true
 
-  echo "== 更新 flycastsa v2.6 =="
+  echo "== 更新和添加 flycastsa =="
   mkdir -p "$PAYLOAD_ROOT/opt/flycastsa"
-  cp -a ./replace_file/flycastsa/flycast "$PAYLOAD_ROOT/opt/flycastsa/" 2>/dev/null || true
+  cp -a ./replace_file/flycastsa/. "$PAYLOAD_ROOT/opt/flycastsa/" 2>/dev/null || true
   rm -rf "$PAYLOAD_ROOT/opt/flycastsa/patch" 2>/dev/null || true
-
-  echo "== 添加 flycastsa-2022 =="
-  mkdir -p "$PAYLOAD_ROOT/opt/flycastsa-2022"
-  cp -a ./replace_file/flycastsa-2022/. "$PAYLOAD_ROOT/opt/flycastsa-2022/" 2>/dev/null || true
-  rm -rf "$PAYLOAD_ROOT/opt/flycastsa-2022/patch" 2>/dev/null || true
-
-  echo "== 添加 flycastsa-r7 =="
-  mkdir -p "$PAYLOAD_ROOT/opt/flycastsa-r7"
-  cp -a ./replace_file/flycastsa-r7/. "$PAYLOAD_ROOT/opt/flycastsa-r7/" 2>/dev/null || true
-  rm -rf "$PAYLOAD_ROOT/opt/flycastsa-r7/patch" 2>/dev/null || true
 
   echo "== 添加 rufflesa =="
   mkdir -p "$PAYLOAD_ROOT/opt/rufflesa"
@@ -494,10 +470,10 @@ else
   mkdir -p "$PAYLOAD_ROOT/home/ark/.quirks"
   cp -r ./replace_file/ogage "$PAYLOAD_ROOT/home/ark/.quirks/" 2>/dev/null || true
 
-  echo "== 更新 yabasanshiro-sa =="
+  echo "== 更新和添加 yabasanshiro-sa =="
   mkdir -p "$PAYLOAD_ROOT/opt/yabasanshiro"
-  rm -rf "$PAYLOAD_ROOT/opt/yabasanshiro/patch" 2>/dev/null || true
   cp -a ./replace_file/yabasanshiro/. "$PAYLOAD_ROOT/opt/yabasanshiro/" 2>/dev/null || true
+  rm -rf "$PAYLOAD_ROOT/opt/yabasanshiro/patch" 2>/dev/null || true
 
   echo "== 注入 services / tools =="
   mkdir -p "$PAYLOAD_ROOT/etc/systemd/system" \
@@ -577,10 +553,6 @@ EOF
   meta_add "0777" "1002:1002" "/opt/scummvm/*"
   meta_add "0777" "1002:1002" "/opt/flycastsa"
   meta_add "0777" "1002:1002" "/opt/flycastsa/*"
-  meta_add "0777" "1002:1002" "/opt/flycastsa-2022"
-  meta_add "0777" "1002:1002" "/opt/flycastsa-2022/*"
-  meta_add "0777" "1002:1002" "/opt/flycastsa-r7"
-  meta_add "0777" "1002:1002" "/opt/flycastsa-r7/*"
   meta_add "0777" "1002:1002" "/opt/yabasanshiro"
   meta_add "0777" "1002:1002" "/opt/yabasanshiro/*"
   meta_add "0777" "1002:1002" "/usr/lib/aarch64-linux-gnu/libjson-c.so*"

@@ -212,26 +212,13 @@ if [[ "$ARKOS_IMAGE_NAME" == *dArkOS* ]]; then
   safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/opt/retroarch/bin/" 2>/dev/null
   safe sudo chmod -R 777 "$MOUNT_DIR/root/opt/retroarch/bin/" 2>/dev/null
 
-  echo "== 更新 flycastsa v2.6 =="
-  safe sudo cp -a ./replace_file/flycastsa/flycast "$MOUNT_DIR/root/opt/flycastsa/" 2>/dev/null
+  echo "== 更新和添加 flycastsa =="
+  safe sudo cp -a ./replace_file/flycastsa/. "$MOUNT_DIR/root/opt/flycastsa/" 2>/dev/null
   safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/opt/flycastsa/" 2>/dev/null
   safe sudo chmod -R 777 "$MOUNT_DIR/root/opt/flycastsa/" 2>/dev/null
+  safe sudo rm -rf "$MOUNT_DIR/root/opt/flycastsa/patch" 2>/dev/null
 
-  echo "== 添加 flycastsa-2022  =="
-  safe sudo mkdir -p "$MOUNT_DIR/root/opt/flycastsa-2022" 2>/dev/null
-  safe sudo cp -a ./replace_file/flycastsa-2022/. "$MOUNT_DIR/root/opt/flycastsa-2022/" 2>/dev/null
-  safe sudo rm -rf "$MOUNT_DIR/root/opt/flycastsa-2022/patch" 2>/dev/null
-  safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/opt/flycastsa-2022" 2>/dev/null
-  safe sudo chmod -R 777 "$MOUNT_DIR/root/opt/flycastsa-2022" 2>/dev/null
-
-  echo "== 添加 flycastsa-r7  =="
-  safe sudo mkdir -p "$MOUNT_DIR/root/opt/flycastsa-r7" 2>/dev/null
-  safe sudo cp -a ./replace_file/flycastsa-r7/. "$MOUNT_DIR/root/opt/flycastsa-r7/" 2>/dev/null
-  safe sudo rm -rf "$MOUNT_DIR/root/opt/flycastsa-r7/patch" 2>/dev/null
-  safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/opt/flycastsa-r7" 2>/dev/null
-  safe sudo chmod -R 777 "$MOUNT_DIR/root/opt/flycastsa-r7" 2>/dev/null
-
-  echo "== 更新 yabasanshiro-sa =="
+  echo "== 更新和添加 yabasanshiro-sa =="
   safe sudo cp -a ./replace_file/yabasanshiro/. "$MOUNT_DIR/root/opt/yabasanshiro/" 2>/dev/null
   safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/opt/yabasanshiro/" 2>/dev/null
   safe sudo chmod -R 777 "$MOUNT_DIR/root/opt/yabasanshiro/" 2>/dev/null
@@ -582,24 +569,11 @@ else
   safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/opt/scummvm/" 2>/dev/null
   safe sudo chmod -R 777 "$MOUNT_DIR/root/opt/scummvm/" 2>/dev/null
 
-  echo "== 更新 flycastsa v2.6 =="
-  safe sudo cp -a ./replace_file/flycastsa/flycast "$MOUNT_DIR/root/opt/flycastsa/" 2>/dev/null
+  echo "== 更新和添加 flycastsa =="
+  safe sudo cp -a ./replace_file/flycastsa/. "$MOUNT_DIR/root/opt/flycastsa/" 2>/dev/null
   safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/opt/flycastsa/" 2>/dev/null
   safe sudo chmod -R 777 "$MOUNT_DIR/root/opt/flycastsa/" 2>/dev/null
-
-  echo "== 添加 flycastsa-2022  =="
-  safe sudo mkdir -p "$MOUNT_DIR/root/opt/flycastsa-2022" 2>/dev/null
-  safe sudo cp -a ./replace_file/flycastsa-2022/. "$MOUNT_DIR/root/opt/flycastsa-2022/" 2>/dev/null
-  safe sudo rm -rf "$MOUNT_DIR/root/opt/flycastsa-2022/patch" 2>/dev/null
-  safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/opt/flycastsa-2022" 2>/dev/null
-  safe sudo chmod -R 777 "$MOUNT_DIR/root/opt/flycastsa-2022" 2>/dev/null
-
-  echo "== 添加 flycastsa-r7  =="
-  safe sudo mkdir -p "$MOUNT_DIR/root/opt/flycastsa-r7" 2>/dev/null
-  safe sudo cp -a ./replace_file/flycastsa-r7/. "$MOUNT_DIR/root/opt/flycastsa-r7/" 2>/dev/null
-  safe sudo rm -rf "$MOUNT_DIR/root/opt/flycastsa-r7/patch" 2>/dev/null
-  safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/opt/flycastsa-r7" 2>/dev/null
-  safe sudo chmod -R 777 "$MOUNT_DIR/root/opt/flycastsa-r7" 2>/dev/null
+  safe sudo rm -rf "$MOUNT_DIR/root/opt/flycastsa/patch" 2>/dev/null
 
   echo "== 添加 gametank-sa  =="
   safe sudo mkdir -p "$MOUNT_DIR/root/opt/gametank" 2>/dev/null
@@ -614,7 +588,7 @@ else
   safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/opt/rufflesa" 2>/dev/null
   safe sudo chmod -R 777 "$MOUNT_DIR/root/opt/rufflesa" 2>/dev/null
 
-  echo "== 更新 yabasanshiro-sa =="
+  echo "== 更新和添加 yabasanshiro-sa =="
   safe sudo cp -a ./replace_file/yabasanshiro/. "$MOUNT_DIR/root/opt/yabasanshiro/" 2>/dev/null
   safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/opt/yabasanshiro/" 2>/dev/null
   safe sudo chmod -R 777 "$MOUNT_DIR/root/opt/yabasanshiro/" 2>/dev/null

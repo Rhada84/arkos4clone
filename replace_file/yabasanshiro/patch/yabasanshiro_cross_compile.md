@@ -1,250 +1,241 @@
 # Yabasanshiro 交叉编译文档
 
-## 概述
+## 版本信息
 
-Yabasanshiro 是一个世嘉土星(Sega Saturn)模拟器，本文档介绍如何在x86_64主机上交叉编译aarch64版本。
+| 版本 | 源码分支 | 二进制名 | 存档路径 |
+|------|----------|----------|----------|
+| 1.11 | `m2_1_11` | `yabasanshiro-2412` | `/roms(2)/saturn/yabasanshiro-2412/` |
+| pi4 | `pi4` | `yabasanshiro-pi4` | `/roms(2)/saturn/yabasanshiro-pi4/` |
+| pi4-1-9-0 | `pi4-1-9-0` | `yabasanshiro` | `/roms(2)/saturn/yabasanshiro/` |
 
-## 项目信息
+## 统一配置
 
-| 项目 | 内容 |
+| 项目 | 路径 |
 |------|------|
-| 源码 | https://github.com/devmiyax/yabause |
-| 分支/标签 | pi4-1-9-0 |
+| 按键配置 | `/opt/yabasanshiro/input.cfg` |
+| 按键映射 | `/opt/yabasanshiro/keymapv2.json` |
+| CJK字体 | `/opt/yabasanshiro/wqy-microhei.ttf` |
+| 游戏配置 | `/opt/yabasanshiro/` |
+
+## 源码仓库
+
+- **仓库**: https://github.com/devmiyax/yabause
+- **pi4-1-9-0分支**: `pi4-1-9-0`
+- **pi4分支**: `pi4`
+- **1.11分支**: `m2_1_11` (tag: `1.11.0-beta3`)
+
+## 交叉编译环境
+
+| 项目 | 路径/版本 |
+|------|-----------|
+| 工具链 | `gcc-linaro-7.5.0-2019.12-x86_64_aarch64-linux-gnu` |
+| Sysroot | `/home/lcdyk/ppsspp_cross` |
 | 目标架构 | aarch64 (ARM 64-bit) |
 | 目标平台 | RK3326 (Cortex-A35) |
+| 主机系统 | Ubuntu 22.04 x86_64 |
 
-## 依赖
+## 交叉编译修复
 
-### 主机依赖
+### 1. CMake交叉编译支持
 
-```bash
-# 交叉编译工具链
-/opt/toolchains/gcc-linaro-7.5.0-2019.12-x86_64_aarch64-linux-gnu
+**文件**: `CMake/Packages/external_libchdr.cmake`, `external_libpng.cmake`, `external_zlib.cmake`
 
-# 构建工具
-cmake
-git
-python3 (用于fonttools转换字体)
+**问题**: ExternalProject使用host编译器而非交叉编译器
+
+**修复**: 在`else()`分支添加交叉编译参数
+```cmake
+else()
+  set(ADDITIONAL_CMAKE_ARGS
+    -DCMAKE_C_COMPILER=${CMAKE_C_COMPILER}
+    -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}
+    -DCMAKE_SYSROOT=${CMAKE_SYSROOT}
+  )
+endif()
 ```
 
-### 目标依赖 (sysroot)
+### 2. bin2c交叉编译
 
+**文件**: `src/retro_arena/nanogui-sdl/CMakeLists.txt`
+
+**问题**: bin2c是构建时工具，需要用host编译器编译，但CMake会用交叉编译器编译
+
+**修复**: 检测交叉编译时使用预编译的bin2c
+```cmake
+if(CMAKE_CROSSCOMPILING)
+  set(bin2c_cmdline ${CMAKE_CURRENT_SOURCE_DIR}/bin2c)
+else()
+  add_executable(bin2c resources/bin2c.c)
+  set(bin2c_cmdline ./bin2c)
+endif()
 ```
-/home/lcdyk/r.arkos/core_cross_build/ (或 /home/lcdyk/ppsspp_cross/)
-├── usr/lib/aarch64-linux-gnu/
-│   ├── libEGL.so → libMali.so
-│   ├── libGLESv2.so → libMali.so
-│   ├── libgbm.so → libMali.so
-│   ├── libSDL2.so
-│   ├── libX11.so
-│   ├── libXrandr.so
-│   ├── libopenal.so
-│   ├── libboost_system.so
-│   ├── libboost_filesystem.so
-│   ├── libboost_date_time.so
-│   ├── libboost_locale.so
-│   ├── libasound.so
-│   ├── librga.so
-│   └── libmali-bifrost-g31-rxp0-gbm.so
-└── usr/include/
-    ├── SDL2/
-    ├── EGL/
-    ├── GLES2/
-    ├── GLES3/
-    └── rga/
+
+### 3. libpng NEON禁用
+
+**文件**: `src/retro_arena/png/src/png/pngpriv.h`
+
+**问题**: libpng在ARM架构上自动启用NEON，但交叉编译环境不支持
+
+**修复**: 在文件开头强制定义
+```c
+#define PNG_ARM_NEON_OPT 0
+#if 0
+// 原始的 #ifndef PNG_ARM_NEON_OPT ...
 ```
+
+同时修改 `pngrtran.c` 和 `pngrutil.c`，注释掉NEON函数调用。
+
+### 4. mini18n禁用
+
+**文件**: `src/CMakeLists.txt`
+
+**问题**: mini18n库与sysroot的wchar.h不兼容（locale_t类型冲突）
+
+**修复**: 
+```cmake
+# 注释掉mini18n定义
+# add_definitions(-DHAVE_LIBMINI18N=1)
+
+# 注释掉mini18n源文件
+# ${MINI18N_PATH}/mini18n.c
+# ${MINI18N_PATH}/mini18n-multi.c
+# ...
+```
+
+### 5. threads.h u64类型定义
+
+**文件**: `src/threads.h`
+
+**问题**: 缺少u64类型的定义
+
+**修复**: 添加头文件和类型定义
+```c
+#include <stdint.h>
+typedef uint64_t u64;
+```
+
+### 6. librga.so符号链接
+
+**问题**: sysroot里的librga.so是指向libMali.so的stub
+
+**修复**: 替换为正确版本的librga.so（无SONAME）
+
+## Patch说明
+
+### 共用修改（三个版本都有）
+
+| 修改 | 文件 | 说明 |
+|------|------|------|
+| i18n中文菜单 | `MenuScreen.cpp`, `i18n.h` | 根据LANG/LC_ALL自动切换中英文 |
+| CJK字体加载 | `nanogui-sdl/src/theme.cpp` | 从二进制目录加载wqy-microhei.ttf |
+| 居中显示 | `vidogl.c` | 修复正方形屏幕过裁剪问题 |
+| 存档路径 | `main.cpp` | 统一存档路径 |
+| input.cfg路径 | `InputManager.cpp` | 读取/opt/yabasanshiro/input.cfg |
+| 路径修改 | `main.cpp`, `Preference.cpp` | 配置文件路径修改 |
+| 按键映射 | `InputManager.cpp` | 按键配置调整 |
+| 低分辨率 | `nx/main.cpp`, `sdl/main.c` | 默认低分辨率模式 |
+| 移除GLES3扩展 | `ygl.h`, `nanovg_osdcore.c` | 兼容性修复 |
+| 移除关于页面 | `MenuScreen.cpp` | 注释掉About窗口 |
+| 存档路径修改 | `main.cpp` | 存档路径调整 |
+
+### 存档路径
+
+| 版本 | 路径 |
+|------|------|
+| 1.11 | `/roms(2)/saturn/yabasanshiro-2412/` |
+| pi4 | `/roms(2)/saturn/yabasanshiro-pi4/` |
+| pi4-1-9-0 | `/roms(2)/saturn/yabasanshiro/` |
 
 ## 编译步骤
 
-### 1. 克隆源码
+### 1. 准备工具
 
 ```bash
-git clone --recursive https://github.com/devmiyax/yabause -b pi4-1-9-0 yabasanshiro
+# bin2c (x86_64 host工具)
+cp yabasanshiro-build-host/bin2c/bin2c yabause/src/retro_arena/nanogui-sdl/
+
+# m68kmake (x86_64 host工具)
+mkdir -p build/src/musashi
+cp yabasanshiro-build-host/musashi/m68kmake build/src/musashi/
 ```
 
-### 2. 应用补丁
+### 2. 应用Patch
 
 ```bash
-cd yabasanshiro
-
-# 应用原有补丁
-for patch in ../patches/yabasanshirosa-patch-00{01,02,03,04,05,06,08,09}*.patch; do
-    patch -Np1 < "$patch"
-done
-
-# 应用完整补丁（包含i18n、居中显示、编译修复）
-patch -Np1 < ../patches/yabasanshirosa-patch-0010-i18n-center-cjk.patch
+cd yabause
+patch -Np2 < yabasanshirosa.patch
+cp yabasanshirosa-i18n.h src/retro_arena/i18n.h
 ```
 
-### 3. 构建m68kmake (host工具)
+### 3. CMake配置
 
 ```bash
-mkdir -p ../yabasanshiro-build-host/musashi
-cd ../yabasanshiro-build-host/musashi
-cmake ../../yabasanshiro/yabause/src/musashi -G "Unix Makefiles"
-make -j$(nproc)
-cd ../../yabasanshiro
-```
-
-### 4. 配置CMake工具链
-
-创建 `aarch64-toolchain.cmake`:
-
-```cmake
-set(CMAKE_SYSTEM_NAME Linux)
-set(CMAKE_SYSTEM_PROCESSOR aarch64)
-set(CMAKE_C_COMPILER /opt/toolchains/gcc-linaro-7.5.0-2019.12-x86_64_aarch64-linux-gnu/bin/aarch64-linux-gnu-gcc)
-set(CMAKE_CXX_COMPILER /opt/toolchains/gcc-linaro-7.5.0-2019.12-x86_64_aarch64-linux-gnu/bin/aarch64-linux-gnu-g++)
-set(CMAKE_SYSROOT /home/lcdyk/r.arkos/core_cross_build)
-set(CMAKE_FIND_ROOT_PATH /home/lcdyk/r.arkos/core_cross_build)
-set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
-set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
-set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
-set(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE ONLY)
-```
-
-### 5. 构建
-
-```bash
-SYSROOT="/home/lcdyk/ppsspp_cross"
-TOOLCHAIN_DIR="/opt/toolchains/gcc-linaro-7.5.0-2019.12-x86_64_aarch64-linux-gnu"
-
-mkdir -p yabasanshiro-build && cd yabasanshiro-build
-
-# 复制m68kmake
-mkdir -p src/musashi
-cp ../yabasanshiro-build-host/musashi/m68kmake src/musashi/
-chmod +x src/musashi/m68kmake
-
-# 配置
-cmake -S ../yabasanshiro/yabause \
-    -DCMAKE_RULE_MESSAGES=OFF \
-    -DCMAKE_VERBOSE_MAKEFILE=ON \
-    -DCMAKE_BUILD_TYPE=Release \
+cmake -S yabause \
     -DCMAKE_SYSTEM_NAME=Linux \
     -DCMAKE_SYSTEM_PROCESSOR=aarch64 \
-    -DCMAKE_C_COMPILER=${TOOLCHAIN_DIR}/bin/aarch64-linux-gnu-gcc \
-    -DCMAKE_CXX_COMPILER=${TOOLCHAIN_DIR}/bin/aarch64-linux-gnu-g++ \
+    -DCMAKE_C_COMPILER=${TOOLCHAIN}/bin/aarch64-linux-gnu-gcc \
+    -DCMAKE_CXX_COMPILER=${TOOLCHAIN}/bin/aarch64-linux-gnu-g++ \
     -DCMAKE_SYSROOT=${SYSROOT} \
     -DCMAKE_C_FLAGS="-march=armv8-a+crc -mtune=cortex-a35 -ftree-vectorize -funsafe-math-optimizations -O2" \
     -DCMAKE_CXX_FLAGS="-march=armv8-a+crc -mtune=cortex-a35 -ftree-vectorize -funsafe-math-optimizations -O2" \
-    -DCMAKE_EXE_LINKER_FLAGS="-L${SYSROOT}/usr/lib/aarch64-linux-gnu -lEGL -lGLESv2 -lSDL2 -lX11 -lXrandr -lopenal -lboost_system -lboost_filesystem -lboost_date_time -lboost_locale -lz -lm -lpthread -lasound -lrga -lstdc++fs -Wl,--allow-multiple-definition" \
+    -DCMAKE_EXE_LINKER_FLAGS="--sysroot=${SYSROOT} -L${SYSROOT}/usr/lib/aarch64-linux-gnu -lEGL -lGLESv2 -lSDL2 -lX11 -lXrandr -lopenal -lboost_system -lboost_filesystem -lboost_date_time -lboost_locale -lz -lm -lpthread -lasound -lrga -lstdc++fs -Wl,--allow-multiple-definition" \
     -DYAB_PORTS=retro_arena \
     -DYAB_WANT_DYNAREC_DEVMIYAX=ON \
     -DYAB_WANT_ARM7=ON \
     -DYAB_WANT_VULKAN=OFF \
     -DUSE_EGL=ON \
-    -B .
-
-# 编译
-make -j$(nproc)
-
-# 打包
-${TOOLCHAIN_DIR}/bin/aarch64-linux-gnu-strip src/retro_arena/yabasanshiro
-cp src/retro_arena/yabasanshiro ../yabasanshirosa_pkg/
+    -B build
 ```
 
-## 补丁说明
+### 4. 编译
 
-### 0001-0009: 原有补丁
+```bash
+cd build
+make -j$(nproc)
+```
 
-| 补丁 | 说明 |
-|------|------|
-| 0001 | 添加缺失的include |
-| 0002 | 低分辨率模式 |
-| 0003 | 移除GL3扩展 |
-| 0004 | 修改路径 |
-| 0005 | 存档路径 |
-| 0006 | 移除关于页面 |
-| 0007 | 缩放菜单UI (odroidgoa) |
-| 0008 | 禁用SH2 |
-| 0009 | 增大GLUI尺寸 |
+### 5. 打包
 
-### 0010: 完整补丁 (i18n + 居中显示 + CJK字体 + 编译修复)
-
-包含内容：
-
-1. **编译修复** - CMake配置、头文件修复
-2. **居中显示** - 游戏画面在屏幕上居中显示
-3. **i18n支持** - 根据LANG/LC_ALL环境变量自动切换中英文
-4. **CJK字体** - 从二进制目录加载wqy-microhei.ttf字体
-
-#### 修改的文件
-
-| 文件 | 修改内容 |
-|------|----------|
-| `CMake/Packages/external_*.cmake` | 编译修复 |
-| `src/retro_arena/MenuScreen.cpp` | i18n中文翻译 |
-| `src/retro_arena/i18n.h` | 新增：i18n头文件 |
-| `src/retro_arena/nanogui-sdl/src/theme.cpp` | CJK字体加载 |
-| `src/vidogl.c` | 居中显示 |
-| `src/ygl.h` | 编译修复 |
-| `src/threads.h` | 编译修复 |
-| 其他 | 各种编译兼容性修复 |
+```bash
+${TOOLCHAIN}/bin/aarch64-linux-gnu-strip src/retro_arena/yabasanshiro
+cp src/retro_arena/yabasanshiro yabasanshirosa_pkg/yabasanshiro
+```
 
 ## 设备部署
 
 ```bash
-# 复制二进制文件
+# 复制二进制
 cp yabasanshiro /opt/yabasanshiro/
+cp yabasanshiro-pi4 /opt/yabasanshiro/
+cp yabasanshiro-2412 /opt/yabasanshiro/
 
-# 复制CJK字体 (WenQuanYi Micro Hei, TrueType格式)
+# 复制配置文件
 cp wqy-microhei.ttf /opt/yabasanshiro/
+cp input.cfg /opt/yabasanshiro/
+cp keymapv2.json /opt/yabasanshiro/
 
-# 设置中文locale (可选)
+# 创建存档目录
+mkdir -p /roms/saturn/yabasanshiro
+mkdir -p /roms/saturn/yabasanshiro-pi4
+mkdir -p /roms/saturn/yabasanshiro-2412
+
+# 设置中文locale（可选）
 sudo locale-gen zh_CN.UTF-8
 export LANG=zh_CN.UTF-8
 export LC_ALL=zh_CN.UTF-8
-
-# 运行
-cd /opt/yabasanshiro
-./yabasanshiro
 ```
 
-## 字体说明
+## 按键说明
 
-NotoSansCJK 使用 CFF (Compact Font Format) 轮廓，stb_truetype 不支持。
-必须使用 TrueType 格式的字体，如：
-- WenQuanYi Micro Hei (wqy-microhei.ttf)
-- Droid Sans Fallback
+| 按键 | 功能 |
+|------|------|
+| Select (id=12) | 打开/关闭菜单 |
+| Start (id=13) | 功能键 |
+| A/B/X/Y/L/R | 游戏按键 |
+| 方向键 | 方向 |
 
-### 字体转换
+## 已知问题
 
-```bash
-# 从 .ttc 转换为 .ttf
-pip install fonttools
-python3 -c "
-from fontTools.ttLib import TTCollection
-ttc = TTCollection('NotoSansCJK-Regular.ttc')
-ttc.fonts[0].save('NotoSansCJK-Regular.ttf')
-"
-```
-
-## 注意事项
-
-1. **SDL2需要X11支持** - yaba使用SDL2+X11显示，不支持纯GBM/DRM
-2. **字体格式** - 必须是TrueType(.ttf)，不能是CFF
-3. **编译顺序** - 必须先编译m68kmake(host工具)，再编译yabasanshiro
-4. **m68kmake** - 需要复制到build目录的src/musashi/下
-
-## 脚本位置
-
-```
-rk3326_core_builds/scripts/yabasanshirosa_cross.sh
-rk3326_core_builds/patches/
-├── yabasanshirosa-patch-0001-add-missing-include.patch
-├── yabasanshirosa-patch-0002-low-res-mode.patch
-├── ...
-├── yabasanshirosa-patch-0010-i18n-center-cjk.patch  (完整补丁)
-└── yabasanshirosa-i18n.h
-```
-
-## 与原生编译对比
-
-| 项目 | 原生编译 | 交叉编译 |
-|------|----------|----------|
-| 编译器 | 系统gcc | gcc-linaro-7.5.0 |
-| 依赖 | apt install | sysroot已有 |
-| 输出大小 | ~4.3MB | 4.3MB |
-| 功能 | 完整 | 完整 (含i18n) |
-| CJK字体 | 无 | wqy-microhei.ttf |
+1. **mini18n禁用** - 因为与sysroot的wchar.h不兼容
+2. **NEON禁用** - libpng的NEON在交叉编译时不支持
+3. **PulseAudio未启用** - 依赖链太复杂，使用ALSA替代
+4. **1.11版本** - m2_1_11分支主要是Windows版本，需要额外修复

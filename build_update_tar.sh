@@ -401,6 +401,7 @@ else
   cp -f ./mod_so/64/* "$PAYLOAD_ROOT/home/ark/.config/retroarch/cores/" 2>/dev/null || true
   cp -f ./mod_so/arkos_64/* "$PAYLOAD_ROOT/home/ark/.config/retroarch/cores/" 2>/dev/null || true
   cp -f ./mod_so/32/* "$PAYLOAD_ROOT/home/ark/.config/retroarch32/cores/" 2>/dev/null || true
+  cp -f ./mod_so/arkos_32/* "$PAYLOAD_ROOT/home/ark/.config/retroarch32/cores/" 2>/dev/null || true
   cp -f ./replace_file/es_systems.cfg "$PAYLOAD_ROOT/etc/emulationstation/" 2>/dev/null || true
   cp -f ./replace_file/es_systems.cfg.dual "$PAYLOAD_ROOT/etc/emulationstation/" 2>/dev/null || true
   cp -rf ./replace_file/resources/* "$PAYLOAD_ROOT/usr/bin/emulationstation/resources/" 2>/dev/null || true
@@ -474,6 +475,11 @@ else
   mkdir -p "$PAYLOAD_ROOT/opt/yabasanshiro"
   cp -a ./replace_file/yabasanshiro/. "$PAYLOAD_ROOT/opt/yabasanshiro/" 2>/dev/null || true
   rm -rf "$PAYLOAD_ROOT/opt/yabasanshiro/patch" 2>/dev/null || true
+
+  echo "== 添加 OpenborFF =="
+  mkdir -p "$PAYLOAD_ROOT/opt/OpenBorFF"
+  cp -a ./replace_file/OpenBorFF/. "$PAYLOAD_ROOT/opt/OpenBorFF/" 2>/dev/null || true
+  cp -a ./replace_file/OpenBor/. "$PAYLOAD_ROOT/opt/OpenBor/" 2>/dev/null || true
 
   echo "== 注入 services / tools =="
   mkdir -p "$PAYLOAD_ROOT/etc/systemd/system" \
@@ -555,6 +561,10 @@ EOF
   meta_add "0777" "1002:1002" "/opt/flycastsa/*"
   meta_add "0777" "1002:1002" "/opt/yabasanshiro"
   meta_add "0777" "1002:1002" "/opt/yabasanshiro/*"
+  meta_add "0777" "1002:1002" "/opt/OpenBorFF"
+  meta_add "0777" "1002:1002" "/opt/OpenBorFF/*"
+  meta_add "0777" "1002:1002" "/opt/OpenBor"
+  meta_add "0777" "1002:1002" "/opt/OpenBor/*"
   meta_add "0777" "1002:1002" "/usr/lib/aarch64-linux-gnu/libjson-c.so*"
   meta_add "0777" "1002:1002" "/usr/local/bin/cpymo"
   meta_add "0777" "1002:1002" "/usr/local/bin/pymo.sh"

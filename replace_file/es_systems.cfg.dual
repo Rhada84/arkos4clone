@@ -1899,11 +1899,11 @@
 		<extension>.chd .CHD .cso .CSO .iso .ISO .pbp .PBP</extension>
 		<command>sudo perfmax %GOVERNOR% %ROM%; nice -n -19 /usr/local/bin/ppsspp.sh %EMULATOR% %ROM%; sudo perfnorm</command>
 		<emulators>
+			<emulator name="standalone-2021">
+		      </emulator>
 			<emulator name="standalone">
 		      </emulator>
 			<emulator name="retroarch">
-		      </emulator>
-			<emulator name="standalone-2021">
 		      </emulator>
 		</emulators>
 		<platform>psp</platform>
@@ -2350,6 +2350,18 @@
 		<platform>native32</platform>
 		<theme>native32</theme>
 		<manufacturer>native32</manufacturer>
+		<release>2005</release>
+		<hardware>game engine</hardware>
+	</system>
+	<system>
+		<name>spmp8000</name>
+		<fullname>spmp8000</fullname>
+		<path>/roms/spmp8000/</path>
+		<extension>.bin .BIN</extension>
+		<command>sudo perfmax %GOVERNOR% %ROM%; nice -n -19 /usr/local/bin/retroarch -L /home/ark/.config/retroarch/cores/spmp8000emu_libretro.so %ROM%; sudo perfnorm</command>
+		<platform>spmp8000</platform>
+		<theme>spmp8000</theme>
+		<manufacturer>spmp8000</manufacturer>
 		<release>2005</release>
 		<hardware>game engine</hardware>
 	</system>
@@ -4595,11 +4607,11 @@
 		<extension>.chd .CHD .cso .CSO .iso .ISO .pbp .PBP</extension>
 		<command>sudo perfmax %GOVERNOR% %ROM%; nice -n -19 /usr/local/bin/ppsspp.sh %EMULATOR% %ROM%; sudo perfnorm</command>
 		<emulators>
+			<emulator name="standalone-2021">
+		      </emulator>
 			<emulator name="standalone">
 		      </emulator>
 			<emulator name="retroarch">
-		      </emulator>
-			<emulator name="standalone-2021">
 		      </emulator>
 		</emulators>
 		<platform>psp</platform>
@@ -5050,9 +5062,21 @@
 		<hardware>game engine</hardware>
 	</system>
 	<system>
+		<name>spmp8000</name>
+		<fullname>spmp8000 [SD2]</fullname>
+		<path>/roms2/spmp8000/</path>
+		<extension>.bin .BIN</extension>
+		<command>sudo perfmax %GOVERNOR% %ROM%; nice -n -19 /usr/local/bin/retroarch -L /home/ark/.config/retroarch/cores/spmp8000emu_libretro.so %ROM%; sudo perfnorm</command>
+		<platform>spmp8000</platform>
+		<theme>spmp8000</theme>
+		<manufacturer>spmp8000</manufacturer>
+		<release>2005</release>
+		<hardware>game engine</hardware>
+	</system>
+	<system>
 		<name>flash</name>
 		<fullname>flash [SD2]</fullname>
-		<path>/roms/flash/</path>
+		<path>/roms2/flash/</path>
 		<extension>.swf .SWF</extension>
 		<command>sudo perfmax %GOVERNOR% %ROM%; nice -n -19 /usr/local/bin/flash.sh %ROM%; sudo perfnorm</command>
 		<platform>flash</platform>

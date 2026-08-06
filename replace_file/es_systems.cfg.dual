@@ -449,11 +449,6 @@
 					<core>flycast</core>
 				</cores>
 			</emulator>
-			<emulator name="retrorun">
-				<cores>
-					<core>flycast</core>
-				</cores>
-			</emulator>
 			<emulator name="retroarch32">
 				<cores>
 					<core>flycast32_rumble</core>
@@ -461,11 +456,26 @@
 					<core>reicast_xtreme</core>
 				</cores>
 			</emulator>
+			<emulator name="retrorun">
+				<cores>
+					<core>flycast</core>
+				</cores>
+			</emulator>
 			<emulator name="retrorun32">
 				<cores>
 					<core>flycast32_rumble</core>
 					<core>flycast_xtreme</core>
-					<core>reicast_xtreme</core>
+				</cores>
+			</emulator>
+			<emulator name="retrorunsdl">
+				<cores>
+					<core>flycast</core>
+				</cores>
+			</emulator>
+			<emulator name="retrorunsdl32">
+				<cores>
+					<core>flycast32_rumble</core>
+					<core>flycast_xtreme</core>
 				</cores>
 			</emulator>
 		</emulators>
@@ -493,11 +503,6 @@
 					<core>flycast</core>
 				</cores>
 			</emulator>
-			<emulator name="retrorun">
-				<cores>
-					<core>flycast</core>
-				</cores>
-			</emulator>
 			<emulator name="retroarch32">
 				<cores>
 					<core>flycast32_rumble</core>
@@ -505,11 +510,26 @@
 					<core>reicast_xtreme</core>
 				</cores>
 			</emulator>
+			<emulator name="retrorun">
+				<cores>
+					<core>flycast</core>
+				</cores>
+			</emulator>
 			<emulator name="retrorun32">
 				<cores>
 					<core>flycast32_rumble</core>
 					<core>flycast_xtreme</core>
-					<core>reicast_xtreme</core>
+				</cores>
+			</emulator>
+			<emulator name="retrorunsdl">
+				<cores>
+					<core>flycast</core>
+				</cores>
+			</emulator>
+			<emulator name="retrorunsdl32">
+				<cores>
+					<core>flycast32_rumble</core>
+					<core>flycast_xtreme</core>
 				</cores>
 			</emulator>
 		</emulators>
@@ -1604,11 +1624,6 @@
 					<core>yabause</core>
 				</cores>
 			</emulator>
-			<emulator name="retrorun32">
-				<cores>
-					<core>yabasanshiro</core>
-				</cores>
-			</emulator>
 			<emulator name="retroarch">
 				<cores>
 					<core>yabause</core>
@@ -1616,6 +1631,21 @@
 				</cores>
 			</emulator>
 			<emulator name="retrorun">
+				<cores>
+					<core>yabasanshiro</core>
+				</cores>
+			</emulator>
+			<emulator name="retrorun32">
+				<cores>
+					<core>yabasanshiro</core>
+				</cores>
+			</emulator>
+			<emulator name="retrorunsdl">
+				<cores>
+					<core>yabasanshiro</core>
+				</cores>
+			</emulator>
+			<emulator name="retrorunsdl32">
 				<cores>
 					<core>yabasanshiro</core>
 				</cores>
@@ -1657,10 +1687,21 @@
 				<cores>
 					<core>flycast32_rumble</core>
 					<core>flycast_xtreme</core>
-					<core>reicast_xtreme</core>
 				</cores>
 			</emulator>
 			<emulator name="retrorun">
+				<cores>
+					<core>flycast_rumble</core>
+					<core>flycast</core>
+				</cores>
+			</emulator>
+			<emulator name="retrorunsdl32">
+				<cores>
+					<core>flycast32_rumble</core>
+					<core>flycast_xtreme</core>
+				</cores>
+			</emulator>
+			<emulator name="retrorunsdl">
 				<cores>
 					<core>flycast_rumble</core>
 					<core>flycast</core>
@@ -2374,6 +2415,18 @@
 		<platform>flash</platform>
 		<theme>flash</theme>
 		<manufacturer>flash</manufacturer>
+		<release>1996</release>
+		<hardware>game engine</hardware>
+	</system>
+	<system>
+		<name>krkr2</name>
+		<fullname>krkr2</fullname>
+		<path>/roms/krkr2/</path>
+		<extension>.xp3 .XP3</extension>
+		<command>sudo perfmax %GOVERNOR% %ROM%; nice -n -19 /opt/krkr2/start_krkr.sh %ROM%; sudo perfnorm</command>
+		<platform>krkr2</platform>
+		<theme>krkr2</theme>
+		<manufacturer>krkr2</manufacturer>
 		<release>1996</release>
 		<hardware>game engine</hardware>
 	</system>
@@ -3157,11 +3210,6 @@
 					<core>flycast</core>
 				</cores>
 			</emulator>
-			<emulator name="retrorun">
-				<cores>
-					<core>flycast</core>
-				</cores>
-			</emulator>
 			<emulator name="retroarch32">
 				<cores>
 					<core>flycast32_rumble</core>
@@ -3169,11 +3217,26 @@
 					<core>reicast_xtreme</core>
 				</cores>
 			</emulator>
+			<emulator name="retrorun">
+				<cores>
+					<core>flycast</core>
+				</cores>
+			</emulator>
 			<emulator name="retrorun32">
 				<cores>
 					<core>flycast32_rumble</core>
 					<core>flycast_xtreme</core>
-					<core>reicast_xtreme</core>
+				</cores>
+			</emulator>
+			<emulator name="retrorunsdl">
+				<cores>
+					<core>flycast</core>
+				</cores>
+			</emulator>
+			<emulator name="retrorunsdl32">
+				<cores>
+					<core>flycast32_rumble</core>
+					<core>flycast_xtreme</core>
 				</cores>
 			</emulator>
 		</emulators>
@@ -3201,11 +3264,6 @@
 					<core>flycast</core>
 				</cores>
 			</emulator>
-			<emulator name="retrorun">
-				<cores>
-					<core>flycast</core>
-				</cores>
-			</emulator>
 			<emulator name="retroarch32">
 				<cores>
 					<core>flycast32_rumble</core>
@@ -3213,11 +3271,26 @@
 					<core>reicast_xtreme</core>
 				</cores>
 			</emulator>
+			<emulator name="retrorun">
+				<cores>
+					<core>flycast</core>
+				</cores>
+			</emulator>
 			<emulator name="retrorun32">
 				<cores>
 					<core>flycast32_rumble</core>
 					<core>flycast_xtreme</core>
-					<core>reicast_xtreme</core>
+				</cores>
+			</emulator>
+			<emulator name="retrorunsdl">
+				<cores>
+					<core>flycast</core>
+				</cores>
+			</emulator>
+			<emulator name="retrorunsdl32">
+				<cores>
+					<core>flycast32_rumble</core>
+					<core>flycast_xtreme</core>
 				</cores>
 			</emulator>
 		</emulators>
@@ -4312,18 +4385,28 @@
 					<core>yabause</core>
 				</cores>
 			</emulator>
-			<emulator name="retrorun32">
-				<cores>
-					<core>yabasanshiro</core>
-				</cores>
-			</emulator>
 			<emulator name="retroarch">
 				<cores>
 					<core>yabause</core>
 					<core>yabasanshiro</core>
 				</cores>
 			</emulator>
+			<emulator name="retrorun32">
+				<cores>
+					<core>yabasanshiro</core>
+				</cores>
+			</emulator>
 			<emulator name="retrorun">
+				<cores>
+					<core>yabasanshiro</core>
+				</cores>
+			</emulator>
+			<emulator name="retrorunsdl32">
+				<cores>
+					<core>yabasanshiro</core>
+				</cores>
+			</emulator>
+			<emulator name="retrorunsdl">
 				<cores>
 					<core>yabasanshiro</core>
 				</cores>
@@ -4365,10 +4448,21 @@
 				<cores>
 					<core>flycast32_rumble</core>
 					<core>flycast_xtreme</core>
-					<core>reicast_xtreme</core>
 				</cores>
 			</emulator>
 			<emulator name="retrorun">
+				<cores>
+					<core>flycast_rumble</core>
+					<core>flycast</core>
+				</cores>
+			</emulator>
+			<emulator name="retrorunsdl32">
+				<cores>
+					<core>flycast32_rumble</core>
+					<core>flycast_xtreme</core>
+				</cores>
+			</emulator>
+			<emulator name="retrorunsdl">
 				<cores>
 					<core>flycast_rumble</core>
 					<core>flycast</core>
@@ -5082,6 +5176,18 @@
 		<platform>flash</platform>
 		<theme>flash</theme>
 		<manufacturer>flash</manufacturer>
+		<release>1996</release>
+		<hardware>game engine</hardware>
+	</system>
+	<system>
+		<name>krkr2</name>
+		<fullname>krkr2 [SD2]</fullname>
+		<path>/roms2/krkr2/</path>
+		<extension>.xp3 .XP3</extension>
+		<command>sudo perfmax %GOVERNOR% %ROM%; nice -n -19 /opt/krkr2/start_krkr.sh %ROM%; sudo perfnorm</command>
+		<platform>krkr2</platform>
+		<theme>krkr2</theme>
+		<manufacturer>krkr2</manufacturer>
 		<release>1996</release>
 		<hardware>game engine</hardware>
 	</system>

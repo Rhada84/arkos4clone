@@ -133,6 +133,13 @@ var Consoles = []ConsoleConfig{
 		ExtraSources: []string{"logo/854x480P/"},
 	},
 	{
+		RealName: "rgb10max2",
+		BrandEntries: []BrandEntry{
+			{Brand: "Powkiddy", DisplayName: "Powkiddy RGB10Max2"},
+		},
+		ExtraSources: []string{"logo/854x480P/"},
+	},
+	{
 		RealName: "rgb20s",
 		BrandEntries: []BrandEntry{
 			{Brand: "Powkiddy", DisplayName: "Powkiddy RGB20S"},
@@ -470,6 +477,13 @@ var Consoles = []ConsoleConfig{
 			{Brand: "XiFan HandHelds", DisplayName: "XiFan RF45V"},
 		},
 		ExtraSources: []string{"logo/768P/"},
+	},
+	{
+		RealName: "rf55h",
+		BrandEntries: []BrandEntry{
+			{Brand: "XiFan HandHelds", DisplayName: "XiFan RF55H"},
+		},
+		ExtraSources: []string{"logo/720x1280P-90/"},
 	},
 	//==================  XiFan HandHelds  ===================================
 	{

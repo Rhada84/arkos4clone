@@ -88,6 +88,9 @@ if [[ "$ARKOS_IMAGE_NAME" == *dArkOS* ]]; then
   safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/usr/lib/firmware/aic8800DC" 2>/dev/null
   safe sudo chmod -R 777 "$MOUNT_DIR/root/usr/lib/firmware/aic8800DC" 2>/dev/null
 
+  echo "== 注入 351 系列手柄伪装规则  =="
+  safe sudo cp -f ./bin/99-odroidgo3.rules "$MOUNT_DIR/root/etc/udev/rules.d" 2>/dev/null
+
   echo "== 注入 351Files 自适应 =="
   safe sudo mkdir -p "$MOUNT_DIR/root/opt/351Files/res"
   safe sudo cp -r ./res/* "$MOUNT_DIR/root/opt/351Files/res/" 2>/dev/null
@@ -102,6 +105,7 @@ if [[ "$ARKOS_IMAGE_NAME" == *dArkOS* ]]; then
   safe sudo cp -f ./replace_file/darkos4n64.sh "$MOUNT_DIR/root/usr/local/bin/n64.sh"
   safe sudo cp -f ./replace_file/darkos4pico8.sh "$MOUNT_DIR/root/usr/local/bin/pico8.sh"
   safe sudo cp -f ./replace_file/darkos4saturn.sh "$MOUNT_DIR/root/usr/local/bin/saturn.sh"
+  safe sudo cp -f ./replace_file/flash.sh "$MOUNT_DIR/root/usr/local/bin/"
   safe sudo cp -f ./replace_file/drastic.sh "$MOUNT_DIR/root/usr/local/bin/"
   safe sudo cp -f ./replace_file/drastic_kk.sh "$MOUNT_DIR/root/usr/local/bin/"
   safe sudo cp -f ./replace_file/choose_drastic_ver.sh "$MOUNT_DIR/root/usr/local/bin/"
@@ -111,9 +115,10 @@ if [[ "$ARKOS_IMAGE_NAME" == *dArkOS* ]]; then
   safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/usr/local/bin/atomiswave.sh" 2>/dev/null
   safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/usr/local/bin/dreamcast.sh" 2>/dev/null
   safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/usr/local/bin/naomi.sh" 2>/dev/null
-  safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/usr/local/bin/n64.sh" 2>/dev/null
-  safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/usr/local/bin/pico8.sh" 2>/dev/null
   safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/usr/local/bin/saturn.sh" 2>/dev/null
+  safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/usr/local/bin/n64.sh" 2>/dev/null
+  safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/usr/local/bin/flash.sh" 2>/dev/null
+  safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/usr/local/bin/pico8.sh" 2>/dev/null
   safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/usr/local/bin/drastic.sh" 2>/dev/null
   safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/usr/local/bin/drastic_kk.sh" 2>/dev/null
   safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/usr/local/bin/choose_drastic_ver.sh" 2>/dev/null
@@ -123,26 +128,16 @@ if [[ "$ARKOS_IMAGE_NAME" == *dArkOS* ]]; then
   safe sudo chmod 777 "$MOUNT_DIR/root/usr/local/bin/atomiswave.sh" 2>/dev/null
   safe sudo chmod 777 "$MOUNT_DIR/root/usr/local/bin/dreamcast.sh" 2>/dev/null
   safe sudo chmod 777 "$MOUNT_DIR/root/usr/local/bin/naomi.sh" 2>/dev/null
-  safe sudo chmod 777 "$MOUNT_DIR/root/usr/local/bin/n64.sh" 2>/dev/null
-  safe sudo chmod 777 "$MOUNT_DIR/root/usr/local/bin/pico8.sh" 2>/dev/null
   safe sudo chmod 777 "$MOUNT_DIR/root/usr/local/bin/saturn.sh" 2>/dev/null
+  safe sudo chmod 777 "$MOUNT_DIR/root/usr/local/bin/n64.sh" 2>/dev/null
+  safe sudo chmod 777 "$MOUNT_DIR/root/usr/local/bin/flash.sh" 2>/dev/null
+  safe sudo chmod 777 "$MOUNT_DIR/root/usr/local/bin/pico8.sh" 2>/dev/null
   safe sudo chmod 777 "$MOUNT_DIR/root/usr/local/bin/drastic.sh" 2>/dev/null
   safe sudo chmod 777 "$MOUNT_DIR/root/usr/local/bin/drastic_kk.sh" 2>/dev/null
   safe sudo chmod 777 "$MOUNT_DIR/root/usr/local/bin/choose_drastic_ver.sh" 2>/dev/null
   safe sudo chmod 777 "$MOUNT_DIR/root/usr/local/bin/choose_ons_ver.sh" 2>/dev/null
   safe sudo chmod 777 "$MOUNT_DIR/root/usr/local/bin/onscripter.sh" 2>/dev/null
   safe sudo chmod 777 "$MOUNT_DIR/root/usr/local/bin/get_last_played.sh" 2>/dev/null
-
-  echo "== 注入 adc-key 服务脚本 =="
-  safe sudo cp -f ./bin/adc-key/adckeys.py "$MOUNT_DIR/root/usr/local/bin/"
-  safe sudo cp -f ./bin/adc-key/adckeys.sh "$MOUNT_DIR/root/usr/local/bin/"
-  safe sudo cp -f ./bin/adc-key/adckeys.service "$MOUNT_DIR/root/etc/systemd/system/"
-  safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/usr/local/bin/adckeys.py" 2>/dev/null
-  safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/usr/local/bin/adckeys.sh" 2>/dev/null
-  safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/etc/systemd/system/adckeys.service" 2>/dev/null
-  safe sudo chmod 777 "$MOUNT_DIR/root/usr/local/bin/adckeys.py" 2>/dev/null
-  safe sudo chmod 777 "$MOUNT_DIR/root/usr/local/bin/adckeys.sh" 2>/dev/null
-  safe sudo chmod 777 "$MOUNT_DIR/root/etc/systemd/system/adckeys.service" 2>/dev/null
 
   echo "== 注入 es-service 服务脚本 =="
   safe sudo cp -f ./bin/es-service/es-status-daemon.sh "$MOUNT_DIR/root/usr/local/bin/"
@@ -219,6 +214,12 @@ if [[ "$ARKOS_IMAGE_NAME" == *dArkOS* ]]; then
   safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/opt/flycastsa/" 2>/dev/null
   safe sudo chmod -R 777 "$MOUNT_DIR/root/opt/flycastsa/" 2>/dev/null
 
+  echo "== 添加 ruffle-sa  =="
+  safe sudo mkdir -p "$MOUNT_DIR/root/opt/rufflesa" 2>/dev/null
+  safe sudo cp -a ./replace_file/rufflesa/. "$MOUNT_DIR/root/opt/rufflesa/" 2>/dev/null
+  safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/opt/rufflesa" 2>/dev/null
+  safe sudo chmod -R 777 "$MOUNT_DIR/root/opt/rufflesa" 2>/dev/null
+
   echo "== 更新和添加 yabasanshiro-sa =="
   safe sudo cp -a ./replace_file/yabasanshiro/. "$MOUNT_DIR/root/opt/yabasanshiro/" 2>/dev/null
   safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/opt/yabasanshiro/" 2>/dev/null
@@ -233,6 +234,7 @@ if [[ "$ARKOS_IMAGE_NAME" == *dArkOS* ]]; then
     safe sudo mkdir -p "$WORK_DIR/tmproms/roms/hbmame"
     safe sudo mkdir -p "$WORK_DIR/tmproms/roms/native32"
     safe sudo mkdir -p "$WORK_DIR/tmproms/roms/bbk"
+    safe sudo mkdir -p "$WORK_DIR/tmproms/roms/flash"
     tar -xf "$SCRIPT_DIR/zulu11.48.21-ca-jdk11.0.11-linux_aarch64.tar.gz" -C "$WORK_DIR/tmproms/roms/j2me"
     safe sudo mv "$WORK_DIR/tmproms/roms/j2me/zulu11.48.21-ca-jdk11.0.11-linux_aarch64" "$WORK_DIR/tmproms/roms/j2me/jdk"
     safe sudo chown -R root:root "$WORK_DIR/tmproms/roms/j2me/jdk"
@@ -270,12 +272,15 @@ if [[ "$ARKOS_IMAGE_NAME" == *dArkOS* ]]; then
   fi
 
   echo "== 调整retrorun =="
-  safe sudo cp -r ./replace_file/retrorun/retrorun32 "$MOUNT_DIR/root/usr/local/bin/"
-  safe sudo cp -r ./replace_file/retrorun/retrorun "$MOUNT_DIR/root/usr/local/bin/"
+  safe sudo cp -r ./replace_file/retrorun/* "$MOUNT_DIR/root/usr/local/bin/"
   safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/usr/local/bin/retrorun32"
   safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/usr/local/bin/retrorun"
+  safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/usr/local/bin/retrorunsdl"
+  safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/usr/local/bin/retrorunsdl32"
   safe sudo chmod -R 777 "$MOUNT_DIR/root/usr/local/bin/retrorun32"
   safe sudo chmod -R 777 "$MOUNT_DIR/root/usr/local/bin/retrorun"
+  safe sudo chmod -R 777 "$MOUNT_DIR/root/usr/local/bin/retrorunsdl32"
+  safe sudo chmod -R 777 "$MOUNT_DIR/root/usr/local/bin/retrorunsdl"
 
   echo "== 注入pymo =="
   safe sudo cp -r ./replace_file/pymo/cpymo "$MOUNT_DIR/root/usr/local/bin/"
@@ -335,7 +340,6 @@ if [[ "$ARKOS_IMAGE_NAME" == *dArkOS* ]]; then
   safe sudo mkdir -p "$MOUNT_DIR/root/opt/system/Tools/"
   safe sudo rm -rf "$MOUNT_DIR/root/opt/system/Advanced/Backup dArkOS Settings" 2>/dev/null
   safe sudo rm -rf "$MOUNT_DIR/root/opt/system/Tools/Install.PortMaster.sh" 2>/dev/null
-  safe sudo cp -r "./replace_file/tools/Ports Fix.sh" "$MOUNT_DIR/root/opt/system/Tools/" 2>/dev/null
   safe sudo cp -r "./Jason3_Scripte/wifi-toggle/Wifi-toggle.sh" "$MOUNT_DIR/root/opt/system/Wifi-Toggle.sh"
   safe sudo cp -r "./Jason3_Scripte/InfoSystem/InfoSystem.sh" "$MOUNT_DIR/root/opt/system/Tools/System Info.sh"
   safe sudo cp -r "./Jason3_Scripte/GhostLoader/GhostLoader.sh" "$MOUNT_DIR/root/opt/system/Tools/Ghost Loader.sh"
@@ -410,12 +414,18 @@ else
   safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/usr/lib/firmware/aic8800DC" 2>/dev/null
   safe sudo chmod -R 777 "$MOUNT_DIR/root/usr/lib/firmware/aic8800DC" 2>/dev/null
 
+  echo "== 注入 351 系列手柄伪装规则  =="
+  safe sudo cp -f ./bin/99-odroidgo3.rules "$MOUNT_DIR/root/etc/udev/rules.d" 2>/dev/null
+
   echo "== 注入 351Files 自适应 =="
   safe sudo mkdir -p "$MOUNT_DIR/root/opt/351Files/res"
   safe sudo cp -r ./res/* "$MOUNT_DIR/root/opt/351Files/res/" 2>/dev/null
   safe sudo cp -r ./replace_file/351Files "$MOUNT_DIR/root/opt/351Files/" 2>/dev/null
   safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/opt/351Files/" 2>/dev/null
   safe sudo chmod -R 777 "$MOUNT_DIR/root/opt/351Files/" 2>/dev/null
+
+  echo "== 更新 usb-modeswitch-data =="
+  safe sudo cp -a ./bin/usb-modeswitch-data/* "$MOUNT_DIR/root/" 2>/dev/null
 
   echo "== 注入 ArkOS 启动脚本 =="
   safe sudo cp -f ./replace_file/atomiswave.sh "$MOUNT_DIR/root/usr/local/bin/"
@@ -472,17 +482,6 @@ else
   safe sudo chmod 777 "$MOUNT_DIR/root/usr/local/bin/freej2me.sh" 2>/dev/null
   safe sudo chmod 777 "$MOUNT_DIR/root/usr/local/bin/mediaplayer.sh" 2>/dev/null
   safe sudo chmod 777 "$MOUNT_DIR/root/usr/local/bin/get_last_played.sh" 2>/dev/null
-
-  echo "== 注入 adc-key 服务脚本 =="
-  safe sudo cp -f ./bin/adc-key/adckeys.py "$MOUNT_DIR/root/usr/local/bin/"
-  safe sudo cp -f ./bin/adc-key/adckeys.sh "$MOUNT_DIR/root/usr/local/bin/"
-  safe sudo cp -f ./bin/adc-key/adckeys.service "$MOUNT_DIR/root/etc/systemd/system/"
-  safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/usr/local/bin/adckeys.py" 2>/dev/null
-  safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/usr/local/bin/adckeys.sh" 2>/dev/null
-  safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/etc/systemd/system/adckeys.service" 2>/dev/null
-  safe sudo chmod 777 "$MOUNT_DIR/root/usr/local/bin/adckeys.py" 2>/dev/null
-  safe sudo chmod 777 "$MOUNT_DIR/root/usr/local/bin/adckeys.sh" 2>/dev/null
-  safe sudo chmod 777 "$MOUNT_DIR/root/etc/systemd/system/adckeys.service" 2>/dev/null
 
   echo "== 注入 es-service 服务脚本 =="
   safe sudo cp -f ./bin/es-service/es-status-daemon.sh "$MOUNT_DIR/root/usr/local/bin/"

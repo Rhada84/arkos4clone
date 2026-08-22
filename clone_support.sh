@@ -161,6 +161,18 @@ if [[ "$ARKOS_IMAGE_NAME" == *dArkOS* ]]; then
   safe sudo chmod 777 "$MOUNT_DIR/root/etc/systemd/system/zram-swap.service" 2>/dev/null
   safe sudo chmod 777 "$MOUNT_DIR/root/etc/zram.conf" 2>/dev/null
 
+  echo "== 注入 batteryplus 服务脚本 =="
+  safe sudo cp -f ./bin/batteryplus-service/batteryplus "$MOUNT_DIR/root/usr/local/bin/"
+  safe sudo cp -f ./bin/batteryplus-service/batteryplus.service "$MOUNT_DIR/root/etc/systemd/system/"
+  sudo mkdir -p "$MOUNT_DIR/root/etc/batteryplus/"
+  safe sudo cp -f ./bin/batteryplus-service/batteryplus.conf "$MOUNT_DIR/root/etc/batteryplus/"
+  safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/usr/local/bin/batteryplus" 2>/dev/null
+  safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/etc/systemd/system/batteryplus.service" 2>/dev/null
+  safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/etc/batteryplus/batteryplus.conf" 2>/dev/null
+  safe sudo chmod 777 "$MOUNT_DIR/root/usr/local/bin/batteryplus" 2>/dev/null
+  safe sudo chmod 777 "$MOUNT_DIR/root/etc/systemd/system/batteryplus.service" 2>/dev/null
+  safe sudo chmod 777 "$MOUNT_DIR/root/etc/batteryplus/batteryplus.conf" 2>/dev/null
+
   echo "== 注入核心 =="
   safe sudo cp -f ./mod_so/64/* "$MOUNT_DIR/root/home/ark/.config/retroarch/cores/"
   safe sudo cp -f ./mod_so/32/* "$MOUNT_DIR/root/home/ark/.config/retroarch32/cores/"
@@ -442,6 +454,7 @@ else
   safe sudo cp -f ./replace_file/naomi.sh "$MOUNT_DIR/root/usr/local/bin/"
   safe sudo cp -f ./replace_file/saturn.sh "$MOUNT_DIR/root/usr/local/bin/"
   safe sudo cp -f ./replace_file/n64.sh "$MOUNT_DIR/root/usr/local/bin/"
+  safe sudo cp -f ./replace_file/mvem.sh "$MOUNT_DIR/root/usr/local/bin/"
   safe sudo cp -f ./replace_file/gametank.sh "$MOUNT_DIR/root/usr/local/bin/"
   safe sudo cp -f ./replace_file/easyrpg.sh "$MOUNT_DIR/root/usr/local/bin/"
   safe sudo cp -f ./replace_file/gametankkeydemon.py "$MOUNT_DIR/root/usr/local/bin/"
@@ -460,6 +473,7 @@ else
   safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/usr/local/bin/naomi.sh" 2>/dev/null
   safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/usr/local/bin/saturn.sh" 2>/dev/null
   safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/usr/local/bin/n64.sh" 2>/dev/null
+  safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/usr/local/bin/mvem.sh" 2>/dev/null
   safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/usr/local/bin/gametank.sh" 2>/dev/null
   safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/usr/local/bin/easyrpg.sh" 2>/dev/null
   safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/usr/local/bin/gametankkeydemon.py" 2>/dev/null
@@ -478,6 +492,7 @@ else
   safe sudo chmod 777 "$MOUNT_DIR/root/usr/local/bin/naomi.sh" 2>/dev/null
   safe sudo chmod 777 "$MOUNT_DIR/root/usr/local/bin/saturn.sh" 2>/dev/null
   safe sudo chmod 777 "$MOUNT_DIR/root/usr/local/bin/n64.sh" 2>/dev/null
+  safe sudo chmod 777 "$MOUNT_DIR/root/usr/local/bin/mvem.sh" 2>/dev/null
   safe sudo chmod 777 "$MOUNT_DIR/root/usr/local/bin/gametank.sh" 2>/dev/null
   safe sudo chmod 777 "$MOUNT_DIR/root/usr/local/bin/easyrpg.sh" 2>/dev/null
   safe sudo chmod 777 "$MOUNT_DIR/root/usr/local/bin/gametankkeydemon.py" 2>/dev/null
@@ -510,6 +525,18 @@ else
   safe sudo chmod 777 "$MOUNT_DIR/root/usr/local/bin/zram-setup.sh" 2>/dev/null
   safe sudo chmod 777 "$MOUNT_DIR/root/etc/systemd/system/zram-swap.service" 2>/dev/null
   safe sudo chmod 777 "$MOUNT_DIR/root/etc/zram.conf" 2>/dev/null
+
+  echo "== 注入 batteryplus 服务脚本 =="
+  safe sudo cp -f ./bin/batteryplus-service/batteryplus "$MOUNT_DIR/root/usr/local/bin/"
+  safe sudo cp -f ./bin/batteryplus-service/batteryplus.service "$MOUNT_DIR/root/etc/systemd/system/"
+  sudo mkdir -p "$MOUNT_DIR/root/etc/batteryplus/"
+  safe sudo cp -f ./bin/batteryplus-service/batteryplus.conf "$MOUNT_DIR/root/etc/batteryplus/"
+  safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/usr/local/bin/batteryplus" 2>/dev/null
+  safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/etc/systemd/system/batteryplus.service" 2>/dev/null
+  safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/etc/batteryplus/batteryplus.conf" 2>/dev/null
+  safe sudo chmod 777 "$MOUNT_DIR/root/usr/local/bin/batteryplus" 2>/dev/null
+  safe sudo chmod 777 "$MOUNT_DIR/root/etc/systemd/system/batteryplus.service" 2>/dev/null
+  safe sudo chmod 777 "$MOUNT_DIR/root/etc/batteryplus/batteryplus.conf" 2>/dev/null
 
   echo "== 注入核心 =="
   safe sudo cp -f ./mod_so/64/* "$MOUNT_DIR/root/home/ark/.config/retroarch/cores/"
@@ -570,10 +597,25 @@ else
   safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/opt/retroarch/bin/" 2>/dev/null
   safe sudo chmod -R 777 "$MOUNT_DIR/root/opt/retroarch/bin/" 2>/dev/null
 
+  echo "== 更新 Fake08-sa =="
+  safe sudo cp -a ./replace_file/fake08/* "$MOUNT_DIR/root/opt/fake08/" 2>/dev/null
+  safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/opt/fake08/" 2>/dev/null
+  safe sudo chmod -R 777 "$MOUNT_DIR/root/opt/fake08/" 2>/dev/null
+
   echo "== 更新 PPSSPP 1.20.4 =="
   safe sudo cp -a ./replace_file/ppsspp/* "$MOUNT_DIR/root/opt/ppsspp/" 2>/dev/null
   safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/opt/ppsspp/" 2>/dev/null
   safe sudo chmod -R 777 "$MOUNT_DIR/root/opt/ppsspp/" 2>/dev/null
+
+  echo "== 替换 PPSSPP-2021 =="
+  safe sudo cp -a ./replace_file/ppsspp-2021/* "$MOUNT_DIR/root/opt/ppsspp-2021/" 2>/dev/null
+  safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/opt/ppsspp-2021/" 2>/dev/null
+  safe sudo chmod -R 777 "$MOUNT_DIR/root/opt/ppsspp-2021/" 2>/dev/null
+
+  echo "== 更新 mupen64plus =="
+  safe sudo cp -a ./replace_file/mupen64plus/* "$MOUNT_DIR/root/opt/mupen64plus/" 2>/dev/null
+  safe sudo chown -R $CHOWN_USER "$MOUNT_DIR/root/opt/mupen64plus/" 2>/dev/null
+  safe sudo chmod -R 777 "$MOUNT_DIR/root/opt/mupen64plus/" 2>/dev/null
 
   echo "== 更新 ScummVM v2026.3.0 =="
   safe sudo cp -a ./replace_file/scummvm/* "$MOUNT_DIR/root/opt/scummvm/" 2>/dev/null

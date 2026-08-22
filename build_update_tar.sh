@@ -145,6 +145,13 @@ if [[ "$ARKOS_IMAGE_NAME" == *dArkOS* ]]; then
   cp -f ./bin/zram-service/zram.conf "$PAYLOAD_ROOT/etc/" 2>/dev/null || true
   cp -f ./bin/zram-service/zram-swap.service "$PAYLOAD_ROOT/etc/systemd/system/" 2>/dev/null || true
 
+  echo "== 注入 batteryplus 服务 =="
+  mkdir -p "$PAYLOAD_ROOT/etc/systemd/system"
+  mkdir -p "$PAYLOAD_ROOT/etc/batteryplus/"
+  cp -f ./bin/batteryplus-service/batteryplus "$PAYLOAD_ROOT/usr/local/bin/" 2>/dev/null || true
+  cp -f ./bin/batteryplus-service/batteryplus.conf "$PAYLOAD_ROOT/etc/batteryplus/" 2>/dev/null || true
+  cp -f ./bin/batteryplus-service/batteryplus.service "$PAYLOAD_ROOT/etc/systemd/system/" 2>/dev/null || true
+
   echo "== 注入核心与 EmulationStation 文件 =="
   mkdir -p "$PAYLOAD_ROOT/home/ark/.config/retroarch/cores" \
            "$PAYLOAD_ROOT/home/ark/.config/retroarch32/cores" \
@@ -261,6 +268,9 @@ EOF
   meta_add "0777" "1000:1000" "/etc/zram.conf"
   meta_add "0777" "1000:1000" "/usr/local/bin/zram-setup.sh"
   meta_add "0777" "1000:1000" "/etc/systemd/system/zram-swap.service"
+  meta_add "0777" "1000:1000" "/etc/batteryplus/batteryplus.conf"
+  meta_add "0777" "1000:1000" "/usr/local/bin/batteryplus"
+  meta_add "0777" "1000:1000" "/etc/systemd/system/batteryplus.service"
   meta_add "0777" "1000:1000" "/home/ark/.config/retroarch/cores/*"
   meta_add "0777" "1000:1000" "/home/ark/.config/retroarch32/cores/*"
   meta_add "0777" "1000:1000" "/etc/emulationstation/darkos4es_systems.cfg"
@@ -357,6 +367,8 @@ else
   cp -f ./replace_file/naomi.sh "$PAYLOAD_ROOT/usr/local/bin/" 2>/dev/null || true
   cp -f ./replace_file/saturn.sh "$PAYLOAD_ROOT/usr/local/bin/" 2>/dev/null || true
   cp -f ./replace_file/n64.sh "$PAYLOAD_ROOT/usr/local/bin/" 2>/dev/null || true
+  cp -f ./replace_file/easyrpg.sh "$PAYLOAD_ROOT/usr/local/bin/" 2>/dev/null || true
+  cp -f ./replace_file/mvem.sh "$PAYLOAD_ROOT/usr/local/bin/" 2>/dev/null || true
   cp -f ./replace_file/gametank.sh "$PAYLOAD_ROOT/usr/local/bin/" 2>/dev/null || true
   cp -f ./replace_file/gametankkeydemon.py "$PAYLOAD_ROOT/usr/local/bin/" 2>/dev/null || true
   cp -f ./replace_file/flash.sh "$PAYLOAD_ROOT/usr/local/bin/" 2>/dev/null || true
@@ -380,6 +392,13 @@ else
   cp -f ./bin/zram-service/zram-setup.sh "$PAYLOAD_ROOT/usr/local/bin/" 2>/dev/null || true
   cp -f ./bin/zram-service/zram.conf "$PAYLOAD_ROOT/etc/" 2>/dev/null || true
   cp -f ./bin/zram-service/zram-swap.service "$PAYLOAD_ROOT/etc/systemd/system/" 2>/dev/null || true
+
+  echo "== 注入 batteryplus 服务 =="
+  mkdir -p "$PAYLOAD_ROOT/etc/systemd/system"
+  mkdir -p "$PAYLOAD_ROOT/etc/batteryplus/"
+  cp -f ./bin/batteryplus-service/batteryplus "$PAYLOAD_ROOT/usr/local/bin/" 2>/dev/null || true
+  cp -f ./bin/batteryplus-service/batteryplus.conf "$PAYLOAD_ROOT/etc/batteryplus/" 2>/dev/null || true
+  cp -f ./bin/batteryplus-service/batteryplus.service "$PAYLOAD_ROOT/etc/systemd/system/" 2>/dev/null || true
 
   echo "== 注入核心与 EmulationStation 文件 =="
   mkdir -p "$PAYLOAD_ROOT/home/ark/.config/retroarch/cores" \
@@ -421,9 +440,21 @@ else
   mkdir -p "$PAYLOAD_ROOT/usr/lib/aarch64-linux-gnu/"
   cp -f ./bin/json-c3/* "$PAYLOAD_ROOT/usr/lib/aarch64-linux-gnu/" 2>/dev/null || true
 
+  echo "== 更新 Fake08-sa =="
+  mkdir -p "$PAYLOAD_ROOT/opt/fake08"
+  cp -a ./replace_file/fake08/. "$PAYLOAD_ROOT/opt/fake08/" 2>/dev/null || true
+
   echo "== 更新 PPSSPP 1.20.4 =="
   mkdir -p "$PAYLOAD_ROOT/opt/ppsspp"
   cp -a ./replace_file/ppsspp/. "$PAYLOAD_ROOT/opt/ppsspp/" 2>/dev/null || true
+
+  echo "== 替换 PPSSPP-2021 =="
+  mkdir -p "$PAYLOAD_ROOT/opt/ppsspp-2021"
+  cp -a ./replace_file/ppsspp-2021/. "$PAYLOAD_ROOT/opt/ppsspp-2021/" 2>/dev/null || true
+
+  echo "== 更新 mupen64plus =="
+  mkdir -p "$PAYLOAD_ROOT/opt/mupen64plus"
+  cp -a ./replace_file/mupen64plus/. "$PAYLOAD_ROOT/opt/mupen64plus/" 2>/dev/null || true
 
   echo "== 更新 ScummVM v2026.3.0 =="
   mkdir -p "$PAYLOAD_ROOT/opt/scummvm"
@@ -518,7 +549,7 @@ EOF
   meta_add "0777" "1002:1002" "/usr/lib/firmware/aic8800DC/*"
   meta_add "0777" "1002:1002" "/opt/351Files"
   meta_add "0777" "1002:1002" "/opt/351Files/*"
-  for f in atomiswave.sh dreamcast.sh naomi.sh saturn.sh n64.sh gametank.sh flash.sh gametankkeydemon.py pico8.sh drastic.sh drastic_kk.sh choose_drastic_ver.sh mediaplayer.sh get_last_played.sh choose_ons_ver.sh onscripter.sh freej2me.sh; do
+  for f in atomiswave.sh dreamcast.sh naomi.sh saturn.sh n64.sh mvem.sh easyrpg.sh gametank.sh flash.sh gametankkeydemon.py pico8.sh drastic.sh drastic_kk.sh choose_drastic_ver.sh mediaplayer.sh get_last_played.sh choose_ons_ver.sh onscripter.sh freej2me.sh; do
     meta_add "0777" "1002:1002" "/usr/local/bin/$f"
   done
   meta_add "0777" "1002:1002" "/usr/local/bin/es-status-daemon.sh"
@@ -526,6 +557,9 @@ EOF
   meta_add "0777" "1002:1002" "/etc/zram.conf"
   meta_add "0777" "1002:1002" "/usr/local/bin/zram-setup.sh"
   meta_add "0777" "1002:1002" "/etc/systemd/system/zram-swap.service"
+  meta_add "0777" "1002:1002" "/etc/batteryplus/batteryplus.conf"
+  meta_add "0777" "1002:1002" "/usr/local/bin/batteryplus"
+  meta_add "0777" "1002:1002" "/etc/systemd/system/batteryplus.service"
   meta_add "0777" "1002:1002" "/home/ark/.config/retroarch/cores/*"
   meta_add "0777" "1002:1002" "/home/ark/.config/retroarch32/cores/*"
   meta_add "0777" "1002:1002" "/etc/emulationstation/es_systems.cfg"
@@ -540,8 +574,14 @@ EOF
   meta_add "0777" "1002:1002" "/opt/freej2mesa/*"
   meta_add "0777" "1002:1002" "/opt/retroarch/bin/"
   meta_add "0777" "1002:1002" "/opt/retroarch/bin/*"
+  meta_add "0777" "1002:1002" "/opt/fake08"
+  meta_add "0777" "1002:1002" "/opt/fake08/*"
   meta_add "0777" "1002:1002" "/opt/ppsspp"
   meta_add "0777" "1002:1002" "/opt/ppsspp/*"
+  meta_add "0777" "1002:1002" "/opt/ppsspp-2021"
+  meta_add "0777" "1002:1002" "/opt/ppsspp-2021/*"
+  meta_add "0777" "1002:1002" "/opt/mupen64plus"
+  meta_add "0777" "1002:1002" "/opt/mupen64plus/*"
   meta_add "0777" "1002:1002" "/opt/scummvm"
   meta_add "0777" "1002:1002" "/opt/scummvm/*"
   meta_add "0777" "1002:1002" "/opt/flycastsa"
@@ -677,7 +717,7 @@ else
 fi
 
 log "=== Step 1: Stop conflicting services ==="
-for s in zram-swap.service es-status-daemon.service batt_led.service ddtbcheck.service 351mp.service mpv.service oga_events; do
+for s in zram-swap.service batteryplus.service es-status-daemon.service batt_led.service ddtbcheck.service 351mp.service mpv.service oga_events; do
   if [[ -e "/etc/systemd/system/$s" || -e "/lib/systemd/system/$s" ]]; then
     svc_stop_disable "$s"
   fi

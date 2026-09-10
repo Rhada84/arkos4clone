@@ -46,26 +46,49 @@ if ([[ "${ext,,}" == "zip" ]] || [[ "${ext,,}" == "7z" ]]) && [[ $1 == *"standal
   fi
 fi
 
+calc_4_3() {
+    local x=$1 y=$2
+    if (( x * 3 > y * 4 )); then
+        echo $(( (y * 4) / 3 )) $y
+    elif (( x * 3 < y * 4 )); then
+        echo $x $(( (x * 3) / 4 ))
+    else
+        echo $x $y
+    fi
+}
+
 if [[ $1 == "standalone-Rice" ]]; then
-  if [[ $2 == "Widescreen_Aspect" ]]; then
-    /opt/mupen64plus/mupen64plus --resolution "${xres}x${yres}" --plugindir /opt/mupen64plus --gfx mupen64plus-video-rice.so --corelib /opt/mupen64plus/libmupen64plus.so.2 --datadir /opt/mupen64plus "$game"
-  else
-    ricewidthhack=$(((yres * 4) / 3))
-    /opt/mupen64plus/mupen64plus --resolution "${ricewidthhack}x${yres}" --plugindir /opt/mupen64plus --gfx mupen64plus-video-rice.so --corelib /opt/mupen64plus/libmupen64plus.so.2 --datadir /opt/mupen64plus "$game"
-  fi
+    if [[ $2 == "Widescreen_Aspect" ]]; then
+        res="${xres}x${yres}"
+    else
+        read ricewidthhack riceheighthack <<< $(calc_4_3 $xres $yres)
+        res="${ricewidthhack}x${riceheighthack}"
+    fi
+    /opt/mupen64plus/mupen64plus --resolution "$res" --plugindir /opt/mupen64plus --gfx mupen64plus-video-rice.so --corelib /opt/mupen64plus/libmupen64plus.so.2 --datadir /opt/mupen64plus "$game"
+
 elif [[ $1 == "standalone-Glide64mk2" ]]; then
-  if [[ $2 == "Widescreen_Aspect" ]]; then
-    /opt/mupen64plus/mupen64plus --set Video-Glide64mk2[aspect]=1 --resolution "${xres}x${yres}" --plugindir /opt/mupen64plus --gfx mupen64plus-video-glide64mk2.so --corelib /opt/mupen64plus/libmupen64plus.so.2 --datadir /opt/mupen64plus "$game"
-  else
-    /opt/mupen64plus/mupen64plus --set Video-Glide64mk2[aspect]=-1 --resolution "${xres}x${yres}" --plugindir /opt/mupen64plus --gfx mupen64plus-video-glide64mk2.so --corelib /opt/mupen64plus/libmupen64plus.so.2 --datadir /opt/mupen64plus "$game"
-  fi
+    if [[ $2 == "Widescreen_Aspect" ]]; then
+        aspect=1
+        res="${xres}x${yres}"
+    else
+        aspect=-1
+        read ricewidthhack riceheighthack <<< $(calc_4_3 $xres $yres)
+        res="${ricewidthhack}x${riceheighthack}"
+    fi
+    /opt/mupen64plus/mupen64plus --set Video-Glide64mk2[aspect]=$aspect --resolution "$res" --plugindir /opt/mupen64plus --gfx mupen64plus-video-glide64mk2.so --corelib /opt/mupen64plus/libmupen64plus.so.2 --datadir /opt/mupen64plus "$game"
+
 elif [[ $1 == "standalone-GlideN64" ]]; then
-  if [[ $2 == "Widescreen_Aspect" ]]; then
-    /opt/mupen64plus/mupen64plus --set Video-GLideN64[ThreadedVideo]=True --set Video-GLideN64[UseNativeResolutionFactor]=1 --set Video-GLideN64[AspectRatio]=3 --resolution "${xres}x${yres}" --plugindir /opt/mupen64plus --gfx mupen64plus-video-GLideN64.so --corelib /opt/mupen64plus/libmupen64plus.so.2 --datadir /opt/mupen64plus "$game"
-  else
-    /opt/mupen64plus/mupen64plus --set Video-GLideN64[ThreadedVideo]=True --set Video-GLideN64[UseNativeResolutionFactor]=1 --set Video-GLideN64[AspectRatio]=1 --resolution "${xres}x${yres}" --plugindir /opt/mupen64plus --gfx mupen64plus-video-GLideN64.so --corelib /opt/mupen64plus/libmupen64plus.so.2 --datadir /opt/mupen64plus "$game"
-  fi
+    if [[ $2 == "Widescreen_Aspect" ]]; then
+        aspect=3
+        res="${xres}x${yres}"
+    else
+        aspect=1
+        read ricewidthhack riceheighthack <<< $(calc_4_3 $xres $yres)
+        res="${ricewidthhack}x${riceheighthack}"
+    fi
+    /opt/mupen64plus/mupen64plus --set Video-GLideN64[ThreadedVideo]=True --set Video-GLideN64[UseNativeResolutionFactor]=1 --set Video-GLideN64[AspectRatio]=$aspect --resolution "$res" --plugindir /opt/mupen64plus --gfx mupen64plus-video-GLideN64.so --corelib /opt/mupen64plus/libmupen64plus.so.2 --datadir /opt/mupen64plus "$game"
+
 else
-  /usr/local/bin/"$1" -L /home/ark/.config/"$1"/cores/"$2"_libretro.so "$3"
+    /usr/local/bin/"$1" -L /home/ark/.config/"$1"/cores/"$2"_libretro.so "$3"
 fi
 

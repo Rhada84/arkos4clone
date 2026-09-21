@@ -9,7 +9,8 @@ set -euo pipefail
 # Mount points will be created under: ./mnt/{boot,root,roms}
 # State (loop device) is stored in:   ./.arkos_loop
 
-BASE_MNT="${ARKOS_MNT:-/home/lcdyk/arkos/mnt}"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+BASE_MNT="${ARKOS_MNT:-$SCRIPT_DIR/mnt}"
 STATE_FILE="$BASE_MNT/.arkos_loop"
 BOOT_MNT="$BASE_MNT/boot"
 ROOT_MNT="$BASE_MNT/root"
@@ -32,6 +33,7 @@ ensure_tools() {
 }
 
 write_state() {
+  mkdir -p "$BASE_MNT"
   echo "$1" > "$STATE_FILE"
 }
 
@@ -75,6 +77,7 @@ do_mount() {
   local loop
   loop="$(losetup -fP --show "$img")"   # e.g. /dev/loop7
   echo "Loop device: $loop"
+  trap 'for m in "$ROMS_MNT" "$ROOT_MNT" "$BOOT_MNT"; do mountpoint -q "$m" && umount "$m" 2>/dev/null || true; done; losetup -d "$loop" 2>/dev/null || true' ERR
   write_state "$loop"
 
   # wait for kernel to create loopXp{1,2,3}
@@ -112,19 +115,28 @@ do_mount() {
     exit 1
   fi
   
-  # exfat utils differ; use 'exfat' fstype and safe options if available
-  if grep -qw exfat /proc/filesystems 2>/dev/null; then
-    mount_if_not "$p3" "$ROMS_MNT" exfat "rw,uid=0,gid=0,umask=000"
-  else
-    # fallback: kernel exfat may appear as 'fuseblk' via fuse-exfat, still ok
-    mount_if_not "$p3" "$ROMS_MNT"
-  fi
+  # p3 按实际文件系统类型挂载 (构建时原厂为 NTFS，首启转换后为 exFAT)
+  roms_fstype=$(blkid -o value -s TYPE "$p3")
+  case "$roms_fstype" in
+    exfat)
+      mount_if_not "$p3" "$ROMS_MNT" exfat "rw,uid=0,gid=0,umask=000"
+      ;;
+    ntfs|ntfs3)
+      mount_if_not "$p3" "$ROMS_MNT" ntfs-3g "iocharset=utf8,umask=000" 2>/dev/null ||
+        mount_if_not "$p3" "$ROMS_MNT" ntfs "iocharset=utf8,umask=000" 2>/dev/null ||
+        mount_if_not "$p3" "$ROMS_MNT"
+      ;;
+    *)
+      mount_if_not "$p3" "$ROMS_MNT"
+      ;;
+  esac
 
   echo
   echo "All set."
   echo "  BOOT -> $BOOT_MNT"
   echo "  ROOT -> $ROOT_MNT"
   echo "  ROMS -> $ROMS_MNT"
+  trap - ERR
 }
 
 do_unmount() {

@@ -82,7 +82,12 @@ if [ -f /roms.tar ]; then
   # --no-same-owner/--no-same-permissions: exFAT 不支持 chown/chmod，
   # 不加的话每个文件都会报 Operation not permitted；属主由挂载参数 (fstab uid/gid) 决定
   sudo tar --warning=no-timestamp --no-same-permissions --no-same-owner -xvf /roms.tar -C / 2>&1 | tee -a "$LOG_FILE"
-  log "roms.tar extraction completed"
+  rc=${PIPESTATUS[0]}
+  if [ "$rc" -eq 0 ]; then
+    log "roms.tar extraction completed"
+  else
+    log "WARNING: roms.tar extraction FAILED (tar exit $rc) - archive may be truncated/corrupt"
+  fi
 else
   log "WARNING: /roms.tar not found!"
 fi
@@ -98,6 +103,7 @@ fi
 log "=== Step 7: Move tempthemes ==="
 if [ -d /tempthemes ]; then
   log "Moving /tempthemes/* to /roms/themes..."
+  sudo mkdir -p /roms/themes
   sudo mv -f -v /tempthemes/* /roms/themes 2>&1 | tee -a "$LOG_FILE"
   sync
   sleep 1

@@ -81,6 +81,7 @@ pack_roms_tar() {
     return 0
   fi
   echo "== 打包 roms/ -> 镜像 /roms.tar =="
+
   # 首启需要的空 roms 目录与 pymo 扫描器 (源在 rootfs 树内)
   local d
   for d in hbmame native32 bbk flash gametank spmp8000 krkr2 pymo; do
@@ -89,15 +90,8 @@ pack_roms_tar() {
   if [[ ! -f roms/pymo/Scan_for_new_games.pymo && -f rootfs/dArkOS/opt/pymo/Scan_for_new_games.pymo ]]; then
     cp -f rootfs/dArkOS/opt/pymo/Scan_for_new_games.pymo roms/pymo/
   fi
-  # pymo 主题合入镜像 tempthemes (原厂机制: 首启把 tempthemes 搬进 /roms/themes)
-  if [[ -d "$MOUNT_DIR/root/tempthemes/es-theme-nes-box" && ! -d "$MOUNT_DIR/root/tempthemes/es-theme-nes-box/pymo" ]]; then
-    echo "== 合并 pymo 主题到镜像 tempthemes =="
-    if [[ -d roms/themes/es-theme-nes-box/pymo ]]; then
-      fatal sudo cp -r roms/themes/es-theme-nes-box/pymo "$MOUNT_DIR/root/tempthemes/es-theme-nes-box/pymo"
-    elif [[ -d rootfs/dArkOS/opt/pymo/pymo ]]; then
-      fatal sudo cp -r rootfs/dArkOS/opt/pymo/pymo "$MOUNT_DIR/root/tempthemes/es-theme-nes-box/pymo"
-    fi
-  fi
+
+
   # 组装打包视图: 项目增量 + 原厂骨架 (首启会重格 p3，骨架必须随 tar 进包)
   # 内容放在 stage/roms/ 下，tar 成员即带 roms/ 前缀
   local stage need_mb avail_mb
@@ -109,11 +103,37 @@ pack_roms_tar() {
     exit 1
   fi
   mkdir -p "$stage/roms"
-  fatal sudo rsync -a roms/ "$stage/roms"/
+
+  # 合并顺序: 原厂骨架先进, 项目增量后进 (项目覆盖原厂) --
+  # 否则原厂自带的老 PortMaster/PortMaster.sh 会覆盖构建时新下载的版本
   if [[ -d "$MOUNT_DIR/roms" ]]; then
     echo "== 合并原厂 roms 骨架 (仅入包，不落项目目录) =="
-    fatal sudo rsync -a --exclude 'System Volume Information' --exclude 'EUMONBMP.SYS' --exclude '*.CBM' "$MOUNT_DIR/roms/" "$stage/roms"/
+    fatal sudo rsync -a --checksum \
+      --exclude 'System Volume Information' \
+      --exclude 'EUMONBMP.SYS' \
+      --exclude '*.CBM' \
+      --exclude 'tools/Gamma' \
+      --exclude 'tools/ES-logo-changer' \
+      --exclude 'tools/PortMaster.sh' \
+      \
+      "$MOUNT_DIR/roms/" "$stage/roms"/
   fi
+
+  # 原厂 tempthemes 主题包 (若存在): dArkOS 带 freeplay 等 5 主题, ArkOS 为完整 nes-box
+  if [[ -d "$MOUNT_DIR/root/tempthemes" ]]; then
+    echo "== 合并原厂 tempthemes 主题 (仅入包) =="
+    fatal sudo rsync -a "$MOUNT_DIR/root/tempthemes/" "$stage/roms/themes/"
+  fi
+
+  # --checksum: 项目必须无条件覆盖原厂 (防同尺寸同 mtime 漏覆盖, 同 logo 事件教训)
+  # 主题 (roms/themes, 含完整 es-theme-nes-box + pymo) 随项目增量直接入 tar
+  fatal sudo rsync -a --checksum \
+    \
+    roms/ "$stage/roms"/
+
+  # Gamma / ES-logo-changer 不再随包提供 (双保险: 即使经其他路径混入 stage 也删掉)
+  safe sudo rm -rf "$stage/roms/tools/Gamma" "$stage/roms/tools/ES-logo-changer" "$stage/roms/tools/PortMaster.sh"
+
   # -h 解引用符号链接: 设备 exFAT 不支持链接
   # --owner=0 --group=0: 归档属主归一化为 root (否则会把构建机的 uid 写进包里，
   # 设备端 exFAT 不支持 chown，解压时每个文件都会报 Operation not permitted)
@@ -144,8 +164,10 @@ cleanup_stock() {
   safe sudo rm -f "$MOUNT_DIR/root/opt/system/Advanced/Reset EmulationStation Controls.sh"
   safe sudo rm -f "$MOUNT_DIR/root/opt/system/Advanced/Fix Global Hotkeys.sh"
   safe sudo rm -f "$MOUNT_DIR/root/etc/emulationstation/es_input.cfg"
+  # tempthemes 机制废弃: 主题已随 roms.tar 交付, 镜像不再携带
+  safe sudo rm -rf "$MOUNT_DIR/root/tempthemes"
   # p3 保持原厂 NTFS 出厂，首启 expandtoexfat.sh 转换为 exFAT 并切换 fstab
-  # (fstab.exfat 保留在 boot 分区供首启使用；tempthemes 保留——首启搬进 /roms/themes)
+  # (fstab.exfat 保留在 boot 分区供首启使用；tempthemes 废弃删除——主题已随 roms.tar 交付)
 }
 
 prune_old_libs() {

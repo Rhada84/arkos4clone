@@ -40,6 +40,9 @@ var Polish = Language{
 		Copying:                "Kopiowanie: ",
 		CopyingExtra:           "Kopiowanie dodatkowych zasobów...",
 		CopyingFmt:             "  Kopiowanie: %s\n",
+		SelectKernel:           "Wybierz jądro:",
+		Kernel44:               "1. Jądro 4.4 (zalecane)",
+		Kernel510:              "2. Jądro 5.10 (eksperymentalne: nowy sterownik GPU Mali, obsługa Vulkan)",
 		SelectBatteryVersion:   "Wybierz wersję sterownika baterii:",
 		BatteryVersionOriginal: "1. oryginalny sterownik arkos (ten sterownik musi być używany razem z batteryplus; w przeciwnym razie poziom baterii będzie wyświetlany nieprawidłowo podczas ładowania).",
 		BatteryVersionFix:      "2. sterownik baterii arkos4clone (zdolny do prawidłowego wyświetlania poziomu baterii zarówno podczas ładowania, jak i rozładowania, i z funkcją adaptacji do starzenia)",
@@ -48,6 +51,15 @@ var Polish = Language{
 			"  Jeśli jedno nie ma dźwięku, spróbuj drugie.\n" +
 			"• Jeśli kierunek góra/dół prawego joysticka jest odwrócony w domyślnym DTB,\n" +
 			"  użyj opcji z 'Invert Right Joystick' w nazwie, aby to naprawić.",
+		SoySauceNote: "UWAGA:\n" +
+			"• Dla R36S serii Y3506 wybieraj ściśle według wyniku wykrywania w webTools.\n" +
+			"• Jeśli zgubiłeś oryginalny dtb, testuj je po kolei.\n" +
+			"• Sitodruk na płytce nie mówi nic o panelu; w urządzeniach SoySauce panele są mocno pomieszane.\n" +
+			"• Bez oryginalnego dtb nawet udane wyświetlenie obrazu z dtb SoySauce NIE oznacza, że twoje urządzenie ma ten panel.\n" +
+			"• Jeśli system się uruchamia, ale przy wychodzeniu z gry ekran gaśnie, zmień opcję i testuj dalej.",
+		GameConsoleNote: "UWAGA:\n" +
+			"• Panel 4 Type 1 i Panel 4 Type 2 służą głównie do rozróżnienia, czy działa Wi-Fi.\n" +
+			"• Jeśli Wi-Fi nie działa na Panel 4 Type 1, przełącz na Panel 4 Type 2, i odwrotnie.",
 	},
 	Cleanup: CleanupStrings{
 		OperationCompleted:   "  ✅  Operacja zakończona!",
@@ -103,5 +115,12 @@ var Polish = Language{
 		VoltageWrongInput:    "Nieprawidłowe wejście. Zwiększenie napięcia anulowane.",
 		VoltageApplied:       "Zwiększenie napięcia zastosowane pomyślnie!",
 		VoltageSkipped:       "Zwiększenie napięcia pominięte.",
+	},
+	PortMaster: PortMasterStrings{
+		Title:          "Zależności PortMaster",
+		AskExtract:     "Czy przy pierwszym uruchomieniu rozpakowywać zależności PortMaster na partycję Roms?\nJeśli karta SD jest słabej jakości, wybierz Nie — w przeciwnym razie rozpakowywanie roms.tar może trwać zbyt długo.",
+		KeepingLibs:    "Zależności PortMaster zostaną rozpakowane na Roms jak zwykle (bez zmian).",
+		ExcludeApplied: "expandtoexfat.sh zaktualizowany: pliki *.squashfs będą pomijane przy rozpakowywaniu roms.tar.",
+		ExcludeAlready: "expandtoexfat.sh już pomija pliki *.squashfs — bez zmian.",
 	},
 }

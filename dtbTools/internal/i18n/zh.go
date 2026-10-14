@@ -40,6 +40,9 @@ var Chinese = Language{
 		Copying:                "开始复制: ",
 		CopyingExtra:           "正在复制额外资源...",
 		CopyingFmt:             "  开始复制: %s\n",
+		SelectKernel:           "请选择内核:",
+		Kernel44:               "1. 4.4 内核（推荐）",
+		Kernel510:              "2. 5.10 内核（实验性：新版 Mali GPU 驱动，支持 Vulkan）",
 		SelectBatteryVersion:   "请选择电池驱动版本:",
 		BatteryVersionOriginal: "1. arkos 原始驱动（该驱动需要搭配batteryplus来使用否则会在充电时电量显示异常）",
 		BatteryVersionFix:      "2. arkos4clone 电池驱动（该版本驱动能够在充电和用电时正确显示电池电量，并且具备老化自适应功能）",
@@ -47,6 +50,15 @@ var Chinese = Language{
 			"• 'With Amplifier' 和 'Without Amplifier' 仅在声音输出上有区别。\n" +
 			"  如果其中一个没有声音，请尝试另一个。\n" +
 			"• 若默认 DTB 右摇杆上下颠倒，请使用名称中带 'Invert Right Joystick' 的版本修复。",
+		SoySauceNote: "说明：\n" +
+			"• Y3506 系列的 R36S 请严格按照 webTools 的检测结果选择。\n" +
+			"• 若你丢失了原始 dtb，请依次测试。\n" +
+			"• 主板上的丝印无法得知具体面板信息，SoySauce 设备面板混用严重。\n" +
+			"• 在 dtb 遗失的情况下，就算 SoySauce 成功点亮也不代表你的设备就属于该 Panel。\n" +
+			"• 若成功进入系统后出现游戏退出黑屏，请更换选项继续测试。",
+		GameConsoleNote: "说明：\n" +
+			"• Panel 4 Type 1 和 Panel 4 Type 2 主要用来区别 wifi 是否可用。\n" +
+			"• 若 Panel 4 Type 1 的 wifi 不可用，请切换到 Panel 4 Type 2；反之亦然。",
 	},
 	Cleanup: CleanupStrings{
 		OperationCompleted:   "  ✅  操作完成！",
@@ -102,5 +114,12 @@ var Chinese = Language{
 		VoltageWrongInput:    "输入错误，已取消电压增加。",
 		VoltageApplied:       "电压增加已成功应用！",
 		VoltageSkipped:       "已跳过电压增加。",
+	},
+	PortMaster: PortMasterStrings{
+		Title:          "PortMaster 依赖",
+		AskExtract:     "首次启动解压 roms.tar 时，是否要将 PortMaster 的依赖解压到 Roms 分区？\n若 SD 卡质量较差请选择否，否则可能会导致解压 roms.tar 时间过长。",
+		KeepingLibs:    "PortMaster 依赖将照常解压到 Roms 分区（不做任何改动）。",
+		ExcludeApplied: "已修改 expandtoexfat.sh：解压 roms.tar 时将跳过 *.squashfs。",
+		ExcludeAlready: "expandtoexfat.sh 已配置跳过 *.squashfs，无需改动。",
 	},
 }

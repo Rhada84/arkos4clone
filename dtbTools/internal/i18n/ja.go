@@ -40,6 +40,9 @@ var Japanese = Language{
 		Copying:                "コピー中: ",
 		CopyingExtra:           "追加リソースをコピー中...",
 		CopyingFmt:             "  コピー中: %s\n",
+		SelectKernel:           "カーネルを選択:",
+		Kernel44:               "1. 4.4 カーネル（推奨）",
+		Kernel510:              "2. 5.10 カーネル（実験的：新しい Mali GPU ドライバ、Vulkan 対応）",
 		SelectBatteryVersion:   "バッテリドライババージョンを選択:",
 		BatteryVersionOriginal: "1. arkosオリジナルドライバ (このドライバはbatteryplusと一緒に使用する必要があります。そうしないと、充電中にバッテリーレベルが異常に表示されます)。",
 		BatteryVersionFix:      "2. arkos4cloneバッテリードライバ (充電と放電の両方でバッテリーレベルを正しく表示でき、エージング適応機能を備えています)",
@@ -48,6 +51,15 @@ var Japanese = Language{
 			"  一方に音がない場合は、もう一方を試してください。\n" +
 			"• デフォルトDTBで右ジョイスティックの上下方向が反転している場合、\n" +
 			"  名前に'Invert Right Joystick'を含むオプションを使用して修正してください。",
+		SoySauceNote: "注記:\n" +
+			"• Y3506 シリーズの R36S は、webTools の検出結果に厳密に従って選択してください。\n" +
+			"• 純正の dtb を紛失した場合は、順番にテストしてください。\n" +
+			"• 基板のシルク印刷ではパネル情報を判別できません。SoySauce 端末はパネルの混在が非常に深刻です。\n" +
+			"• 純正 dtb を紛失した場合、SoySauce の dtb で画面が点灯しても、そのパネルが自分の端末に合っているとは限りません。\n" +
+			"• システム起動後にゲーム終了時の画面が真っ暗になる場合は、別の選択肢に切り替えてテストを続けてください。",
+		GameConsoleNote: "注記:\n" +
+			"• Panel 4 Type 1 と Panel 4 Type 2 は、主に Wi-Fi の使える／使えないを区別するためのものです。\n" +
+			"• Panel 4 Type 1 で Wi-Fi が使えない場合は Panel 4 Type 2 に切り替え、その逆も同様です。",
 	},
 	Cleanup: CleanupStrings{
 		OperationCompleted:   "  ✅  操作完了！",
@@ -103,5 +115,12 @@ var Japanese = Language{
 		VoltageWrongInput:    "入力が正しくありません。電圧増加がキャンセルされました。",
 		VoltageApplied:       "電圧増加が正常に適用されました！",
 		VoltageSkipped:       "電圧増加をスキップしました。",
+	},
+	PortMaster: PortMasterStrings{
+		Title:          "PortMaster 依存関係",
+		AskExtract:     "初回起動時に roms.tar を展開する際、PortMaster の依存ファイルを Roms パーティションに展開しますか？\nSDカードの品質が悪い場合は「いいえ」を選択してください。そうしないと roms.tar の展開に時間がかかりすぎる可能性があります。",
+		KeepingLibs:    "PortMaster の依存ファイルを Roms パーティションに通常どおり展開します（変更なし）。",
+		ExcludeApplied: "expandtoexfat.sh を更新しました：roms.tar の展開で *.squashfs を除外します。",
+		ExcludeAlready: "expandtoexfat.sh は既に *.squashfs を除外する設定です。",
 	},
 }

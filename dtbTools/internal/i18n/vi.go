@@ -40,6 +40,9 @@ var Vietnamese = Language{
 		Copying:                "Đang sao chép: ",
 		CopyingExtra:           "Đang sao chép tài nguyên bổ sung...",
 		CopyingFmt:             "  Đang sao chép: %s\n",
+		SelectKernel:           "Chọn nhân (kernel):",
+		Kernel44:               "1. Nhân 4.4 (khuyên dùng)",
+		Kernel510:              "2. Nhân 5.10 (thử nghiệm: trình điều khiển GPU Mali mới, hỗ trợ Vulkan)",
 		SelectBatteryVersion:   "Chọn phiên bản trình điều khiển pin:",
 		BatteryVersionOriginal: "1. trình điều khiển gốc arkos (trình điều khiển này phải được sử dụng cùng với batteryplus; nếu không, mức pin sẽ hiển thị bất thường trong quá trình sạc).",
 		BatteryVersionFix:      "2. trình điều khiển pin arkos4clone (có thể hiển thị chính xác mức pin trong cả quá trình sạc và xả, và có chức năng thích ứng với lão hóa)",
@@ -48,6 +51,15 @@ var Vietnamese = Language{
 			"  Nếu một trong số đó không có âm thanh, hãy thử cái kia.\n" +
 			"• Nếu hướng lên/xuống của joystick bên phải bị đảo ngược trong DTB mặc định,\n" +
 			"  hãy sử dụng tùy chọn có 'Invert Right Joystick' trong tên để sửa nó.",
+		SoySauceNote: "LƯU Ý:\n" +
+			"• R36S dòng Y3506 vui lòng chọn đúng theo kết quả dò tìm của webTools.\n" +
+			"• Nếu bạn làm mất dtb gốc, hãy thử lần lượt từng cái.\n" +
+			"• Chữ in trên bo mạch không cho biết loại màn hình; máy SoySauce bị trộn panel rất nặng.\n" +
+			"• Khi mất dtb gốc, ngay cả khi dtb SoySauce sáng màn hình cũng KHÔNG có nghĩa là máy bạn dùng panel đó.\n" +
+			"• Nếu vào được hệ thống nhưng thoát game bị màn hình đen, hãy đổi lựa chọn khác và tiếp tục thử.",
+		GameConsoleNote: "LƯU Ý:\n" +
+			"• Panel 4 Type 1 và Panel 4 Type 2 chủ yếu để phân biệt Wi-Fi có dùng được hay không.\n" +
+			"• Nếu Wi-Fi không dùng được trên Panel 4 Type 1, hãy chuyển sang Panel 4 Type 2, và ngược lại.",
 	},
 	Cleanup: CleanupStrings{
 		OperationCompleted:   "  ✅  Hoạt động đã hoàn thành!",
@@ -103,5 +115,12 @@ var Vietnamese = Language{
 		VoltageWrongInput:    "Đầu vào không chính xác. Tăng điện áp đã bị hủy.",
 		VoltageApplied:       "Tăng điện áp đã được áp dụng thành công!",
 		VoltageSkipped:       "Tăng điện áp đã bị bỏ qua.",
+	},
+	PortMaster: PortMasterStrings{
+		Title:          "Phụ thuộc PortMaster",
+		AskExtract:     "Khởi động lần đầu có giải nén các phụ thuộc PortMaster vào phân vùng Roms không?\nNếu thẻ SD chất lượng kém, hãy chọn Không, nếu không việc giải nén roms.tar có thể mất quá nhiều thời gian.",
+		KeepingLibs:    "Các phụ thuộc PortMaster sẽ được giải nén vào Roms như bình thường (không thay đổi).",
+		ExcludeApplied: "Đã cập nhật expandtoexfat.sh: bỏ qua *.squashfs khi giải nén roms.tar.",
+		ExcludeAlready: "expandtoexfat.sh đã bỏ qua *.squashfs — không cần thay đổi.",
 	},
 }

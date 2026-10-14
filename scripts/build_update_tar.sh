@@ -258,7 +258,8 @@ for s in zram-swap.service batteryplus.service es-status-daemon.service batt_led
 done
 
 log "=== Step 2: Find boot partition ==="
-BOOT_MP="$(findmnt -n -o TARGET /dev/mmcblk0p1 2>/dev/null || true)"
+DISK=/dev/$(lsblk -no PKNAME "$(findmnt -no SOURCE /)")
+BOOT_MP="$(findmnt -n -o TARGET "${DISK}p1" 2>/dev/null || true)"
 [[ -z "$BOOT_MP" ]] && BOOT_MP="/boot"
 log "Boot mount point: $BOOT_MP"
 
@@ -350,17 +351,17 @@ dd_from_tar() {
     return 0
   fi
   log "Flashing: $member (seek=$seek)"
-  tar -xO -f "$OTA_TAR_PATH" "$member" | dd of=/dev/mmcblk0 conv=notrunc bs=512 seek="$seek" 2>&1 | tee -a "$OTA_LOG" | tee -a "$LOG_FILE"
+  tar -xO -f "$OTA_TAR_PATH" "$member" | dd of="$DISK" conv=notrunc bs=512 seek="$seek" 2>&1 | tee -a "$OTA_LOG" | tee -a "$LOG_FILE"
 }
 
-if [[ -b "/dev/mmcblk0" && -n "$OTA_TAR_PATH" && -f "$OTA_TAR_PATH" ]]; then
+if [[ -b "$DISK" && -n "$OTA_TAR_PATH" && -f "$OTA_TAR_PATH" ]]; then
   dd_from_tar "uboot/idbloader.img" 64
   dd_from_tar "uboot/uboot.img" 16384
   dd_from_tar "uboot/trust.img" 24576
   sync || true
   log "uboot flashed successfully"
 else
-  log "Skipping uboot flash (no mmcblk0 or no tar)"
+  log "Skipping uboot flash (no $DISK or no tar)"
 fi
 
 log "=== Step 6: Update plymouth theme ==="
@@ -417,8 +418,9 @@ log "=== Step 8: Apply permissions (META) ==="
 apply_meta
 
 log "=== Step 9: Fix modules permissions ==="
+# The 4.4 and 5.10 kernels each have their module directory
 fix_modules_perms() {
-  local base="/usr/lib/modules/4.4.189"
+  local base="/usr/lib/modules/$1"
   [[ -d "$base" ]] || { log "modules dir not found: $base"; return 0; }
   log "Fixing modules: $base"
   chown -R $CHOWN_USER "$base" 2>/dev/null || true
@@ -426,10 +428,18 @@ fix_modules_perms() {
   local ko_count; ko_count=$(find "$base" -name "*.ko" 2>/dev/null | wc -l)
   log "Fixed $ko_count .ko files"
   if command -v depmod >/dev/null 2>&1; then
-    depmod -a 4.4.189 2>/dev/null && log "depmod completed" || true
+    depmod -a "$1" 2>/dev/null && log "depmod completed" || true
   fi
 }
-fix_modules_perms
+fix_modules_perms 4.4.189
+fix_modules_perms 5.10.252-arkos4clone
+
+# Mesa's Vulkan drivers cannot drive this GPU, but the loader loads each
+# one (lvp pulls in LLVM, ~3.6 s per Vulkan app start); keep only Mali's
+if [[ -f /usr/share/vulkan/icd.d/mali.json ]]; then
+  find /usr/share/vulkan/icd.d -name '*.json' ! -name 'mali.json' -print -delete 2>/dev/null |
+    while read -r f; do log "Removed Vulkan ICD: $f"; done
+fi
 
 log "=== Step 10: Enable services ==="
 if have_systemctl; then
@@ -437,6 +447,11 @@ if have_systemctl; then
   systemctl enable es-status-daemon.service 2>/dev/null && log "Enabled: es-status-daemon.service" || true
   systemctl restart es-status-daemon.service 2>/dev/null && log "Started: es-status-daemon.service" || true
   chmod 777 /usr/local/bin/ogage 2>/dev/null && log "Fixed: ogage chmod 777" || true
+fi
+
+if [[ -f "$BOOT_MP/emmc.conf" ]]; then
+  log "=== Step 11: Rebuild eMMC boot files ==="
+  /usr/local/bin/emmc-boot-files.sh "$BOOT_MP" && log "eMMC boot files rebuilt"
 fi
 
 sync

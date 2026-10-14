@@ -10,13 +10,14 @@ type Language struct {
 	Title   string
 	Variant LanguageVariant
 
-	Common    CommonStrings
-	Menu1     Menu1Strings
-	Menu2     Menu2Strings
-	Menu3     Menu3Strings
-	Menu4     Menu4Strings
-	Cleanup   CleanupStrings
-	Overclock OverclockStrings
+	Common     CommonStrings
+	Menu1      Menu1Strings
+	Menu2      Menu2Strings
+	Menu3      Menu3Strings
+	Menu4      Menu4Strings
+	Cleanup    CleanupStrings
+	Overclock  OverclockStrings
+	PortMaster PortMasterStrings
 }
 
 // CommonStrings holds shared UI strings.
@@ -63,10 +64,15 @@ type Menu3Strings struct {
 	Copying                string
 	CopyingExtra           string
 	CopyingFmt             string
+	SelectKernel           string
+	Kernel44               string
+	Kernel510              string
 	SelectBatteryVersion   string
 	BatteryVersionOriginal string
 	BatteryVersionFix      string
 	CloneR36sNote          string
+	SoySauceNote           string
+	GameConsoleNote        string
 }
 
 // Menu4Strings holds language selection strings.
@@ -122,6 +128,15 @@ type OverclockStrings struct {
 	VoltageWrongInput    string
 	VoltageApplied       string
 	VoltageSkipped       string
+}
+
+// PortMasterStrings holds first-boot PortMaster dependency extraction strings.
+type PortMasterStrings struct {
+	Title          string
+	AskExtract     string
+	KeepingLibs    string
+	ExcludeApplied string
+	ExcludeAlready string
 }
 
 // AllLanguages returns all supported languages.

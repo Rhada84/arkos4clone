@@ -40,6 +40,9 @@ var French = Language{
 		Copying:                "Copie: ",
 		CopyingExtra:           "Copie de ressources supplémentaires...",
 		CopyingFmt:             "  Copie: %s\n",
+		SelectKernel:           "Sélectionnez le noyau:",
+		Kernel44:               "1. Noyau 4.4 (recommandé)",
+		Kernel510:              "2. Noyau 5.10 (expérimental : nouveau pilote GPU Mali, prise en charge de Vulkan)",
 		SelectBatteryVersion:   "Sélectionnez la version du pilote de batterie:",
 		BatteryVersionOriginal: "1. pilote original arkos (ce pilote doit être utilisé avec batteryplus; sinon, le niveau de batterie s'affichera anormalement pendant la charge).",
 		BatteryVersionFix:      "2. pilote de batterie arkos4clone (capable d'afficher correctement le niveau de batterie pendant la charge et la décharge, et doté d'une fonction d'adaptation au vieillissement)",
@@ -48,6 +51,15 @@ var French = Language{
 			"  Si l'une n'a pas de son, essayez l'autre.\n" +
 			"• Si la direction haut/bas du joystick droit est inversée dans le DTB par défaut,\n" +
 			"  utilisez l'option avec 'Invert Right Joystick' dans le nom pour la corriger.",
+		SoySauceNote: "NOTE :\n" +
+			"• Pour les R36S de la série Y3506, suivez strictement le résultat de détection de webTools.\n" +
+			"• Si vous avez perdu le dtb d'origine, testez-les un par un.\n" +
+			"• La sérigraphie de la carte ne révèle pas le panneau ; les appareils SoySauce mélangent fortement les panneaux.\n" +
+			"• Sans le dtb d'origine, même si un dtb SoySauce allume l'écran, cela ne signifie PAS que votre appareil utilise ce panneau.\n" +
+			"• Si le système démarre mais que l'écran devient noir en quittant un jeu, changez d'option et continuez les tests.",
+		GameConsoleNote: "NOTE :\n" +
+			"• Panel 4 Type 1 et Panel 4 Type 2 servent principalement à distinguer si le Wi-Fi fonctionne.\n" +
+			"• Si le Wi-Fi ne fonctionne pas avec Panel 4 Type 1, passez à Panel 4 Type 2, et inversement.",
 	},
 	Cleanup: CleanupStrings{
 		OperationCompleted:   "  ✅  Opération terminée!",
@@ -103,5 +115,12 @@ var French = Language{
 		VoltageWrongInput:    "Entrée incorrecte. Augmentation de tension annulée.",
 		VoltageApplied:       "Augmentation de tension appliquée avec succès!",
 		VoltageSkipped:       "Augmentation de tension ignorée.",
+	},
+	PortMaster: PortMasterStrings{
+		Title:          "Dépendances PortMaster",
+		AskExtract:     "Au premier démarrage, faut-il extraire les dépendances PortMaster sur la partition Roms ?\nSi votre carte SD est de mauvaise qualité, choisissez Non, sinon l'extraction de roms.tar risque d'être trop longue.",
+		KeepingLibs:    "Les dépendances PortMaster seront extraites normalement sur Roms (aucune modification).",
+		ExcludeApplied: "expandtoexfat.sh mis à jour : les *.squashfs seront ignorés lors de l'extraction de roms.tar.",
+		ExcludeAlready: "expandtoexfat.sh ignore déjà les *.squashfs — aucune modification nécessaire.",
 	},
 }

@@ -40,6 +40,9 @@ var Korean = Language{
 		Copying:                "복사중",
 		CopyingExtra:           "기타 리소스 복사중...",
 		CopyingFmt:             "  복사중: %s\n",
+		SelectKernel:           "커널을 선택하세요:",
+		Kernel44:               "1. 4.4 커널 (권장)",
+		Kernel510:              "2. 5.10 커널 (실험적: 새 Mali GPU 드라이버, Vulkan 지원)",
 		SelectBatteryVersion:   "배터리 드라이버 버전을 선택하세요:",
 		BatteryVersionOriginal: "1. arkos 오리지널 드라이버 (이 드라이버는 batteryplus와 함께 사용해야 하며, 그렇지 않으면 충전 시 배터리 잔량이 비정상적으로 표시됩니다.)",
 		BatteryVersionFix:      "2. arkos4clone 배터리 드라이버 (충전 및 사용 중에 배터리 잔량을 정확하게 표시할 수 있으며, 노화 적응 기능을 갖추고 있습니다.)",
@@ -48,6 +51,15 @@ var Korean = Language{
 			"  하나에서 소리가 나지 않으면 다른 것을 시도하세요.\n" +
 			"• 기본 DTB에서 오른쪽 조이스틱의 상/하 방향이 반전되어 있다면,\n" +
 			"  이름에 'Invert Right Joystick'이 포함된 옵션을 사용하여 수정하세요.",
+		SoySauceNote: "참고:\n" +
+			"• Y3506 시리즈 R36S는 webTools의 감지 결과를 엄격히 따라 선택하세요.\n" +
+			"• 원본 dtb를 분실했다면 하나씩 순서대로 테스트하세요.\n" +
+			"• 메인보드 실리크린으로는 패널 정보를 알 수 없으며, SoySauce 기기는 패널이 심하게 뒤섞여 있습니다.\n" +
+			"• 원본 dtb 없이 SoySauce dtb로 화면이 켜져도 그 패널이 내 기기와 맞는다는 뜻은 아닙니다.\n" +
+			"• 시스템 부팅 후 게임 종료 시 화면이 검게 꺼지면 다른 옵션으로 바꿔 계속 테스트하세요.",
+		GameConsoleNote: "참고:\n" +
+			"• Panel 4 Type 1과 Panel 4 Type 2는 주로 Wi-Fi 작동 여부를 구분하기 위한 것입니다.\n" +
+			"• Panel 4 Type 1에서 Wi-Fi가 되지 않으면 Panel 4 Type 2로 전환하세요. 그 반대도 마찬가지입니다.",
 	},
 	Cleanup: CleanupStrings{
 		OperationCompleted:   "  ✅  성공!",
@@ -103,5 +115,12 @@ var Korean = Language{
 		VoltageWrongInput:    "입력이 올바르지 않습니다. 전압 인상이 취소되었습니다.",
 		VoltageApplied:       "전압 인상이 성공적으로 적용되었습니다!",
 		VoltageSkipped:       "전압 인상을 건너뛰었습니다.",
+	},
+	PortMaster: PortMasterStrings{
+		Title:          "PortMaster 종속성",
+		AskExtract:     "첫 부팅 시 roms.tar 압축을 풀 때 PortMaster 종속성을 Roms 파티션에 풀까요?\nSD 카드 품질이 좋지 않으면 아니오를 선택하세요. 그렇지 않으면 roms.tar 압축 해제가 너무 오래 걸릴 수 있습니다.",
+		KeepingLibs:    "PortMaster 종속성을 Roms 파티션에 그대로 풉니다(변경 없음).",
+		ExcludeApplied: "expandtoexfat.sh 수정 완료: roms.tar 풀기 시 *.squashfs를 제외합니다.",
+		ExcludeAlready: "expandtoexfat.sh가 이미 *.squashfs를 제외하도록 설정되어 있습니다.",
 	},
 }

@@ -40,6 +40,9 @@ var English = Language{
 		Copying:                "Copying: ",
 		CopyingExtra:           "Copying extra resources...",
 		CopyingFmt:             "  Copying: %s\n",
+		SelectKernel:           "Select kernel:",
+		Kernel44:               "1. 4.4 kernel (recommended)",
+		Kernel510:              "2. 5.10 kernel (experimental: new Mali GPU driver, Vulkan support)",
 		SelectBatteryVersion:   "Select battery driver version:",
 		BatteryVersionOriginal: "1. arkos original driver (this driver must be used together with batteryplus; otherwise, the battery level will display abnormally during charging).",
 		BatteryVersionFix:      "2. arkos4clone battery driver (capable of correctly displaying battery level during both charging and discharging, and featuring an aging‑adaptive function)",
@@ -48,6 +51,15 @@ var English = Language{
 			"  If one has no sound, try the other.\n" +
 			"• If the right joystick's up/down direction is inverted in the default DTB,\n" +
 			"  use the option with 'Invert Right Joystick' in its name to fix it.",
+		SoySauceNote: "NOTE:\n" +
+			"• For Y3506-series R36S, choose strictly according to the webTools detection result.\n" +
+			"• If you lost the original dtb, test them one by one.\n" +
+			"• The silkscreen on the board cannot tell you the panel; SoySauce devices have heavily mixed panels.\n" +
+			"• With the original dtb lost, even if a SoySauce dtb lights up the screen, it does NOT mean your device uses that panel.\n" +
+			"• If the system boots but games exit to a black screen, switch to another option and keep testing.",
+		GameConsoleNote: "NOTE:\n" +
+			"• Panel 4 Type 1 and Panel 4 Type 2 are mainly used to distinguish whether Wi-Fi works.\n" +
+			"• If Wi-Fi does not work on Panel 4 Type 1, switch to Panel 4 Type 2, and vice versa.",
 	},
 	Cleanup: CleanupStrings{
 		OperationCompleted:   "  ✅  Operation completed!",
@@ -103,5 +115,12 @@ var English = Language{
 		VoltageWrongInput:    "Incorrect input. Voltage increase cancelled.",
 		VoltageApplied:       "Voltage increase applied successfully!",
 		VoltageSkipped:       "Voltage increase skipped.",
+	},
+	PortMaster: PortMasterStrings{
+		Title:          "PortMaster dependencies",
+		AskExtract:     "On first boot, should PortMaster dependencies be extracted to the Roms partition?\nIf your SD card quality is poor, choose No, otherwise extracting roms.tar may take too long.",
+		KeepingLibs:    "PortMaster dependencies will be extracted to Roms as usual (no changes made).",
+		ExcludeApplied: "Done: expandtoexfat.sh updated — roms.tar extraction will now skip *.squashfs.",
+		ExcludeAlready: "expandtoexfat.sh already skips *.squashfs — no changes made.",
 	},
 }

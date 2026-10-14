@@ -40,6 +40,9 @@ var German = Language{
 		Copying:                "Kopieren: ",
 		CopyingExtra:           "Zusätzliche Ressourcen kopieren...",
 		CopyingFmt:             "  Kopieren: %s\n",
+		SelectKernel:           "Wählen Sie den Kernel:",
+		Kernel44:               "1. Kernel 4.4 (empfohlen)",
+		Kernel510:              "2. Kernel 5.10 (experimentell: neuer Mali-GPU-Treiber, Vulkan-Unterstützung)",
 		SelectBatteryVersion:   "Wählen Sie die Batterie-Treiberversion:",
 		BatteryVersionOriginal: "1. arkos Original-Treiber (dieser Treiber muss zusammen mit batteryplus verwendet werden; andernfalls wird der Batteriestand während des Ladens abnormal angezeigt).",
 		BatteryVersionFix:      "2. arkos4clone Batterie-Treiber (kann den Batteriestand sowohl beim Laden als auch beim Entladen korrekt anzeigen und verfügt über eine alterungsadaptive Funktion)",
@@ -48,6 +51,15 @@ var German = Language{
 			"  Wenn eines keinen Ton hat, versuchen Sie das andere.\n" +
 			"• Wenn die Auf/Ab-Richtung des rechten Joysticks im Standard-DTB invertiert ist,\n" +
 			"  verwenden Sie die Option mit 'Invert Right Joystick' im Namen, um sie zu korrigieren.",
+		SoySauceNote: "HINWEIS:\n" +
+			"• Bei R36S der Y3506-Serie strikt nach dem webTools-Ergebnis wählen.\n" +
+			"• Wenn du das originale dtb verloren hast, teste sie nacheinander.\n" +
+			"• Der Siebdruck auf dem Board verrät nichts über das Panel; SoySauce-Geräte haben stark gemischte Panels.\n" +
+			"• Ohne das originale dtb bedeutet ein erfolgreiches Bild mit einem SoySauce-dtb NICHT, dass dein Gerät dieses Panel nutzt.\n" +
+			"• Wenn das System startet, Spiele aber beim Beenden einen schwarzen Bildschirm zeigen, wechsle zu einer anderen Option und teste weiter.",
+		GameConsoleNote: "HINWEIS:\n" +
+			"• Panel 4 Type 1 und Panel 4 Type 2 unterscheiden hauptsächlich, ob WLAN funktioniert.\n" +
+			"• Wenn WLAN bei Panel 4 Type 1 nicht funktioniert, wechsle zu Panel 4 Type 2, und umgekehrt.",
 	},
 	Cleanup: CleanupStrings{
 		OperationCompleted:   "  ✅  Operation abgeschlossen!",
@@ -103,5 +115,12 @@ var German = Language{
 		VoltageWrongInput:    "Falsche Eingabe. Spannungserhöhung abgebrochen.",
 		VoltageApplied:       "Spannungserhöhung erfolgreich angewendet!",
 		VoltageSkipped:       "Spannungserhöhung übersprungen.",
+	},
+	PortMaster: PortMasterStrings{
+		Title:          "PortMaster-Abhängigkeiten",
+		AskExtract:     "Sollen beim ersten Start die PortMaster-Abhängigkeiten in die Roms-Partition entpackt werden?\nBei einer SD-Karte schlechter Qualität wählen Sie Nein, sonst kann das Entpacken von roms.tar zu lange dauern.",
+		KeepingLibs:    "PortMaster-Abhängigkeiten werden wie üblich nach Roms entpackt (keine Änderungen).",
+		ExcludeApplied: "expandtoexfat.sh aktualisiert: *.squashfs wird beim Entpacken von roms.tar übersprungen.",
+		ExcludeAlready: "expandtoexfat.sh überspringt *.squashfs bereits — keine Änderungen nötig.",
 	},
 }

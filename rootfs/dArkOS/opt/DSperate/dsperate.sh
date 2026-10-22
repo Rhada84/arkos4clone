@@ -48,8 +48,20 @@ fi
 
 ln -sfn /${directory}/nds/dsperate /home/ark/.config/
 
-if [[ ! -d "/${directory}/nds/cheats" ]]; then
-    mkdir /${directory}/nds/cheats
+if grep -q '<string name="Language" value="zh-CN" />' /home/ark/.emulationstation/es_settings.cfg; then
+    export LANG=zh_CN.UTF-8
+    target="/opt/drastic-kk/resources/cheats/zh_CN/usrcheat.dat"
+else
+    target="/opt/drastic-kk/resources/cheats/es_EN/usrcheat.dat"
+fi
+
+if [ -L /opt/DSperate/usrcheat.dat ]; then
+    if [ "$(readlink /opt/DSperate/usrcheat.dat)" != "$target" ]; then
+        sudo rm -f /opt/DSperate/usrcheat.dat
+        sudo ln -sf "$target" /opt/DSperateusrcheat.dat
+    fi
+else
+    sudo ln -sf "$target" /opt/DSperate/usrcheat.dat
 fi
 
 if [[ ! -d "/${directory}/nds/savestates" ]]; then
@@ -58,11 +70,14 @@ fi
 
 sed -i "/saves =/c\saves = /${directory}/nds" /${directory}/nds/dsperate/dsperate.ini
 sed -i "/states =/c\states = /${directory}/nds/savestates" /${directory}/nds/dsperate/dsperate.ini
-sed -i "/cheats =/c\cheats = /${directory}/nds/cheats" /${directory}/nds/dsperate/dsperate.ini
+sed -i "/cheats =/c\cheats = /opt/DSperate/usrcheat.dat" /${directory}/nds/dsperate/dsperate.ini
 
 sdl_controllerconfig="190000004b4800000011000000010000,GO-Super Gamepad,x:b2,a:b1,b:b0,y:b3,back:b12,start:b13,dpleft:b10,dpdown:b9,dpright:b11,dpup:b8,leftshoulder:b4,lefttrigger:b6,rightshoulder:b5,righttrigger:b7,leftstick:b14,rightstick:b15,leftx:a0,lefty:a1,rightx:a2,righty:a3,platform:Linux,"
-SDL_GAMECONTROLLERCONFIG="$sdl_controllerconfig" /opt/DSperate/dsperate "$game" --bios9 /${directory}/bios/nds_bios9.bin --bios7 /${directory}/bios/nds_bios7.bin --firmware /${directory}/bios/nds_firmware.bin
-
+if grep -q '<string name="Language" value="zh-CN" />' /home/ark/.emulationstation/es_settings.cfg; then
+    SDL_GAMECONTROLLERCONFIG="$sdl_controllerconfig" LANG=zh_CN.UTF-8 LC_ALL=zh_CN.UTF-8 /opt/DSperate/dsperate "$game" --bios9 /${directory}/bios/nds_bios9.bin --bios7 /${directory}/bios/nds_bios7.bin --firmware /${directory}/bios/nds_firmware.bin
+else
+    SDL_GAMECONTROLLERCONFIG="$sdl_controllerconfig" /opt/DSperate/dsperate "$game" --bios9 /${directory}/bios/nds_bios9.bin --bios7 /${directory}/bios/nds_bios7.bin --firmware /${directory}/bios/nds_firmware.bin
+fi
 if [ -d "/dev/shm/ndsroms" ]; then
 rm -rf /dev/shm/ndsroms
 fi

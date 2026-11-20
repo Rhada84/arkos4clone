@@ -394,6 +394,18 @@
 		<hardware>game engine</hardware>
 	</system>
 	<system>
+		<name>makecode</name>
+		<fullname>MakeCode Arcade</fullname>
+		<path>/roms/makecode/</path>
+		<extension>.pxt64 .PXT64</extension>
+		<command>sudo perfmax %GOVERNOR% %ROM%; nice -n -19 /usr/local/bin/retroarch -L /home/ark/.config/retroarch/cores/makecode_arcade_libretro.so %ROM%; sudo perfnorm</command>
+		<platform>makecode</platform>
+		<theme>makecode</theme>
+		<manufacturer>Microsoft</manufacturer>
+		<release>2019</release>
+		<hardware>game engine</hardware>
+	</system>
+	<system>
 		<name>mame2000</name>
 		<fullname>MAME2000</fullname>
 		<path>/roms/mame2000/</path>
@@ -1270,6 +1282,7 @@
 			</emulator>
 			<emulator name="retroarch">
 				<cores>
+					<core>armn64</core>
 					<core>km_ludicrousn64_2k22_xtreme_amped</core>
 					<core>parallel_n64</core>
 					<core>mupen64plus_next</core>
@@ -1303,6 +1316,7 @@
 			</emulator>
 			<emulator name="retroarch">
 				<cores>
+					<core>armn64</core>
 					<core>km_ludicrousn64_2k22_xtreme_amped</core>
 					<core>parallel_n64</core>
 					<core>mupen64plus_next</core>
@@ -1440,6 +1454,7 @@
 			</emulator>
 			<emulator name="retroarch32">
 				<cores>
+					<core>armgba</core>
 					<core>gpsp_ezode_mod</core>
 					<core>gpsp</core>
 				</cores>
@@ -2053,7 +2068,7 @@
 		</emulators>
 		<platform>psp</platform>
 		<theme>psp</theme>
-		<manufacturer>Henrik Rydgård</manufacturer>
+		<manufacturer>Sony</manufacturer>
 		<release>2004</release>
 		<hardware>handheld</hardware>
 	</system>
@@ -3261,6 +3276,18 @@
 		<hardware>game engine</hardware>
 	</system>
 	<system>
+		<name>makecode</name>
+		<fullname>MakeCode Arcade</fullname>
+		<path>/roms/makecode/</path>
+		<extension>.pxt64 .PXT64</extension>
+		<command>sudo perfmax %GOVERNOR% %ROM%; nice -n -19 /usr/local/bin/retroarch -L /home/ark/.config/retroarch/cores/makecode_arcade_libretro.so %ROM%; sudo perfnorm</command>
+		<platform>makecode</platform>
+		<theme>makecode</theme>
+		<manufacturer>Microsoft</manufacturer>
+		<release>2019</release>
+		<hardware>game engine</hardware>
+	</system>
+	<system>
 		<name>mame2000</name>
 		<fullname>MAME2000 [SD2]</fullname>
 		<path>/roms2/mame2000/</path>
@@ -4137,6 +4164,7 @@
 			</emulator>
 			<emulator name="retroarch">
 				<cores>
+					<core>armn64</core>
 					<core>km_ludicrousn64_2k22_xtreme_amped</core>
 					<core>parallel_n64</core>
 					<core>mupen64plus_next</core>
@@ -4170,6 +4198,7 @@
 			</emulator>
 			<emulator name="retroarch">
 				<cores>
+					<core>armn64</core>
 					<core>km_ludicrousn64_2k22_xtreme_amped</core>
 					<core>parallel_n64</core>
 					<core>mupen64plus_next</core>
@@ -4307,6 +4336,7 @@
 			</emulator>
 			<emulator name="retroarch32">
 				<cores>
+					<core>armgba</core>
 					<core>gpsp_ezode_mod</core>
 					<core>gpsp</core>
 				</cores>
@@ -4920,7 +4950,7 @@
 		</emulators>
 		<platform>psp</platform>
 		<theme>psp</theme>
-		<manufacturer>Henrik Rydgård</manufacturer>
+		<manufacturer>Sony</manufacturer>
 		<release>2004</release>
 		<hardware>handheld</hardware>
 	</system>
